@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "e-library management system"
+version = "0.0.1"
+description = "An E-Library Management System is a digital platform designed to store, manage, and deliver books, research papers, journals, and other learning resources electronically. Instead of handling physical books, users can log in from any device and access digital content instantly. The system allows librarians to upload, categorize, and organize materials, while users can search, read online, or download based on permissions. It often includes features like user authentication, role-based access, digital rights management, analytics, and automatic notifications for new content or due dates. For institutions like schools, universities, or training centers, an e-library helps reduce physical storage needs, improves accessibility, and ensures resources are available 24/7. It also supports multimedia content such as videos, audio lectures, and interactive learning materials, making education more flexible and efficient."
+authors = ["Sazzad Hossen <mshossen75@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+django = "^5.2.8"
+django-filter = "^25.2"
+django-widget-tweaks = "^1.5.0"
+pillow = "^12.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 135
+
+[tool.ruff]
+line-length = 135
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
