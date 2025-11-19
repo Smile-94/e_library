@@ -118,6 +118,10 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
         verbose_name = "User"
         verbose_name_plural = "Users"
 
+    def get_short_name(self):
+        # Return first_name or username as fallback
+        return self.first_name if self.first_name else self.username
+
     def get_full_name(self):
         return f"{self.first_name} {self.last_name}"
 
