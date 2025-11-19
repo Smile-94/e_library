@@ -5,8 +5,12 @@ from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf import settings
 
+# <<------------------------------------*** URLs ***------------------------------------>>
+from apps.account import urls as account_urls
+
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("", include(account_urls)),
 ]
 # for serve static files
 urlpatterns += staticfiles_urlpatterns()

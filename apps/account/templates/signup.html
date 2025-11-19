@@ -1,0 +1,248 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+ <!-- Sign Up Start -->
+        <div class="container-fluid">
+            <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
+                <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+                    <div class="bg-light rounded p-4 p-sm-5 my-4 mx-3">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <a href="index.html" class="">
+                                <h3 class="text-primary"><i class="fa fa-hashtag me-2"></i>E-Library</h3>
+                            </a>
+                            <h3>Sign Up</h3>
+                        </div>
+                        <form method='POST' > {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    {{ form.first_name|add_class:"form-control" }}
+                                    <label for="id_first_name">First Name</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    {{ form.last_name|add_class:"form-control" }}
+                                    <label for="id_last_name">Last Name</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-floating mb-3">
+                            {{ form.email|add_class:"form-control" }}
+                            <label for="email_address">Email address</label>
+                            {% for error in form.email.errors %}
+                                <small class="text-danger">{{ error }}</small>
+                            {% endfor %}
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    {{ form.username|add_class:"form-control" }}
+                                    <label for="id_username">Username</label>
+                                    {% for error in form.username.errors %}
+                                        <small class="text-danger">{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    {{ form.contact_no|add_class:"form-control" }}
+                                    <label for="id_contact_no">Contact No.</label>
+                                    {% for error in form.contact_no.errors %}
+                                        <small class="text-danger">{{ error }}</small>
+                                    {% endfor %}
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    {{ form.gender|add_class:"form-select" }}
+                                    <label for="id_gender">Gender</label>
+                                    {% for error in form.gender.errors %}
+                                        <small class="text-danger">{{ error }}</small>
+                                    {% endfor %}
+                                   
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    {{ form.profile_photo|add_class:"form-select" }}
+                                    <label for="id_profile_photo">Profile Photo</label>
+                                    {% for error in form.profile_photo.errors %}
+                                        <small class="text-danger">{{ error }}</small>
+                                    {% endfor %}
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    {{ form.password1|add_class:"form-control" }}
+                                    <label for="id_password1">Password</label>
+                                    <span class="toggle-password" data-target="id_password1" style="cursor:pointer; position:absolute; right:15px; top:50%; transform:translateY(-50%);">
+                                        <i class="fa fa-eye"></i>
+                                    </span>
+                                    <div class="password-strength mb-3">
+                                        <div id="password-strength-bar" style="height:6px; width:100%; background-color:#e0e0e0; border-radius:3px;">
+                                            <div id="password-strength-fill" style="height:100%; width:0%; background-color:red; border-radius:3px;"></div>
+                                        </div>
+                                        <small id="password-strength-text" class="text-muted">Weak</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    {{ form.password2|add_class:"form-control" }}
+                                    <label for="id_password2">Confirm Password</label>
+                                    <span class="toggle-password" data-target="id_password2" style="cursor:pointer; position:absolute; right:15px; top:50%; transform:translateY(-50%);">
+                                        <i class="fa fa-eye"></i>
+                                    </span>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <a href="">Forgot Password</a>
+                        </div>
+                        <button type="submit" class="btn btn-primary py-3 w-100 mb-4">Sign Up</button>
+                        </form>
+                        <p class="text-center mb-0">Already have an Account? <a href="">Sign In</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Sign Up End -->
+
+<!-- Password Validation -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const password1 = document.getElementById("id_password1");
+    const password2 = document.getElementById("id_password2");
+
+    // Create an error display element
+    const errorMsg = document.createElement("small");
+    errorMsg.classList.add("text-danger");
+    errorMsg.style.display = "none"; // hidden initially
+
+    // Insert after password2 input
+    password2.parentNode.appendChild(errorMsg);
+
+    function validatePasswords() {
+        if (password2.value.trim() === "") {
+            errorMsg.style.display = "none";
+            return;
+        }
+
+        if (password1.value !== password2.value) {
+            errorMsg.textContent = "Passwords do not match.";
+            errorMsg.style.display = "block";
+        } else {
+            errorMsg.textContent = "";
+            errorMsg.style.display = "none";
+        }
+    }
+
+    password1.addEventListener("input", validatePasswords);
+    password2.addEventListener("input", validatePasswords);
+});
+
+// Show/hide password
+document.querySelectorAll(".toggle-password").forEach(function (toggle) {
+        toggle.addEventListener("click", function () {
+            const targetId = toggle.getAttribute("data-target");
+            const input = document.getElementById(targetId);
+
+            if (input.type === "password") {
+                input.type = "text";
+                toggle.innerHTML = '<i class="fa fa-eye-slash"></i>';
+            } else {
+                input.type = "password";
+                toggle.innerHTML = '<i class="fa fa-eye"></i>';
+            }
+        });
+});
+
+// Validate Email Address
+document.addEventListener("DOMContentLoaded", function () {
+    const emailField = document.getElementById("id_email");
+
+    // Create error message element
+    const emailError = document.createElement("small");
+    emailError.classList.add("text-danger");
+    emailError.style.display = "none";
+    emailField.parentNode.appendChild(emailError);
+
+    function validateEmailJS() {
+        const email = emailField.value.trim();
+
+        // Basic email regex
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!email) {
+            emailError.style.display = "none";
+            return;
+        }
+
+        if (!emailPattern.test(email)) {
+            emailError.textContent = "Invalid email format.";
+            emailError.style.display = "block";
+        } else {
+            emailError.textContent = "";
+            emailError.style.display = "none";
+        }
+    }
+
+    emailField.addEventListener("input", validateEmailJS);
+});
+
+// Show password strongest
+const passwordInput = document.getElementById('id_password1');
+const strengthFill = document.getElementById('password-strength-fill');
+const strengthText = document.getElementById('password-strength-text');
+
+passwordInput.addEventListener('input', function() {
+    const val = passwordInput.value;
+    let strength = 0;
+
+    // Criteria
+    if (val.length >= 6) strength += 1;           // Minimum length
+    if (val.match(/[A-Z]/)) strength += 1;       // Uppercase letters
+    if (val.match(/[0-9]/)) strength += 1;       // Numbers
+    if (val.match(/[\W]/)) strength += 1;        // Special characters
+
+    // Update bar and text
+    let width = (strength / 4) * 100;
+    strengthFill.style.width = width + '%';
+
+    if (strength <= 1) {
+        strengthFill.style.backgroundColor = 'red';
+        strengthText.textContent = 'Weak';
+        strengthText.className = 'text-danger';
+    } else if (strength === 2) {
+        strengthFill.style.backgroundColor = 'orange';
+        strengthText.textContent = 'Medium';
+        strengthText.className = 'text-warning';
+    } else if (strength >= 3) {
+        strengthFill.style.backgroundColor = 'green';
+        strengthText.textContent = 'Strong';
+        strengthText.className = 'text-success';
+    }
+});
+
+
+</script>
+<!-- Password validation end -->
+{% endblock body%}
+
