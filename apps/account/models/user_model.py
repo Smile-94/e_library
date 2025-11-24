@@ -131,5 +131,14 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
     def get_user_rbac_permissions(self):
         return self.role.permissions.all().prefetch_related("permissions")
 
+    def has_rbac_permission(self, code: str) -> bool:
+        """
+        Check if user has a specific RBAC permission by its code.
+        """
+        if not self.role:
+            return False
+
+        return self.role.permissions.filter(code=code, is_active=True).exists()
+
     def __repr__(self):
         return f"<User: {self.username}, {self.pk}>"

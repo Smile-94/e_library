@@ -105,3 +105,23 @@ class UserLoginView(LoginView):
         logger.error(f"WARNING:--------------------> {form.errors}")
         messages.error(self.request, "Invalid User email password")
         return super().form_invalid(form)
+
+
+# <<------------------------------------*** Logout  View ***------------------------------------>>
+class UserLogout(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        try:
+            if request.user.is_authenticated:
+                is_staff = request.user.is_staff
+                logout(request)
+                if is_staff:
+                    # Staff user redirected to login
+                    return HttpResponseRedirect(reverse("account:login"))
+                else:
+                    # Non-staff redirected to home
+                    # return HttpResponseRedirect(reverse("home:home"))
+                    return HttpResponse("You have been logged out!")
+            return HttpResponseRedirect(reverse("account:login"))
+        except Exception as e:
+            logger.exception(f"ERROR:--------------------> Logout View Error: {e}")
+            return HttpResponse("Something went wrong!")
