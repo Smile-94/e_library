@@ -16,9 +16,9 @@ db.sqlite3
 
 
 # Media and Static files
-/media/
-/static/
-media
+# /media/
+# /static/
+# media
 
 # IDE/Editor files
 .idea/
