@@ -1,4 +1,5 @@
 from pathlib import Path
+
 from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,7 +24,7 @@ ALLOWED_HOSTS = []
 
 # <<------------------------------------*** Application Settings ***------------------------------------>>
 THIRD_PARTY_APPS = ["django_filters", "widget_tweaks"]
-CUSTOM_APPS = ["apps.account.apps.AccountConfig", "apps.common.apps.CommonConfig"]
+CUSTOM_APPS = ["apps.account.apps.AccountConfig", "apps.common.apps.CommonConfig", "apps.authority.apps.AuthorityConfig"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",

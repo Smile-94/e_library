@@ -1,39 +1,31 @@
 import logging
-from django.shortcuts import HttpResponse
-from django.contrib import messages
-from django.urls import reverse_lazy
-from django.urls import reverse
-from django.shortcuts import HttpResponseRedirect
-from django.views import View
-from django.shortcuts import render
 
+from django.contrib import messages
 
 # Permission and Authentication
-from django.contrib.auth import authenticate
-from django.contrib.auth import login
-from django.contrib.auth import logout
-
-from django.contrib.auth.mixins import LoginRequiredMixin
-
-
-# class based view builtin class
-from django.contrib.auth.views import LoginView
-from django.contrib.auth.views import LogoutView
-
-
-# Models
-from apps.account.models.user_model import User
+from django.contrib.auth import authenticate, login, logout
 
 # forms
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+# class based view builtin class
+from django.contrib.auth.views import LoginView
+from django.shortcuts import HttpResponse, HttpResponseRedirect, render
+from django.urls import reverse
+from django.views import View
+
 from apps.account.forms.account_forms import SignUpForm
+
+# Models
+from apps.account.models.user_model import User
 
 logger = logging.getLogger(__name__)
 
 
 # <<------------------------------------*** Signup  View ***------------------------------------>>
 class SignUpView(View):
-    template_name = "signup.html"  # your template path
+    template_name = "signup.html"
 
     def get(self, request):
         try:
@@ -83,8 +75,7 @@ class UserLoginView(LoginView):
 
             if user is not None and request_user.is_staff is True:
                 login(self.request, user)
-                # return HttpResponseRedirect(reverse("authority:authority"))
-                return HttpResponse("Login Successful! we are working on authority view")
+                return HttpResponseRedirect(reverse("authority:admin_dashboard"))
 
             elif user is not None and request_user.is_active is True:
                 login(self.request, user)

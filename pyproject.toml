@@ -11,6 +11,8 @@ django = "^5.2.8"
 django-filter = "^25.2"
 django-widget-tweaks = "^1.5.0"
 pillow = "^12.0.0"
+isort = "^7.0.0"
+black = "^25.11.0"
 
 
 [build-system]
@@ -26,4 +28,15 @@ line-length = 135
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
+
+[tool.isort]
+profile = "black"
+line_length = 88
+combine_as_imports = true
+multi_line_output = 3
+include_trailing_comma = true
+known_django = ["django"]
+sections = ["FUTURE", "STDLIB", "DJANGO", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+default_section = "THIRDPARTY"
+
 

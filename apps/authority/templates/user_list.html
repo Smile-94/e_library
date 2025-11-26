@@ -1,0 +1,62 @@
+{% extends 'authority_base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block body %}
+  <div class="bg-light rounded h-100 p-4">
+    <h6 class="mb-4">{{ table_title }}</h6>
+    {% if users %}
+      <div class="col-md-12 col-lg-12 mb-4">
+        <form class="d-flex" method="get">
+          <div class="row w-50">
+            <div class="col-md-9">{{ users.form.search|add_class:'form-control' }}</div>
+            <div class="col-md-3">
+              <button class="btn btn-outline-success w-100" type="submit">Search</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    {% endif %}
+    <table class="table table-striped table-bordered">
+      <thead class="bg-dark text-white">
+        <tr>
+          <th scope="col">Sl</th>
+          <th scope="col">First Name</th>
+          <th scope="col">Last Name</th>
+          <th scope="col">User Name</th>
+          <th scope="col">Email</th>
+          <th scope="col">Contact No</th>
+          <th scope="col">Gender</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if users %}
+          {% for user in users.qs %}
+            <tr>
+              <th scope="row">{{ forloop.counter }}</th>
+              <td>{{ user.first_name|lower|capfirst }}</td>
+              <td>{{ user.last_name|lower|capfirst }}</td>
+              <td>{{ user.username }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.contact_no }}</td>
+              <td>{{ user.gender|lower|capfirst }}</td>
+              <td>
+                <a class="btn btn-success" href="#" role="button"><i class="fa-solid fa-eye"></i></a>
+                <a class="btn btn-danger" href="#" role="button"><i class="fa-solid fa-trash"></i></a>
+              </td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="4" class="text-center">No user found!</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
