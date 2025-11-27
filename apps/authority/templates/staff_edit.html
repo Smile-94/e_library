@@ -1,0 +1,102 @@
+{% extends 'authority_base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block body %}
+  <div class="bg-light rounded h-100 p-4">
+    <h6 class="mb-4">{{ form_title }}</h6>
+    <div class="container-fluid">
+      <div class="text-end mb-3">
+        <a href="{% url 'authority:staff_list' %}" class="btn btn-primary"><i class="fa-solid fa-arrow-left me-2"></i> Back</a>
+      </div>
+    </div>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-floating mb-3">
+            {{ user_form.first_name|add_class:'form-control' }}
+            <label for="id_first_name">First Name</label>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-floating mb-3">
+            {{ user_form.last_name|add_class:'form-control' }}
+            <label for="id_last_name">Last Name</label>
+          </div>
+        </div>
+      </div>
+      <div class="form-floating mb-3">
+        {{ user_form.email|add_class:'form-control' }}
+        <label for="email_address">Email address</label>
+        {% for error in user_form.email.errors %}
+          <small class="text-danger">{{ error }}</small>
+        {% endfor %}
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-floating mb-3">
+            {{ user_form.username|add_class:'form-control' }}
+            <label for="id_username">Username</label>
+            {% for error in user_form.username.errors %}
+              <small class="text-danger">{{ error }}</small>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-floating mb-3">
+            {{ user_form.contact_no|add_class:'form-control' }}
+            <label for="id_contact_no">Contact No.</label>
+            {% for error in user_form.contact_no.errors %}
+              <small class="text-danger">{{ error }}</small>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-floating mb-3">
+            {{ user_form.gender|add_class:'form-select' }}
+            <label for="id_gender">Gender</label>
+            {% for error in user_form.gender.errors %}
+              <small class="text-danger">{{ error }}</small>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-floating mb-3">
+            {{ user_form.role|add_class:'form-select' }}
+            <label for="id_profile_photo">Role</label>
+            {% for error in user_form.role.errors %}
+              <small class="text-danger">{{ error }}</small>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
+        {{ user_form.profile_photo|add_class:'form-control' }}
+        <label for="id_profile_photo">Profile Photo</label>
+        {% for error in user_form.profile_photo.errors %}
+          <small class="text-danger">{{ error }}</small>
+        {% endfor %}
+      </div>
+      <div class="row mb-3">
+        <legend class="col-form-label col-sm-2 pt-0">Status</legend>
+        <div class="col-sm-10">
+          <div class="form-check">
+            {{ user_form.is_active|add_class:'form-check-input' }}
+            <label class="form-check-label" for="id_is_active">Is Active</label>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+{% endblock %}
