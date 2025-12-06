@@ -25,7 +25,7 @@
       <!-- Add Staff Button (Right) -->
       <div class="col-md-6 text-end">
         {% if request.user|has_permission:'can_add_staff' %}
-          <a href="{% url 'authority:staff_create' %}" class="btn btn-success"><i class="fa-solid fa-user-plus"></i> Add Staff</a>
+          <a href="{% url 'authority:author_create' %}" class="btn btn-success"><i class="fa-solid fa-user-plus"></i> Add Author</a>
         {% endif %}
       </div>
     </div>
@@ -38,7 +38,6 @@
           <th scope="col">User Name</th>
           <th scope="col">Email</th>
           <th scope="col">Contact No</th>
-          <th scope="col">Role</th>
           <th scope="col">Gender</th>
           <th scope="col">Status</th>
           <th scope="col">Action</th>
@@ -54,7 +53,6 @@
               <td>{{ user.username }}</td>
               <td>{{ user.email }}</td>
               <td>{{ user.contact_no }}</td>
-              <td>{{ user.role.name }}</td>
               <td>{{ user.gender|lower|capfirst }}</td>
               <td>
                 {% if user.is_active %}
@@ -64,12 +62,12 @@
                 {% endif %}
               </td>
               <td>
-                <a class="btn btn-success" href="{% url 'authority:staff_detail' user.id %}" role="button"><i class="fa-solid fa-eye"></i></a>
-                {% if request.user|has_permission:'can_edit_staff' %}
-                  <a class="btn btn-primary" href="{% url 'authority:staff_edit' user.id %}" role="button"><i class="fa-regular fa-pen-to-square"></i></a>
+                <a class="btn btn-success" href="{% url 'authority:author_detail' user.id %}" role="button"><i class="fa-solid fa-eye"></i></a>
+                {% if request.user|has_permission:'can_edit_author' %}
+                  <a class="btn btn-primary" href="{% url 'authority:author_edit' user.id %}" role="button"><i class="fa-regular fa-pen-to-square"></i></a>
                 {% endif %}
-                {% if request.user|has_permission:'can_delete_staff' %}
-                  <a class="btn btn-danger" href="{% url 'authority:staff_delete' user.id %}" role="button"><i class="fa-solid fa-trash"></i></a>
+                {% if request.user|has_permission:'can_delete_author' %}
+                  <a class="btn btn-danger" href="{% url 'authority:author_delete' user.id %}" role="button"><i class="fa-solid fa-trash"></i></a>
                 {% endif %}
               </td>
             </tr>

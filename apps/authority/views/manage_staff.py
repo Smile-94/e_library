@@ -1,17 +1,18 @@
 import logging
-from django.urls import reverse, reverse_lazy
-from django.shortcuts import redirect
+
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 from django.views import View
+
+from apps.account.forms.user_forms import UserForm
 
 # Import Filters
 from apps.authority.filters.user_filter import UserSearchFilter
 from apps.common.permissions import RBACPermissionRequiredMixin, StaffPassesTestMixin
-from apps.account.forms.user_forms import UserForm
 
 logger = logging.getLogger(__name__)
 User = get_user_model()

@@ -24,7 +24,12 @@ ALLOWED_HOSTS = []
 
 # <<------------------------------------*** Application Settings ***------------------------------------>>
 THIRD_PARTY_APPS = ["django_filters", "widget_tweaks"]
-CUSTOM_APPS = ["apps.account.apps.AccountConfig", "apps.common.apps.CommonConfig", "apps.authority.apps.AuthorityConfig"]
+CUSTOM_APPS = [
+    "apps.account.apps.AccountConfig",
+    "apps.common.apps.CommonConfig",
+    "apps.authority.apps.AuthorityConfig",
+    "apps.author.apps.AuthorConfig",
+]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -117,7 +122,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Custom user model
 AUTH_USER_MODEL = "account.User"
 
-LOGIN_REDIRECT_URL = "/home/"
+# LOGIN_REDIRECT_URL = "/home/"
 LOGIN_URL = "/login/"
 
 # Media files(Uploaded Files)

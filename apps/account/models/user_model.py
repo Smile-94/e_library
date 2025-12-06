@@ -3,8 +3,9 @@ from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from apps.common.models import BaseModel
+
 from apps.account.models.choices import GenderChoices
+from apps.common.models import BaseModel
 
 
 # <<------------------------------------*** RBAC Permission Manager ***------------------------------------>>
@@ -106,6 +107,7 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
     profile_photo = models.ImageField(upload_to="user_documents/", null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    is_author = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
 
     USERNAME_FIELD = "username"

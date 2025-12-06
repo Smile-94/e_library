@@ -73,10 +73,9 @@
                             <h6 class="mb-0">{{ user.username }}</h6>
                         {% endif %}
                         {% if user.role %}
-                            <span>{{ user.role.name }}</span>
+                            {% comment %} <span>{{ user.role.name }}</span> {% endcomment %}
                         {% elif user.is_superuser %}
                             <span>Admin</span>
-
                         {% endif %}
                     </div>
                 </div>
@@ -89,8 +88,7 @@
                             {% if request.user|has_permission:"can_view_user" %}
                                 <a href="{% url 'authority:user_list' %}" class="dropdown-item">User List</a>
                             {% endif %}
-                            <a href="typography.html" class="dropdown-item">Typography</a>
-                            <a href="element.html" class="dropdown-item">Other Elements</a>
+                            
                         </div>
                     </div>
                     <div class="nav-item dropdown">
@@ -105,7 +103,20 @@
                             {% endif %}
                         </div>
                     </div>
-                    <a href="widget.html" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Widgets</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa-solid fa-user-pen me-2"></i>Author</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+
+                            {% if request.user|has_permission:"can_add_author" %}
+                                <a href="{% url 'authority:author_create' %}" class="dropdown-item"><i class="fa-solid fa-user-plus me-2"></i>Add Author</a>
+                            {% endif %}
+                            
+                            {% if request.user|has_permission:"can_view_author" %}
+                                <a href="{% url 'authority:author_list' %}" class="dropdown-item"><i class="fa-solid fa-list me-2"></i> Author List</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% comment %} <a href="widget.html" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Widgets</a>
                     <a href="form.html" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Forms</a>
                     <a href="table.html" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Tables</a>
                     <a href="chart.html" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Charts</a>
@@ -117,7 +128,7 @@
                             <a href="404.html" class="dropdown-item">404 Error</a>
                             <a href="blank.html" class="dropdown-item">Blank Page</a>
                         </div>
-                    </div>
+                    </div> {% endcomment %}
                 </div>
             </nav>
         </div>
