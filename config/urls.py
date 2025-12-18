@@ -7,11 +7,13 @@ from django.urls import include, path
 # <<------------------------------------*** URLs ***------------------------------------>>
 from apps.account import urls as account_urls
 from apps.authority import urls as authority_urls
+from apps.home import urls as home_urls
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include(account_urls)),
     path("", include(authority_urls)),
+    path("", include(home_urls)),
 ]
 # for serve static files
 urlpatterns += staticfiles_urlpatterns()

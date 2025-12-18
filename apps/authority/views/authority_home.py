@@ -28,7 +28,13 @@ class AdminDashboardView(LoginRequiredMixin, StaffPassesTestMixin, View):
         try:
             total_customer = self.user_model.objects.filter(is_staff=False).count()
             total_staff = self.user_model.objects.filter(is_staff=True).count()
-            context = {"title": "Dashboard", "total_customer": total_customer, "total_staff": total_staff, "name": "Sazzad"}
+            total_author = self.user_model.objects.filter(is_author=True).count()
+            context = {
+                "title": "Dashboard",
+                "total_customer": total_customer,
+                "total_staff": total_staff,
+                "total_author": total_author,
+            }
 
             return render(request, self.template_name, context)
             # return HttpResponse(f"Hello {context['name']}")
