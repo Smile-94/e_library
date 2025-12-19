@@ -1,0 +1,65 @@
+{% extends 'authority_base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block body %}
+  <div class="bg-light rounded h-100 p-4">
+    <h6 class="mb-4">{{ form_title }}</h6>
+    <div class="container-fluid">
+      <div class="text-end mb-3">
+        <a href="{% url 'authority:author_detail' user_obj.id %}" class="btn btn-primary"><i class="fa-solid fa-arrow-left me-2"></i> Back</a>
+      </div>
+    </div>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-floating mb-3">
+            {{ form.degree|add_class:'form-control' }}
+            <label for="id_degree">Degree</label>
+            {% for error in form.degree.errors %}
+              <small class="text-danger">{{ error }}</small>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-floating mb-3">
+            {{ form.institution|add_class:'form-control' }}
+            <label for="id_institution">Institution</label>
+            {% for error in form.institution.errors %}
+              <small class="text-danger">{{ error }}</small>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-floating mb-3">
+            {{ form.start_year|add_class:'form-select' }}
+            <label for="id_start_year">Start Year</label>
+            {% for error in form.start_year.errors %}
+              <small class="text-danger">{{ error }}</small>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-floating mb-3">
+            {{ form.end_year|add_class:'form-select' }}
+            <label for="id_end_year">End Year</label>
+            {% for error in form.end_year.errors %}
+              <small class="text-danger">{{ error }}</small>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+{% endblock %}

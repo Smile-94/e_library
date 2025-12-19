@@ -1,0 +1,73 @@
+{% extends 'authority_base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block body %}
+  <div class="bg-light rounded h-100 p-4">
+    <h6 class="mb-4">{{ form_title }}</h6>
+    <div class="container-fluid">
+      <div class="text-end mb-3">
+        <a href="{% url 'authority:author_detail' user_obj.id %}" class="btn btn-primary"><i class="fa-solid fa-arrow-left me-2"></i> Back</a>
+      </div>
+    </div>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-floating mb-3">
+            {{ form.job_title|add_class:'form-control' }}
+            <label for="id_job_title">Job Title</label>
+            {% for error in form.job_title.errors %}
+              <small class="text-danger">{{ error }}</small>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-floating mb-3">
+            {{ form.organization|add_class:'form-control' }}
+            <label for="id_organization">Organization</label>
+            {% for error in form.organization.errors %}
+              <small class="text-danger">{{ error }}</small>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+     
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-floating mb-3">
+            {{ form.start_date|add_class:'form-control' }}
+            <label for="id_start_date">Joining Date</label>
+            {% for error in form.start_date.errors %}
+              <small class="text-danger">{{ error }}</small>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-floating mb-3">
+            {{ form.end_date|add_class:'form-control' }}
+            <label for="id_end_date">End Date</label>
+            {% for error in form.end_date.errors %}
+              <small class="text-danger">{{ error }}</small>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+     
+      <div class="mb-3">
+        {{ form.description|add_class:'form-control' }}
+        {% comment %} <label for="id_description">Description</label> {% endcomment %}
+        {% for error in form.description.errors %}
+          <small class="text-danger">{{ error }}</small>
+        {% endfor %}
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+{% endblock %}

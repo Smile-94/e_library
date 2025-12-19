@@ -10,7 +10,9 @@ from django.urls import reverse_lazy
 from django.views import View
 
 from apps.account.forms.user_forms import UserForm
-from apps.author.models.author_model import AuthorWorkExperience
+from apps.author.forms.education_forms import AuthorEducationForm
+from apps.author.forms.exprience_forms import AuthorWorkExperienceForm
+from apps.author.models.author_model import AuthorEducation, AuthorWorkExperience
 
 # Import Filters
 from apps.authority.filters.user_filter import UserSearchFilter
@@ -160,6 +162,11 @@ class AuthorDetailView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPas
                         queryset=AuthorWorkExperience.objects.all().order_by("id"),
                         to_attr="experiences",
                     ),
+                    Prefetch(
+                        "author_educations",
+                        queryset=AuthorEducation.objects.all().order_by("id"),
+                        to_attr="educations",
+                    ),
                 )
                 .first()
             )
@@ -221,3 +228,237 @@ class AuthorSoftDeleteView(LoginRequiredMixin, RBACPermissionRequiredMixin, Staf
             logger.exception(f"ERROR:------>> Error occurred in author Soft Delete View: {e}")
             messages.error(request, "Unable to delete author!")
             return HttpResponse(f"{e}")
+
+
+# <<------------------------------------*** Author Work Experience Create View ***------------------------------------>>
+class AuthorWorkExperienceCreateView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesTestMixin, View):
+    required_permission = "can_add_author_experience"
+    template_name = "author_experience_create.html"
+    model_class = User
+    form_class = AuthorWorkExperienceForm
+
+    def get(self, request, pk, *args, **kwargs):
+        try:
+            user = self.model_class.objects.filter(pk=pk, is_author=True).first()
+            if not user:
+                messages.error(request, "Author not found!")
+                return redirect("authority:author_list")
+
+            context = {
+                "title": "Add Author Work Experience",
+                "form_title": "Add Author Work Experience",
+                "form": self.form_class(),
+                "user_obj": user,
+            }
+            return render(request, self.template_name, context)
+
+        except Exception as e:
+            logger.exception(f"ERROR:------>> Error occurred in Author Work Experience Create GET View: {e}")
+            messages.error(request, "Unable to load Author Work Experience details!")
+            return HttpResponse(f"{e}")
+
+    def post(self, request, pk, *args, **kwargs):
+        try:
+            user = self.model_class.objects.filter(pk=pk).first()
+
+            form = self.form_class(request.POST)
+            if form.is_valid():
+                author_work_experience = form.save(commit=False)
+                author_work_experience.author = user
+                author_work_experience.save()
+
+                messages.success(request, "Author Work Experience created successfully!")
+                return redirect("authority:author_detail", pk=user.pk)
+
+            messages.error(request, "Unable to create Author Work Experience!")
+            return render(
+                request,
+                self.template_name,
+                {
+                    "title": "Add Author Work Experience",
+                    "form_title": "Add Author Work Experience",
+                    "form": form,
+                    "user_obj": user,
+                },
+            )
+
+        except Exception as e:
+            logger.exception(f"ERROR:------>> Error occurred in Author Work Experience Create POST View: {e}")
+            messages.error(request, "Unable to create Author Work Experience!")
+            return HttpResponse(str(e))
+
+
+# <<------------------------------------*** Author Work Experience Edit View ***------------------------------------>>
+class AuthorWorkExperienceEditView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesTestMixin, View):
+    required_permission = "can_edit_author_experience"
+    template_name = "edit_author_experience.html"
+    model_class = AuthorWorkExperience
+    form_class = AuthorWorkExperienceForm
+
+    def get(self, request, pk, *args, **kwargs):
+        try:
+            work_experience = self.model_class.objects.filter(pk=pk).first()
+            if not work_experience:
+                messages.error(request, "Author Work Experience not found!")
+                return redirect("authority:author_list")
+
+            context = {
+                "title": "Edit Author Work Experience",
+                "form_title": "Edit Author Work Experience",
+                "form": self.form_class(instance=work_experience),
+                "user_obj": work_experience.author,
+            }
+            return render(request, self.template_name, context)
+
+        except Exception as e:
+            logger.exception(f"ERROR:------>> Error occurred in Author Work Experience Edit GET View: {e}")
+            messages.error(request, "Unable to load Author Work Experience details!")
+            return HttpResponse(f"{e}")
+
+    def post(self, request, pk, *args, **kwargs):
+        try:
+            work_experience = self.model_class.objects.filter(pk=pk).first()
+            if not work_experience:
+                messages.error(request, "Author Work Experience not found!")
+                return redirect("authority:author_list")
+
+            form = self.form_class(request.POST, request.FILES, instance=work_experience)
+
+            if not form.is_valid():
+                context = {
+                    "title": "Create Author Work Experience",
+                    "form_title": "Create Author Work Experience",
+                    "user_form": self.form_class(instance=work_experience),
+                    "user_obj": work_experience.author,
+                }
+                messages.error(request, "Unable to update Author Work Experience!")
+                return render(request, self.template_name, context)
+
+            form.save()
+            messages.success(request, "Author Work Experience updated successfully!")
+            return redirect("authority:author_detail", pk=work_experience.author.pk)
+
+        except Exception as e:
+            logger.exception(f"ERROR:------>> Error occurred in Author Work Experience Edit POST View: {e}")
+            messages.error(request, "Unable to update Author Work Experience!")
+            return HttpResponse(f"{e}")
+
+
+# <<------------------------------------*** Author Education Create View ***------------------------------------>>
+class AuthorEducationCreateView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesTestMixin, View):
+    required_permission = "can_add_author_education"
+    template_name = "author_education_create.html"
+    model_class = User
+    form_class = AuthorEducationForm
+
+    def get(self, request, pk, *args, **kwargs):
+        try:
+            user = self.model_class.objects.filter(pk=pk).first()
+
+            if not user:
+                messages.error(request, "Author not found!")
+                return redirect("authority:author_list")
+
+            context = {
+                "title": "Add Author Education",
+                "form_title": "Add Author Education",
+                "form": self.form_class(),
+                "user_obj": user,
+            }
+            return render(request, self.template_name, context)
+        except Exception as e:
+            logger.exception(f"ERROR:------>> Error occurred in Author Education Create GET View: {e}")
+            messages.error(request, "Unable to load Author Education details!")
+            return HttpResponse(f"{e}")
+
+    def post(self, request, pk, *args, **kwargs):
+        try:
+            user = self.model_class.objects.filter(pk=pk).first()
+
+            if not user:
+                messages.error(request, "Author not found!")
+                return redirect("authority:author_list")
+
+            form = self.form_class(request.POST)
+            if form.is_valid():
+                author_education = form.save(commit=False)
+                author_education.author = user
+                author_education.save()
+
+                messages.success(request, "Author Education created successfully!")
+                return redirect("authority:author_detail", pk=user.pk)
+
+            messages.error(request, "Unable to create Author Education!")
+            return render(
+                request,
+                self.template_name,
+                {
+                    "title": "Add Author Education",
+                    "form_title": "Add Author Education",
+                    "form": form,
+                    "user_obj": user,
+                },
+            )
+
+        except Exception as e:
+            logger.exception(f"ERROR:------>> Error occurred in Author Education Create POST View: {e}")
+            messages.error(request, "Unable to create Author Education!")
+            return HttpResponse(str(e))
+
+
+# <<------------------------------------*** Author Education Edit View ***------------------------------------>>
+class AuthorEducationEditView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesTestMixin, View):
+    required_permission = "can_edit_author_education"
+    template_name = "edit_author_education.html"
+    model_class = AuthorEducation
+    form_class = AuthorEducationForm
+
+    def get(self, request, pk, *args, **kwargs):
+        try:
+            education = self.model_class.objects.filter(pk=pk).first()
+
+            if not education:
+                messages.error(request, "Author Education not found!")
+                return redirect("authority:author_detail", pk=pk)
+
+            context = {
+                "title": "Edit Author Education",
+                "form_title": "Edit Author Education",
+                "form": self.form_class(instance=education),
+                "user_obj": education.author,
+            }
+            return render(request, self.template_name, context)
+
+        except Exception as e:
+            logger.exception(f"ERROR:------>> Error occurred in Author Education Edit GET View: {e}")
+            messages.error(request, "Unable to load Author Education details!")
+            return HttpResponse(f"{e}")
+
+    def post(self, request, pk, *args, **kwargs):
+        try:
+            education = self.model_class.objects.filter(pk=pk).first()
+
+            if not education:
+                messages.error(request, "Author Education not found!")
+                return redirect("authority:author_detail", pk=pk)
+
+            form = self.form_class(request.POST, request.FILES, instance=education)
+
+            if not form.is_valid():
+                context = {
+                    "title": "Edit Author Education",
+                    "form_title": "Edit Author Education",
+                    "form": form,
+                    "user_obj": education.author,
+                }
+                messages.error(request, "Unable to update Author Education!")
+                return render(request, self.template_name, context)
+
+            form.save()
+            messages.success(request, "Author Education updated successfully!")
+            return redirect("authority:author_detail", pk=education.author.pk)
+
+        except Exception as e:
+            logger.exception(f"ERROR:------>> Error occurred in Author Education Edit POST View: {e}")
+            messages.error(request, "Unable to update Author Education!")
+            return HttpResponse(str(e))

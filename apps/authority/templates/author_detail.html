@@ -52,7 +52,7 @@
           <!-- Right Column: Details Table -->
           <div class="col-md-8">
             <div class="card shadow-sm">
-              <div class="card-header bg-primary text-white">Staff Details</div>
+              <div class="card-header bg-primary text-white">Author Details</div>
               <div class="card-body">
                 <table class="table table-borderless">
                   <tbody>
@@ -102,8 +102,8 @@
       <div class="card shadow-sm mb-4">
         <!-- Action Buttons (Edit/Delete) -->
         <div class="d-flex justify-content-end p-3">
-          {% if request.user|has_permission:'can_edit_author' %}
-            <a href="{% url 'authority:author_edit' user_obj.id %}" class="btn btn-primary me-2"><i class="fa-regular fa-pen-to-square me-2"></i>Add Work Experience</a>
+          {% if request.user|has_permission:'can_add_author_experience' %}
+            <a href="{% url 'authority:author_experience_create' user_obj.id %}" class="btn btn-primary me-2"><i class="fa-regular fa-pen-to-square me-2"></i>Add Work Experience</a>
           {% endif %}
         </div>
         <div class="card-header bg-primary text-white">
@@ -111,7 +111,7 @@
         </div>
         <div class="card-body">
           {% if user_obj.experiences %}
-            <table class="table table-bordered ">
+            <table class="table table-bordered">
               <thead class="bg-dark text-white">
                 <tr>
                   <th>Role</th>
@@ -122,14 +122,17 @@
                 </tr>
               </thead>
               <tbody>
-                
                 {% for exp in user_obj.experiences %}
                   <tr>
                     <td>{{ exp.job_title }}</td>
                     <td>{{ exp.organization }}</td>
                     <td>{{ exp.start_date }}</td>
                     <td>{{ exp.end_date|default:'Present' }}</td>
-                    <td>{{ exp.end_date|default:'Present' }}</td>
+                    <td>
+                      {% if request.user|has_permission:'can_edit_author_experience' %}
+                        <a class="btn btn-primary" href="{% url 'authority:author_experience_edit' exp.id %}" role="button"><i class="fa-regular fa-pen-to-square"></i></a>
+                      {% endif %}
+                    </td>
                   </tr>
                 {% endfor %}
               </tbody>
@@ -140,29 +143,41 @@
         </div>
       </div>
 
-      {% comment %} <!-- Education Section -->
+      <!-- Education Section -->
       <div class="card shadow-sm mb-4">
+        <!-- Action Buttons (Edit/Delete) -->
+        <div class="d-flex justify-content-end p-3">
+          {% if request.user|has_permission:'can_add_author_education' %}
+            <a href="{% url 'authority:author_education_create' user_obj.id %}" class="btn btn-primary me-2"><i class="fa-regular fa-pen-to-square me-2"></i>Add Education</a>
+          {% endif %}
+        </div>
         <div class="card-header bg-primary text-white">
           <h5 class="mb-0 text-white">Education</h5>
         </div>
         <div class="card-body">
-          {% if educations %}
+          {% if user_obj.educations %}
             <table class="table table-bordered">
-              <thead>
+              <thead class="bg-dark text-white">
                 <tr>
                   <th>Degree</th>
                   <th>Institution</th>
-                  <th>Start</th>
-                  <th>End</th>
+                  <th>Start Year</th>
+                  <th>End Year</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                {% for edu in educations %}
+                {% for edu in user_obj.educations %}
                   <tr>
                     <td>{{ edu.degree }}</td>
                     <td>{{ edu.institution }}</td>
                     <td>{{ edu.start_year }}</td>
                     <td>{{ edu.end_year|default:'Present' }}</td>
+                    <td>
+                      {% if request.user|has_permission:'can_edit_author_education' %}
+                        <a class="btn btn-primary" href="{% url 'authority:author_education_edit' edu.id %}" role="button"><i class="fa-regular fa-pen-to-square"></i></a>
+                      {% endif %}
+                    </td>
                   </tr>
                 {% endfor %}
               </tbody>
@@ -171,7 +186,7 @@
             <p class="text-muted">No education records.</p>
           {% endif %}
         </div>
-      </div> {% endcomment %}
+      </div>
 
       {% comment %} <!-- Certifications Section -->
       <div class="card shadow-sm mb-4">

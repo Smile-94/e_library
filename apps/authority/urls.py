@@ -4,8 +4,12 @@ from apps.authority.views.author_management import (
     AuthorCreateView,
     AuthorDetailView,
     AuthorEditView,
+    AuthorEducationCreateView,
+    AuthorEducationEditView,
     AuthorListView,
     AuthorSoftDeleteView,
+    AuthorWorkExperienceCreateView,
+    AuthorWorkExperienceEditView,
 )
 
 # Views
@@ -47,4 +51,10 @@ urlpatterns += [
     path("author-edit/<int:pk>/", AuthorEditView.as_view(), name="author_edit"),
     path("author-detail/<int:pk>/", AuthorDetailView.as_view(), name="author_detail"),
     path("author-delete/<int:pk>/", AuthorSoftDeleteView.as_view(), name="author_delete"),
+    # Author Work Experience Urls
+    path("author-experience-create/<int:pk>/", AuthorWorkExperienceCreateView.as_view(), name="author_experience_create"),
+    path("author-experience-edit/<int:pk>/", AuthorWorkExperienceEditView.as_view(), name="author_experience_edit"),
+    # Author Education Urls
+    path("author-education-create/<int:pk>/", AuthorEducationCreateView.as_view(), name="author_education_create"),
+    path("author-education-edit/<int:pk>/", AuthorEducationEditView.as_view(), name="author_education_edit"),
 ]
