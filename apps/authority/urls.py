@@ -14,6 +14,11 @@ from apps.authority.views.author_management import (
 
 # Views
 from apps.authority.views.authority_home import AdminDashboardView
+from apps.authority.views.category_management import (
+    CategoryCreateView,
+    CategoryEditView,
+    CategoryListView,
+)
 from apps.authority.views.manage_staff import (
     StaffUserCreateView,
     StaffUserDetailView,
@@ -57,4 +62,11 @@ urlpatterns += [
     # Author Education Urls
     path("author-education-create/<int:pk>/", AuthorEducationCreateView.as_view(), name="author_education_create"),
     path("author-education-edit/<int:pk>/", AuthorEducationEditView.as_view(), name="author_education_edit"),
+]
+
+# Book Category Management Urls
+urlpatterns += [
+    path("book-category-list/", CategoryListView.as_view(), name="book_category_list"),
+    path("book-category-create/", CategoryCreateView.as_view(), name="book_category_create"),
+    path("book-category-edit/<int:pk>/", CategoryEditView.as_view(), name="book_category_edit"),
 ]

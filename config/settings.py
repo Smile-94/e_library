@@ -30,6 +30,7 @@ CUSTOM_APPS = [
     "apps.authority.apps.AuthorityConfig",
     "apps.author.apps.AuthorConfig",
     "apps.home.apps.HomeConfig",
+    "apps.book.apps.BookConfig",
 ]
 
 INSTALLED_APPS = [
