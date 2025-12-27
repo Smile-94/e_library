@@ -124,8 +124,11 @@
                                 <a href="{% url 'authority:book_category_list' %}" class="dropdown-item"><i class="fa-solid fa-box me-2"></i>Book Category</a>
                             {% endif %}
                             
-                            {% if request.user|has_permission:"can_view_book_sub_category" %}
-                                <a href="{% url 'authority:author_list' %}" class="dropdown-item"><i class="fa-solid fa-box me-2"></i>Book Sub-Category</a>
+                            {% if request.user|has_permission:"can_add_book" %}
+                                <a href="{% url 'authority:book_create' %}" class="dropdown-item"><i class="fa-solid fa-book-medical me-2"></i>Add Book</a>
+                            {% endif %}
+                            {% if request.user|has_permission:"can_view_book" %}
+                                <a href="{% url 'authority:book_list' %}" class="dropdown-item"><i class="fa-solid fa-book me-2"></i>Book List</a>
                             {% endif %}
                         </div>
                     </div>
