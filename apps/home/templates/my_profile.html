@@ -1,0 +1,69 @@
+{% extends 'home_base.html' %}
+{% load static %}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block body %}
+<section class="profile spad">
+  <div class="container">
+    <div class="row justify-content-center">
+
+      <div class="col-lg-7 col-md-9">
+        <div class="profile-card">
+
+          <!-- Profile Image -->
+          <div class="profile-center">
+            {% if user.profile_photo %}
+              <img src="{{ user.profile_photo.url }}" class="profile-img">
+            {% else %}
+              <img src="{% static 'web/img/user-default.png' %}" class="profile-img">
+            {% endif %}
+
+            <h3 class="profile-name">
+              {{ user.first_name }} {{ user.last_name }}
+            </h3>
+          </div>
+
+          <!-- Profile Info Table -->
+          <div class="profile-table">
+            <table class="table">
+              <tbody>
+                <tr>
+                  <th>Email</th>
+                  <td>{{ user.email }}</td>
+                </tr>
+                <tr>
+                  <th>Contact No</th>
+                  <td>{{ user.contact_no|default:"N/A" }}</td>
+                </tr>
+                <tr>
+                  <th>Gender</th>
+                  <td>{{ user.gender|title }}</td>
+                </tr>
+                <tr>
+                  <th>Status</th>
+                  <td>
+                    {% if user.is_active %}
+                      <span class="status-active">Active</span>
+                    {% else %}
+                      <span class="status-inactive">Inactive</span>
+                    {% endif %}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="profile-actions text-center">
+            <a href="{% url 'home:edit_my_profile' %}" class="primary-btn">Edit Profile</a>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock %}

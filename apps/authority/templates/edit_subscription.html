@@ -1,0 +1,113 @@
+{% extends 'authority_base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block body %}
+  <div class="bg-light rounded h-100 p-4">
+    <h6 class="mb-4">{{ form_title }}</h6>
+    <div class="container-fluid">
+      <div class="text-end mb-3">
+        <a href="{% url 'authority:subscription_list' %}" class="btn btn-primary"><i class="fa-solid fa-arrow-left me-2"></i> Back</a>
+      </div>
+    </div>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="row">
+        <div class="col-md-6">
+          <label for="subscriptionName" class="form-label">Subscription Name</label>
+          {{ form.name|add_class:'form-control' }}
+          {% for error in form.name.errors %}
+            <small class="text-danger">{{ error }}</small>
+          {% endfor %}
+        </div>
+
+        <div class="col-md-6">
+          <label for="SubscriptionActiveStatus" class="form-label">Active Status</label>
+          {{ form.active_status|add_class:'form-select' }}
+          {% for error in form.active_status.errors %}
+            <small class="text-danger">{{ error }}</small>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <label class="form-label">Price</label>
+          {{ form.subscription_price|add_class:'form-control' }}
+          {% for error in form.subscription_price.errors %}
+            <small class="text-danger">{{ error }}</small>
+          {% endfor %}
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Duration (Days)</label>
+          {{ form.subscription_duration_days|add_class:'form-control' }}
+          {% for error in form.subscription_duration_days.errors %}
+            <small class="text-danger">{{ error }}</small>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <label class="form-label">Read Limit</label>
+          {{ form.book_read_limit|add_class:'form-select' }}
+          {% for error in form.book_read_limit.errors %}
+            <small class="text-danger">{{ error }}</small>
+          {% endfor %}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Max Read Limit</label>
+          {{ form.max_book_read_limit|add_class:'form-control' }}
+          {% for error in form.max_book_read_limit.errors %}
+            <small class="text-danger">{{ error }}</small>
+          {% endfor %}
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Download Limit</label>
+          {{ form.book_download_limit|add_class:'form-select' }}
+          {% for error in form.book_download_limit.errors %}
+            <small class="text-danger">{{ error }}</small>
+          {% endfor %}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Max Download Limit</label>
+          {{ form.max_book_download_limit|add_class:'form-control' }}
+          {% for error in form.max_book_download_limit.errors %}
+            <small class="text-danger">{{ error }}</small>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <label class="form-label">Description</label>
+          {{ form.description|add_class:'form-control' }}
+          {% for error in form.description.errors %}
+            <small class="text-danger">{{ error }}</small>
+          {% endfor %}
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary mt-2">Submit</button>
+    </form>
+  </div>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const input = document.querySelector('input[type="file"]');
+    const preview = document.getElementById("imagePreview");
+
+    input.addEventListener("change", function () {
+      const file = this.files[0];
+      if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = "block";
+      }
+    });
+  });
+</script>
+
+{% endblock %}

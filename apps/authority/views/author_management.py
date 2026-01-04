@@ -12,6 +12,7 @@ from django.views import View
 from apps.account.forms.user_forms import UserForm
 from apps.author.forms.education_forms import AuthorEducationForm
 from apps.author.forms.exprience_forms import AuthorWorkExperienceForm
+from apps.author.function.unique_username import unique_hex_username
 from apps.author.models.author_model import AuthorEducation, AuthorWorkExperience
 
 # Import Filters
@@ -50,6 +51,8 @@ class AuthorCreateView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPas
             if form.is_valid():
                 user = form.save()
                 user.is_author = True
+                if not form.cleaned_data.get("username"):
+                    user.username = unique_hex_username()
                 user.save()
                 messages.success(request, "Author created successfully!")
                 return redirect(self.success_url)
@@ -57,9 +60,9 @@ class AuthorCreateView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPas
             context = {
                 "title": "Create Author",
                 "form_title": "Create Author",
-                "form": form,
+                "user_form": self.form_class(),
             }
-            messages.error(request, "Unable to create staff!")
+            messages.error(request, "Unable to create Author!")
             return render(request, self.template_name, context)
 
         except Exception as e:

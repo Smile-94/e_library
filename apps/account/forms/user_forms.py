@@ -1,4 +1,5 @@
 from django import forms
+
 from apps.account.models.user_model import User
 
 # Custom widgets
@@ -20,4 +21,16 @@ class UserForm(forms.ModelForm):
             "gender",
             "profile_photo",
             "is_active",
+        ]
+
+
+class EditMyProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = [
+            "first_name",
+            "last_name",
+            "contact_no",
+            "gender",
+            "profile_photo",
         ]

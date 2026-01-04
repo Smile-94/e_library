@@ -128,7 +128,10 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
         return f"{self.first_name} {self.last_name}"
 
     def __str__(self):
-        return f"{self.username}"
+        if self.first_name and self.last_name:
+            return f"{self.first_name} {self.last_name}"
+        else:
+            return f"{self.username}"
 
     def get_user_rbac_permissions(self):
         return self.role.permissions.all().prefetch_related("permissions")

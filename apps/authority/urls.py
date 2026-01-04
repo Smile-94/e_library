@@ -31,6 +31,12 @@ from apps.authority.views.manage_staff import (
     StaffUserListView,
     StaffUserSoftDeleteView,
 )
+from apps.authority.views.manage_subscription import (
+    SubscriptionCreateView,
+    SubscriptionDetailView,
+    SubscriptionEditView,
+    SubscriptionListView,
+)
 from apps.authority.views.user_management import UserListView
 
 app_name = "authority"
@@ -81,4 +87,12 @@ urlpatterns += [
     path("book-create/", BookCreateView.as_view(), name="book_create"),
     path("book-list/", BookListView.as_view(), name="book_list"),
     path("book-edit/<int:pk>/", BookEditView.as_view(), name="book_edit"),
+]
+
+# Subscription Management Urls
+urlpatterns += [
+    path("subscription-create/", SubscriptionCreateView.as_view(), name="subscription_create"),
+    path("subscription-list/", SubscriptionListView.as_view(), name="subscription_list"),
+    path("subscription-edit/<int:pk>/", SubscriptionEditView.as_view(), name="subscription_edit"),
+    path("subscription-detail/<int:pk>/", SubscriptionDetailView.as_view(), name="subscription_detail"),
 ]

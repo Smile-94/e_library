@@ -1,0 +1,77 @@
+{% extends 'home_base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block body %}
+<section class="profile spad">
+  <div class="container">
+    <div class="row justify-content-center">
+
+      <div class="col-lg-7 col-md-9">
+        <div class="profile-card">
+
+          <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Profile Image -->
+            <div class="profile-center">
+              {% if user.profile_photo %}
+                <img src="{{ user.profile_photo.url}}" class="profile-img">
+              {% else %}
+                <img src="{% static 'web/img/user-default.png' %}" class="profile-img">
+              {% endif %}
+
+              <div class="form-group mt-3">
+                {{ form.profile_photo |add_class:'form-control' }}
+              </div>
+            </div>
+
+            <!-- Form Fields -->
+            <div class="row">
+              <div class="col-md-6">
+                <label>First Name</label>
+                {{ form.first_name |add_class:'form-control' }}
+              </div>
+              <div class="col-md-6">
+                <label>Last Name</label>
+                {{ form.last_name |add_class:'form-control' }}
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <div class="col-md-6">
+                <label>Contact No</label>
+                {{ form.contact_no |add_class:'form-control' }}
+              </div>
+              <div class="col-md-6">
+                <label>Gender</label>
+                {{ form.gender |add_class:'form-select' }}
+                
+              </div>
+            </div>
+
+            <div class="mt-3">
+              <label>Email</label>
+              <input type="email" class="form-control" value="{{ user.email }}" readonly>
+            </div>
+
+            <!-- Actions -->
+            <div class="profile-actions text-center mt-4">
+              <button type="submit" class="primary-btn">Update Profile</button>
+              <a href="{% url 'home:my_profile' %}" class="site-btn btn-secondary ml-2">
+                Cancel
+              </a>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock %}

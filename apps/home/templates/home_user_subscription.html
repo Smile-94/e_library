@@ -1,0 +1,56 @@
+{% extends 'home_base.html' %}
+{% load static %}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block body %}
+  <section class="subscription-history spad">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 section-title">
+          <h2>My Subscriptions</h2>
+        </div>
+      </div>
+      <div class="row">
+        {% for sub in subscriptions %}
+          <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="subscription-card {% if sub.active_status == 'active' %}active{% endif %}">
+              {% if sub.active_status == 'active' %}
+                <span class="badge-active">Active</span>
+              {% endif %}
+
+              <div class="sub-header">
+                <h4>{{ sub.subscription.name }}</h4>
+                <span class="price">৳{{ sub.subscription.subscription_price }}</span>
+              </div>
+
+              <ul class="sub-info">
+                <li>
+                  <strong>Start:</strong> {{ sub.start_at|date:'D M, Y' }}
+                </li>
+                <li>
+                  <strong>End:</strong> {{ sub.end_at|date:'D M, Y'|default:'Ongoing' }}
+                </li>
+                <li>
+                  <strong>Status:</strong> {{ sub.active_status|title }}
+                </li>
+                <li>
+                  <strong>Books Read:</strong> {{ sub.read_count }}
+                </li>
+                <li>
+                  <strong>Downloads:</strong> {{ sub.download_count }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        {% empty %}
+          <div class="col-lg-12 text-center">
+            <p>No subscription history found.</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endblock %}

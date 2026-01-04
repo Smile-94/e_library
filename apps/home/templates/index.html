@@ -1,0 +1,435 @@
+{% extends 'home_base.html' %}
+{% load static %}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block body %}
+  
+
+  <!-- Categories Section Begin -->
+  <section class="categories">
+    <div class="container">
+      <div class="row">
+        <div class="categories__slider owl-carousel">
+          {% if all_categories %}
+            {% for category in all_categories %}
+              <div class="col-lg-3">
+                <div class="categories__item set-bg" data-setbg="{{ category.category_image.url }}">
+                  <h5><a href="{% url 'home:home_shope_category' category.id %}">{{ category.category_name }}</a></h5>
+                </div>
+              </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Categories Section End -->
+
+  <!-- Featured Section Begin -->
+  <section class="featured spad">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="section-title">
+            <h2>Your Favorite Books</h2>
+          </div>
+          <div class="featured__controls">
+            <ul>
+              <li class="active" data-filter="*">All</li>
+              <li data-filter=".oranges">Recommended</li>
+              <li data-filter=".fresh-meat">Your Favorite</li>
+              <li data-filter=".vegetables">All Time Favorite</li>
+              <li data-filter=".fastfood">Best Seller</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="row featured__filter">
+        <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
+          <div class="featured__item">
+            <div class="featured__item__pic set-bg" data-setbg="{{ programming_books.book_image.url }}">
+              <ul class="featured__item__pic__hover">
+                <li>
+                  <a href="#"><i class="fa fa-heart"></i></a>
+                </li>
+                <li>
+                  <a href="#"><i class="fa fa-retweet"></i></a>
+                </li>
+                <li>
+                  <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                </li>
+              </ul>
+            </div>
+            <div class="featured__item__text">
+              <h6><a href="{% url 'home:home_book_details' programming_books.id %}">{{ programming_books.title }}</a></h6>
+              <h5>&#2547; {{ programming_books.physical_price }}</h5>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 mix vegetables fastfood">
+          <div class="featured__item">
+            <div class="featured__item__pic set-bg" data-setbg="{{ history.book_image.url }}">
+              <ul class="featured__item__pic__hover">
+                <li>
+                  <a href="#"><i class="fa fa-heart"></i></a>
+                </li>
+                <li>
+                  <a href="#"><i class="fa fa-retweet"></i></a>
+                </li>
+                <li>
+                  <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                </li>
+              </ul>
+            </div>
+            <div class="featured__item__text">
+              <h6><a href="{% url 'home:home_book_details' history.id %}">{{ history.title }}</a></h6>
+              <h5>&#2547; {{ history.physical_price }}</h5>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 mix vegetables fresh-meat">
+          <div class="featured__item">
+            <div class="featured__item__pic set-bg" data-setbg="{{ fiction_books.book_image.url }}">
+              <ul class="featured__item__pic__hover">
+                <li>
+                  <a href="#"><i class="fa fa-heart"></i></a>
+                </li>
+                <li>
+                  <a href="#"><i class="fa fa-retweet"></i></a>
+                </li>
+                <li>
+                  <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                </li>
+              </ul>
+            </div>
+            <div class="featured__item__text">
+              <h6><a href="{% url 'home:home_book_details' fiction_books.id %}">{{ fiction_books.title }}</a></h6>
+              <h5>&#2547; {{ fiction_books.physical_price }}</h5>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 mix fastfood oranges">
+          <div class="featured__item">
+            <div class="featured__item__pic set-bg" data-setbg="{{ politics_books.book_image.url }}">
+              <ul class="featured__item__pic__hover">
+                <li>
+                  <a href="#"><i class="fa fa-heart"></i></a>
+                </li>
+                <li>
+                  <a href="#"><i class="fa fa-retweet"></i></a>
+                </li>
+                <li>
+                  <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                </li>
+              </ul>
+            </div>
+            <div class="featured__item__text">
+              <h6><a href="{% url 'home:home_book_details' politics_books.id %}">{{ politics_books.title }}</a></h6>
+              <h5>&#2547; {{ politics_books.physical_price }}</h5>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 mix fresh-meat vegetables">
+          <div class="featured__item">
+            <div class="featured__item__pic set-bg" data-setbg="{{ rabindranath_tagore_books.book_image.url }}">
+              <ul class="featured__item__pic__hover">
+                <li>
+                  <a href="#"><i class="fa fa-heart"></i></a>
+                </li>
+                <li>
+                  <a href="#"><i class="fa fa-retweet"></i></a>
+                </li>
+                <li>
+                  <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                </li>
+              </ul>
+            </div>
+            <div class="featured__item__text">
+              <h6><a href="{% url 'home:home_book_details' rabindranath_tagore_books.id %}">{{ rabindranath_tagore_books.title }}</a></h6>
+              <h5>&#2547; {{ rabindranath_tagore_books.physical_price }}</h5>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fastfood">
+          <div class="featured__item">
+            <div class="featured__item__pic set-bg" data-setbg="{{ history_2.book_image.url }}">
+              <ul class="featured__item__pic__hover">
+                <li>
+                  <a href="#"><i class="fa fa-heart"></i></a>
+                </li>
+                <li>
+                  <a href="#"><i class="fa fa-retweet"></i></a>
+                </li>
+                <li>
+                  <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                </li>
+              </ul>
+            </div>
+            <div class="featured__item__text">
+              <h6><a href="{% url 'home:home_book_details' history_2.id %}">{{ history_2.title }}</a></h6>
+              <h5>&#2547; {{ history_2.physical_price }}</h5>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 mix fresh-meat vegetables">
+          <div class="featured__item">
+            <div class="featured__item__pic set-bg" data-setbg="{{ history_3.book_image.url }}">
+              <ul class="featured__item__pic__hover">
+                <li>
+                  <a href="#"><i class="fa fa-heart"></i></a>
+                </li>
+                <li>
+                  <a href="#"><i class="fa fa-retweet"></i></a>
+                </li>
+                <li>
+                  <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                </li>
+              </ul>
+            </div>
+            <div class="featured__item__text">
+              <h6><a href="{% url 'home:home_book_details' history_3.id %}">{{ history_3.title }}</a></h6>
+              <h5>&#2547; {{ history_3.physical_price }}</h5>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 mix fastfood vegetables">
+          <div class="featured__item">
+            <div class="featured__item__pic set-bg" data-setbg="{{ programming_books_2.book_image.url }}">
+              <ul class="featured__item__pic__hover">
+                <li>
+                  <a href="#"><i class="fa fa-heart"></i></a>
+                </li>
+                <li>
+                  <a href="#"><i class="fa fa-retweet"></i></a>
+                </li>
+                <li>
+                  <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                </li>
+              </ul>
+            </div>
+            <div class="featured__item__text">
+              <h6><a href="{% url 'home:home_book_details' programming_books_2.id %}">{{ programming_books_2.title }}</a></h6>
+              <h5>&#2547; {{ programming_books_2.physical_price }}</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Featured Section End -->
+
+  <!-- Banner Begin -->
+  <div class="banner">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+          <div class="banner__pic">
+            <a href="#"><img src="{% static 'web/img/banner/banner-3.jpg' %}" alt="" /></a>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6">
+          <div class="banner__pic">
+            <a href="#"><img src="{% static 'web/img/banner/banner-4.jpg' %}" alt="" /></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Banner End -->
+
+  <!-- Latest Product Section Begin -->
+  <section class="latest-product spad">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 col-md-6">
+          <div class="latest-product__text">
+            <h4>Latest Books</h4>
+            <div class="latest-product__slider owl-carousel">
+              <div class="latest-prdouct__slider__item">
+                {% if latest_books %}
+                  {% for book in latest_books|slice:':3' %}
+                    <a href="{% url 'home:home_book_details' book.id %}" class="latest-product__item">
+                      <div class="latest-product__item__pic">
+                        <img src="{{ book.book_image.url }}" alt="" />
+                      </div>
+                      <div class="latest-product__item__text">
+                        <h6>{{ book.title }}</h6>
+                        <span>&#2547; {{ book.physical_price }}</span>
+                      </div>
+                    </a>
+                  {% endfor %}
+                {% endif %}
+              </div>
+              <div class="latest-prdouct__slider__item">
+                {% if latest_books %}
+                  {% for book in latest_books|slice:'3:6' %}
+                    <a href="{% url 'home:home_book_details' book.id %}" class="latest-product__item">
+                      <div class="latest-product__item__pic">
+                        <img src="{{ book.book_image.url }}" alt="" />
+                      </div>
+                      <div class="latest-product__item__text">
+                        <h6>{{ book.title }}</h6>
+                        <span>&#2547; {{ book.physical_price }}</span>
+                      </div>
+                    </a>
+                  {% endfor %}
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="latest-product__text">
+            <h4>Top Rated Products</h4>
+            <div class="latest-product__slider owl-carousel">
+              <div class="latest-prdouct__slider__item">
+                {% if latest_books %}
+                  {% for book in latest_books|slice:'6:9' %}
+                    <a href="{% url 'home:home_book_details' book.id %}" class="latest-product__item">
+                      <div class="latest-product__item__pic">
+                        <img src="{{ book.book_image.url }}" alt="" />
+                      </div>
+                      <div class="latest-product__item__text">
+                        <h6>{{ book.title }}</h6>
+                        <span>&#2547; {{ book.physical_price }}</span>
+                      </div>
+                    </a>
+                  {% endfor %}
+                {% endif %}
+              </div>
+              <div class="latest-prdouct__slider__item">
+                {% if latest_books %}
+                  {% for book in latest_books|slice:'0:3' %}
+                    <a href="{% url 'home:home_book_details' book.id %}" class="latest-product__item">
+                      <div class="latest-product__item__pic">
+                        <img src="{{ book.book_image.url }}" alt="" />
+                      </div>
+                      <div class="latest-product__item__text">
+                        <h6>{{ book.title }}</h6>
+                        <span>&#2547; {{ book.physical_price }}</span>
+                      </div>
+                    </a>
+                  {% endfor %}
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="latest-product__text">
+            <h4>Review Products</h4>
+            <div class="latest-product__slider owl-carousel">
+              <div class="latest-prdouct__slider__item">
+                {% if latest_books %}
+                  {% for book in latest_books|slice:'3:6' %}
+                    <a href="{% url 'home:home_book_details' book.id %}" class="latest-product__item">
+                      <div class="latest-product__item__pic">
+                        <img src="{{ book.book_image.url }}" alt="" />
+                      </div>
+                      <div class="latest-product__item__text">
+                        <h6>{{ book.title }}</h6>
+                        <span>&#2547; {{ book.physical_price }}</span>
+                      </div>
+                    </a>
+                  {% endfor %}
+                {% endif %}
+              </div>
+              <div class="latest-prdouct__slider__item">
+                {% if latest_books %}
+                  {% for book in latest_books|slice:'6:9' %}
+                    <a href="{% url 'home:home_book_details' book.id %}" class="latest-product__item">
+                      <div class="latest-product__item__pic">
+                        <img src="{{ book.book_image.url }}" alt="" />
+                      </div>
+                      <div class="latest-product__item__text">
+                        <h6>{{ book.title }}</h6>
+                        <span>&#2547; {{ book.physical_price }}</span>
+                      </div>
+                    </a>
+                  {% endfor %}
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Latest Product Section End -->
+
+  {% comment %} <!-- Blog Section Begin -->
+  <section class="from-blog spad">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="section-title from-blog__title">
+            <h2>From The Blog</h2>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-6">
+          <div class="blog__item">
+            <div class="blog__item__pic">
+              <img src="img/blog/blog-1.jpg" alt="" />
+            </div>
+            <div class="blog__item__text">
+              <ul>
+                <li>
+                  <i class="fa fa-calendar-o"></i> May 4,2019
+                </li>
+                <li>
+                  <i class="fa fa-comment-o"></i> 5
+                </li>
+              </ul>
+              <h5><a href="#">Cooking tips make cooking simple</a></h5>
+              <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam quaerat</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-6">
+          <div class="blog__item">
+            <div class="blog__item__pic">
+              <img src="img/blog/blog-2.jpg" alt="" />
+            </div>
+            <div class="blog__item__text">
+              <ul>
+                <li>
+                  <i class="fa fa-calendar-o"></i> May 4,2019
+                </li>
+                <li>
+                  <i class="fa fa-comment-o"></i> 5
+                </li>
+              </ul>
+              <h5><a href="#">6 ways to prepare breakfast for 30</a></h5>
+              <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam quaerat</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-6">
+          <div class="blog__item">
+            <div class="blog__item__pic">
+              <img src="img/blog/blog-3.jpg" alt="" />
+            </div>
+            <div class="blog__item__text">
+              <ul>
+                <li>
+                  <i class="fa fa-calendar-o"></i> May 4,2019
+                </li>
+                <li>
+                  <i class="fa fa-comment-o"></i> 5
+                </li>
+              </ul>
+              <h5><a href="#">Visit the clean farm in the US</a></h5>
+              <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam quaerat</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section> {% endcomment %}
+  <!-- Blog Section End -->
+{% endblock %}

@@ -1,0 +1,114 @@
+{% extends 'home_base.html' %}
+{% load static %}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block body %}
+  <section class="subscription spad">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 text-center">
+          <div class="section-title">
+            <h2>Choose Your Subscription</h2>
+            {% comment %} <p>Flexible plans for every reader</p> {% endcomment %}
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Free -->
+
+        {% if subscriptions %}
+          {% for subscription in subscriptions %}
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="subscription__card {% if subscription.name == 'Monthly' %}active{% endif %}">
+                {% if subscription.name == 'Monthly' %}
+                  <span class="badge">Most Popular</span>
+                {% endif %}
+
+                <h4>{{ subscription.name|title }}</h4>
+                <h2>৳{{ subscription.subscription_price|floatformat:2 }}</h2>
+                <span class="duration">Per {{ subscription.subscription_duration_days }} Days</span>
+
+                <ul>
+                  <li>Read {{ subscription.book_read_limit }} Books</li>
+                  <li>Download {{ subscription.book_download_limit }} Books</li>
+                </ul>
+                
+                <a href="{% url 'subscription:buy_subscription' subscription.id %}" class="primary-btn">
+                  {% if subscription.subscription_price > 0 %}
+                    Buy Now
+                  {% else %}
+                    Start Now
+                  {% endif %}
+                </a>
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        {% comment %} <div class="col-lg-3 col-md-6 col-sm-12">
+          <div class="subscription__card">
+            <h4>Free</h4>
+            <h2>৳0</h2>
+            <span class="duration">Forever</span>
+            <ul>
+              <li>Limited Books</li>
+              <li>Online Reading</li>
+              <li>Ads Included</li>
+            </ul>
+            <a href="#" class="primary-btn">Get Started</a>
+          </div>
+        </div>
+
+        <!-- Weekly -->
+        <div class="col-lg-3 col-md-6 col-sm-12">
+          <div class="subscription__card">
+            <h4>Weekly</h4>
+            <h2>৳99</h2>
+            <span class="duration">Per Week</span>
+            <ul>
+              <li>Unlimited Reading</li>
+              <li>Limited Downloads</li>
+              <li>No Ads</li>
+            </ul>
+            <a href="#" class="primary-btn">Buy Now</a>
+          </div>
+        </div>
+
+        <!-- Monthly -->
+        <div class="col-lg-3 col-md-6 col-sm-12">
+          <div class="subscription__card active">
+            <span class="badge">Most Popular</span>
+            <h4>Monthly</h4>
+            <h2>৳299</h2>
+            <span class="duration">Per Month</span>
+            <ul>
+              <li>Unlimited Books</li>
+              <li>Download Access</li>
+              <li>No Ads</li>
+            </ul>
+            <a href="#" class="primary-btn">Buy Now</a>
+          </div>
+        </div>
+
+        <!-- Yearly -->
+        <div class="col-lg-3 col-md-6 col-sm-12">
+          <div class="subscription__card">
+            <h4>Yearly</h4>
+            <h2>৳2999</h2>
+            <span class="duration">Per Year</span>
+            <ul>
+              <li>Unlimited Books</li>
+              <li>Download Access</li>
+              <li>2 Months Free</li>
+            </ul>
+            <a href="#" class="primary-btn">Buy Now</a>
+          </div>
+        </div> {% endcomment %}
+      </div>
+    </div>
+  </section>
+{% endblock %}

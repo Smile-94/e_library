@@ -31,6 +31,7 @@ CUSTOM_APPS = [
     "apps.author.apps.AuthorConfig",
     "apps.home.apps.HomeConfig",
     "apps.book.apps.BookConfig",
+    "apps.subscription.apps.SubscriptionConfig",
 ]
 
 INSTALLED_APPS = [
@@ -133,6 +134,10 @@ MEDIA_URL = "/media/"
 
 # Messages Setting
 MESSAGE_TAGS = {messages.ERROR: "danger"}
+
+# <<------------------------------------*** SSL Commerz Settings ***------------------------------------>>
+SSLCOMMERZ_STORE_ID = "trian62cc10ef4bb1f"
+SSLCOMMERZ_STORE_PASS = "trian62cc10ef4bb1f@ssl"
 
 
 # <<------------------------------------*** Logging Settings ***------------------------------------>>
