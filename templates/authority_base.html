@@ -143,6 +143,9 @@
                             {% if request.user|has_permission:"can_view_subscription" %}
                                 <a href="{% url 'authority:subscription_list' %}" class="dropdown-item"><i class="fa-solid fa-list me-2"></i> Subscription List</a>
                             {% endif %}
+                            {% if request.user|has_permission:"can_view_user_subscription" %}
+                                <a href="{% url 'authority:user_subscription_list' %}" class="dropdown-item"><i class="fa-solid fa-list me-2"></i> User Subscription List</a>
+                            {% endif %}
                             
                         </div>
                     </div>

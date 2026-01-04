@@ -9,9 +9,16 @@ from django.urls import reverse_lazy
 from django.views import View
 
 from apps.common.permissions import RBACPermissionRequiredMixin, StaffPassesTestMixin
-from apps.subscription.filters.subscription_filter import SubscriptionSearchFilter
-from apps.subscription.forms.subscription_form import SubscriptionForm
+from apps.subscription.filters.subscription_filter import (
+    SubscriptionSearchFilter,
+    UserSubscriptionSearchFilter,
+)
+from apps.subscription.forms.subscription_form import (
+    SubscriptionForm,
+    UserSubscriptionForm,
+)
 from apps.subscription.models.subscription_model import Subscription
+from apps.subscription.models.user_subscription_model import UserSubscription
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
@@ -211,4 +218,85 @@ class SubscriptionSoftDeleteView(LoginRequiredMixin, RBACPermissionRequiredMixin
         except Exception as e:
             logger.exception(f"ERROR:------>> Error occurred in Manage Subscription Soft Delete View: {e}")
             messages.error(request, "Unable to delete Subscription!")
+            return HttpResponse(f"{e}")
+
+
+# <<------------------------------------***User Subscription List View***------------------------------------>>
+class UserSubscriptionListView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesTestMixin, View):
+    required_permission = "can_view_user_subscription"
+    template_name = "user_subscription_list.html"
+    model_class = UserSubscription
+    filter_class = UserSubscriptionSearchFilter
+
+    def get(self, request):
+        try:
+            user_subscriptions = self.model_class.objects.filter(user=request.user).order_by("-id")
+            context = {
+                "title": "User Subscription List",
+                "table_title": "User Subscription List",
+                "data_list": self.filter_class(request.GET, queryset=user_subscriptions),
+            }
+            return render(request, self.template_name, context)
+
+        except Exception as e:
+            logger.exception(f"ERROR:------>> Error occurred in Manage Subscription List View: {e}")
+            messages.error(request, "Unable to load Subscription list!")
+            return HttpResponse(f"{e}")
+
+
+# <<------------------------------------***User Subscription Edit View***------------------------------------>>
+class UserSubscriptionEditView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesTestMixin, View):
+    required_permission = "can_edit_user_subscription"
+    template_name = "user_subscription_edit.html"
+    model_class = UserSubscription
+    form_class = UserSubscriptionForm
+
+    def get(self, request, pk, *args, **kwargs):
+        try:
+            user_subscription = self.model_class.objects.filter(pk=pk).first()
+            if not user_subscription:
+                messages.error(request, "User Subscription not found!")
+                return redirect("authority:user_subscription_list")
+
+            context = {
+                "title": "Edit User Subscription",
+                "form_title": "Edit User Subscription",
+                "form": self.form_class(instance=user_subscription),
+                "user_subscription_obj": user_subscription,
+            }
+            return render(request, self.template_name, context)
+
+        except Exception as e:
+            logger.exception(f"ERROR:------>> Error occurred in Manage Subscription Edit View: {e}")
+            messages.error(request, "Unable to load Manage Subscription details!")
+            return HttpResponse(f"{e}")
+
+    def post(self, request, pk):
+        try:
+            user_subscription = self.model_class.objects.filter(pk=pk).first()
+
+            if not user_subscription:
+                messages.error(request, "User Subscription not found!")
+                return redirect("authority:user_subscription_list")
+
+            form = self.form_class(request.POST, request.FILES, instance=user_subscription)
+
+            if not form.is_valid():
+                context = {
+                    "title": "Edit User Subscription",
+                    "form_title": "Edit User Subscription",
+                    "form": form,
+                    "user_subscription_obj": user_subscription,
+                }
+                print(form.errors)
+                messages.error(request, "Unable to update User Subscription!")
+                return render(request, self.template_name, context)
+
+            form.save()
+            messages.success(request, "User Subscription updated successfully!")
+            return redirect("authority:user_subscription_list")
+
+        except Exception as e:
+            logger.exception(f"ERROR:------>> Error occurred in Manage Subscription Edit View: {e}")
+            messages.error(request, "Unable to update User Subscription!")
             return HttpResponse(f"{e}")

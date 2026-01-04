@@ -1,0 +1,100 @@
+{% extends 'authority_base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block body %}
+  <div class="bg-light rounded h-100 p-4">
+    <h6 class="mb-4">{{ form_title }}</h6>
+    <div class="container-fluid">
+      <div class="text-end mb-3">
+        <a href="{% url 'authority:user_subscription_list' %}" class="btn btn-primary"><i class="fa-solid fa-arrow-left me-2"></i> Back</a>
+      </div>
+    </div>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="row">
+        <div class="col-md-3">
+          <label for="subscriptionName" class="form-label">User</label>
+          {{ form.user|add_class:'form-select' }}
+          {% for error in form.user.errors %}
+            <small class="text-danger">{{ error }}</small>
+          {% endfor %}
+        </div>
+        <div class="col-md-3">
+          <label for="subscriptionName" class="form-label">Subscription</label>
+          {{ form.subscription|add_class:'form-select' }}
+          {% for error in form.subscription.errors %}
+            <small class="text-danger">{{ error }}</small>
+          {% endfor %}
+        </div>
+
+        <div class="col-md-3">
+          <label for="SubscriptionActiveStatus" class="form-label">Active Status</label>
+          {{ form.active_status|add_class:'form-select' }}
+          {% for error in form.active_status.errors %}
+            <small class="text-danger">{{ error }}</small>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <label class="form-label">Payment Status</label>
+          {{ form.payment_status|add_class:'form-select' }}
+          {% for error in form.payment_status.errors %}
+            <small class="text-danger">{{ error }}</small>
+          {% endfor %}
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Read Count</label>
+          {{ form.read_count|add_class:'form-control' }}
+          {% for error in form.read_count.errors %}
+            <small class="text-danger">{{ error }}</small>
+          {% endfor %}
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Download Count</label>
+          {{ form.download_count|add_class:'form-control' }}
+          {% for error in form.download_count.errors %}
+            <small class="text-danger">{{ error }}</small>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <label class="form-label">Start Date</label>
+          <input type="text" class="form-control" value="{{ user_subscription_obj.start_at|date:'d M Y H:i' }}" readonly />
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">End Date</label>
+          {{ form.end_at|add_class:'form-control' }}
+          {% for error in form.end_at.errors %}
+            <small class="text-danger">{{ error }}</small>
+          {% endfor %}
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary mt-2">Submit</button>
+    </form>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const input = document.querySelector('input[type="file"]')
+      const preview = document.getElementById('imagePreview')
+    
+      input.addEventListener('change', function () {
+        const file = this.files[0]
+        if (file) {
+          preview.src = URL.createObjectURL(file)
+          preview.style.display = 'block'
+        }
+      })
+    })
+  </script>
+{% endblock %}

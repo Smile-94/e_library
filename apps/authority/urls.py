@@ -36,6 +36,8 @@ from apps.authority.views.manage_subscription import (
     SubscriptionDetailView,
     SubscriptionEditView,
     SubscriptionListView,
+    UserSubscriptionEditView,
+    UserSubscriptionListView,
 )
 from apps.authority.views.user_management import UserListView
 
@@ -95,4 +97,6 @@ urlpatterns += [
     path("subscription-list/", SubscriptionListView.as_view(), name="subscription_list"),
     path("subscription-edit/<int:pk>/", SubscriptionEditView.as_view(), name="subscription_edit"),
     path("subscription-detail/<int:pk>/", SubscriptionDetailView.as_view(), name="subscription_detail"),
+    path("user-subscription-list/", UserSubscriptionListView.as_view(), name="user_subscription_list"),
+    path("user-subscription-edit/<int:pk>/", UserSubscriptionEditView.as_view(), name="user_subscription_edit"),
 ]
