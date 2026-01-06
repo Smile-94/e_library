@@ -66,6 +66,8 @@ class BuySubscriptionView(LoginRequiredMixin, View):
             if subscription.subscription_price == 0:
                 user_subscription.active_status = ActiveStatusChoices.ACTIVE.value
                 user_subscription.payment_status = UserSubscriptionPaymentStatus.PAID.value
+                user_subscription.start_at = now()
+                user_subscription.end_at = now() + timedelta(days=subscription.subscription_duration_days)
                 user_subscription.save()
                 messages.success(request, "Free subscription started successfully!")
                 return redirect("home:home_subscription")

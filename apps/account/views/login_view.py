@@ -110,8 +110,8 @@ class UserLogout(LoginRequiredMixin, View):
                     return HttpResponseRedirect(reverse("account:login"))
                 else:
                     # Non-staff redirected to home
-                    # return HttpResponseRedirect(reverse("home:home"))
-                    return HttpResponse("You have been logged out!")
+                    return HttpResponseRedirect(reverse("home:home"))
+
             return HttpResponseRedirect(reverse("account:login"))
         except Exception as e:
             logger.exception(f"ERROR:--------------------> Logout View Error: {e}")

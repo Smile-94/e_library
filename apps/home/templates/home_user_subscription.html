@@ -28,10 +28,10 @@
 
               <ul class="sub-info">
                 <li>
-                  <strong>Start:</strong> {{ sub.start_at|date:'D M, Y' }}
+                  <strong>Start:</strong> {{ sub.start_at|date:'d M, Y' }}
                 </li>
                 <li>
-                  <strong>End:</strong> {{ sub.end_at|date:'D M, Y'|default:'Ongoing' }}
+                  <strong>End:</strong> {{ sub.end_at|date:'d M, Y'|default:'Ongoing' }}
                 </li>
                 <li>
                   <strong>Status:</strong> {{ sub.active_status|title }}

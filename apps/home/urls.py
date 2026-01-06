@@ -8,7 +8,11 @@ from apps.home.views.home_view import (
     SubscriptionView,
 )
 from apps.home.views.user_profile import EditMyProfileView, MyProfileView
-from apps.home.views.user_subscription import AddBookToMySubscriptionView, MySubscriptionBookListView, MySubscriptionHistoryView
+from apps.home.views.user_subscription import (
+    AddBookToMySubscriptionView,
+    MySubscriptionBookListView,
+    MySubscriptionHistoryView,
+)
 
 app_name = "home"
 
