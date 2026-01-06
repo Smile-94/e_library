@@ -8,7 +8,10 @@ from django.shortcuts import render
 from django.views import View
 
 from apps.book.models.category_model import Category
-from apps.subscription.models.user_subscription_model import UserSubscription
+from apps.subscription.models.user_subscription_model import (
+    UserSubscription,
+    UserSubscriptionPaymentStatus,
+)
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
@@ -20,7 +23,9 @@ class MySubscriptionHistoryView(LoginRequiredMixin, View):
 
     def get(self, request):
         try:
-            subscriptions = self.model_class.objects.filter(user=request.user).order_by("-id")
+            subscriptions = self.model_class.objects.filter(
+                user=request.user, payment_status=UserSubscriptionPaymentStatus.PAID.value
+            ).order_by("-id")
             context = {
                 "title": "My Subscription History",
                 "subscriptions": subscriptions,

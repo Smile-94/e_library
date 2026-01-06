@@ -230,7 +230,7 @@ class UserSubscriptionListView(LoginRequiredMixin, RBACPermissionRequiredMixin, 
 
     def get(self, request):
         try:
-            user_subscriptions = self.model_class.objects.filter(user=request.user).order_by("-id")
+            user_subscriptions = self.model_class.objects.all().order_by("-id")
             context = {
                 "title": "User Subscription List",
                 "table_title": "User Subscription List",

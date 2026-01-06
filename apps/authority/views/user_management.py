@@ -23,7 +23,7 @@ class UserListView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesT
 
     def get(self, request):
         try:
-            users = self.model_class.objects.filter(is_staff=False, is_superuser=False, is_active=True).order_by("id")
+            users = self.model_class.objects.filter(is_staff=False, is_superuser=False, is_author=False, is_active=True).order_by("id")
 
             context = {
                 "title": "User List",

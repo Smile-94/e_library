@@ -79,8 +79,8 @@ class UserLoginView(LoginView):
 
             elif user is not None and request_user.is_active is True:
                 login(self.request, user)
-                # return HttpResponseRedirect(reverse("home:home"))
-                return HttpResponse("Login Successful! we are working on home view")
+                return HttpResponseRedirect(reverse("home:home"))
+                # return HttpResponse("Login Successful! we are working on home view")
 
             else:
                 if User.objects.filter(username=username).exists() and request_user.is_active is False:
