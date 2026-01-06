@@ -10,6 +10,7 @@ from django.urls import reverse
 from django.utils.timezone import now
 from django.views import View
 
+from apps.book.models.book_model import Book
 from apps.book.models.category_model import Category
 from apps.common.models import ActiveStatusChoices
 from apps.subscription.models.subscription_model import SubscriptionReadLimitChoices
@@ -123,7 +124,8 @@ class MySubscriptionBookListView(LoginRequiredMixin, View):
                 "hero_normal": "hero-normal",
                 "subscription": False,
                 "show_hero_banner": False,
-                "my_books": my_books,
+                "books": my_books,
+                "latest_books": Book.objects.all().order_by("-id"),
             }
             return render(request, self.template_name, context)
 
