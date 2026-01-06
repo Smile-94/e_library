@@ -11,16 +11,13 @@ from django.utils.timezone import now
 from django.views import View
 
 from apps.book.models.category_model import Category
-<<<<<<< HEAD
-from apps.subscription.models.user_subscription_model import (
-    UserSubscription,
-    UserSubscriptionPaymentStatus,
-)
-=======
 from apps.common.models import ActiveStatusChoices
 from apps.subscription.models.subscription_model import SubscriptionReadLimitChoices
-from apps.subscription.models.user_subscription_model import UserSubscription, UserSubscriptionBooks, UserSubscriptionPaymentStatus
->>>>>>> d99ebee9ce014ca00ea28a38ccde96533e31d3c3
+from apps.subscription.models.user_subscription_model import (
+    UserSubscription,
+    UserSubscriptionBooks,
+    UserSubscriptionPaymentStatus,
+)
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
