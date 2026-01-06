@@ -75,6 +75,7 @@ class BookDetailsView(View):
                 "all_categories": Category.objects.all()[:8],
                 "hero_normal": "hero-normal",
                 "subscription": False,
+                "show_hero_banner": False,
             }
             return render(request, self.template_name, context)
 

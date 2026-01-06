@@ -15,12 +15,12 @@
             <div class="product__details__pic__item">
               <img class="product__details__pic__item--large" src="{{ book_obj.book_image.url }}" alt="" />
             </div>
-            <div class="product__details__pic__slider owl-carousel">
+            {% comment %} <div class="product__details__pic__slider owl-carousel">
               <img data-imgbigurl="img/product/details/product-details-2.jpg" src="img/product/details/thumb-1.jpg" alt="" />
               <img data-imgbigurl="img/product/details/product-details-3.jpg" src="img/product/details/thumb-2.jpg" alt="" />
               <img data-imgbigurl="img/product/details/product-details-5.jpg" src="img/product/details/thumb-3.jpg" alt="" />
               <img data-imgbigurl="img/product/details/product-details-4.jpg" src="img/product/details/thumb-4.jpg" alt="" />
-            </div>
+            </div> {% endcomment %}
           </div>
         </div>
         <div class="col-lg-6 col-md-6">
@@ -44,7 +44,7 @@
               </div>
             </div>
             <a href="#" class="primary-btn">ADD TO CARD</a>
-            <a href="#" class="primary-btn">DOWNLOAD</a>
+            <button class="primary-btn" id="add-to-my-book" data-book-id="{{ book_obj.id }}">ADD TO MY BOOK</button>
             <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
             <ul>
               <li>
@@ -87,7 +87,7 @@
             <div class="tab-content">
               <div class="tab-pane active" id="tabs-1" role="tabpanel">
                 <div class="product__details__tab__desc">
-                  <h6>Products Infomation</h6>
+                  <h6>Products Information</h6>
                   <p>{{ book_obj.description }}</p>
                 </div>
               </div>
@@ -151,6 +151,29 @@
         {% endif %}
       </div>
     </div>
+    <input type="hidden" id="csrf-token" value="{{ csrf_token }}" />
   </section>
   <!-- Related Product Section End -->
+
+  <script>
+    document.getElementById('add-to-my-book').addEventListener('click', function () {
+      fetch("{% url 'home:add_book_to_subscription' %}", {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': document.getElementById('csrf-token').value,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `book_id=${this.dataset.bookId}`
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === 'unauthenticated') {
+            window.location.href = data.redirect_url
+            return
+          }
+          alert(data.message)
+        })
+        .catch(() => alert('Request failed'))
+    })
+  </script>
 {% endblock %}
