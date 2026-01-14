@@ -32,6 +32,7 @@ CUSTOM_APPS = [
     "apps.home.apps.HomeConfig",
     "apps.book.apps.BookConfig",
     "apps.subscription.apps.SubscriptionConfig",
+    "apps.order.apps.OrderConfig",
 ]
 
 INSTALLED_APPS = [

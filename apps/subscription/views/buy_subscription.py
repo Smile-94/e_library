@@ -1,6 +1,6 @@
 import logging
 from datetime import timedelta
-
+from django.db import transaction
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -145,11 +145,23 @@ class PaymentSuccessView(View):
 
         duration = user_subscription.subscription.subscription_duration_days
 
-        user_subscription.payment_status = UserSubscriptionPaymentStatus.PAID.value
-        user_subscription.active_status = ActiveStatusChoices.ACTIVE.value
-        user_subscription.start_at = now()
-        user_subscription.end_at = now() + timedelta(days=duration)
-        user_subscription.save()
+        with transaction.atomic():
+            # Inactivate all other subscriptions of the user
+            UserSubscription.objects.filter(
+                user=user_subscription.user,
+                active_status=ActiveStatusChoices.ACTIVE.value
+            ).exclude(id=user_subscription.id).update(
+                active_status=ActiveStatusChoices.INACTIVE.value,
+                end_at=now()
+            )
+
+            #  Activate current subscription
+            user_subscription.payment_status = UserSubscriptionPaymentStatus.PAID.value
+            user_subscription.payment_status = UserSubscriptionPaymentStatus.PAID.value
+            user_subscription.active_status = ActiveStatusChoices.ACTIVE.value
+            user_subscription.start_at = now()
+            user_subscription.end_at = now() + timedelta(days=duration)
+            user_subscription.save()
 
         messages.success(request, "Subscription Started successfully!")
         return redirect("home:home")

@@ -39,6 +39,16 @@ class Book(BaseModel):
         db_table = "book"
         app_label = "book"
 
+    def get_book_discount(self):
+        from apps.order.function.promotional_discount import get_product_promotional_discount
+
+        return get_product_promotional_discount(self.id)
+
+    def get_discounted_price(self):
+        from apps.order.function.promotional_discount import get_discounted_physical_price
+
+        return get_discounted_physical_price(self.id)
+
     def __str__(self):
         return self.title
 
