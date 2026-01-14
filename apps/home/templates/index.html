@@ -6,8 +6,6 @@
 {% endblock %}
 
 {% block body %}
-  
-
   <!-- Categories Section Begin -->
   <section class="categories">
     <div class="container">
@@ -51,10 +49,9 @@
         <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
           <div class="featured__item">
             <div class="featured__item__pic set-bg" data-setbg="{{ programming_books.book_image.url }}">
-             
               <ul class="featured__item__pic__hover">
                 <li>
-                 <a href="#" class="add-to-my-book" data-book-id="{{ programming_books.id }}"><i class="fa fa-book"></i></a>
+                  <a href="#" class="add-to-my-book" data-book-id="{{ programming_books.id }}"><i class="fa fa-book"></i></a>
                 </li>
                 <li>
                   <a href="#"><i class="fa fa-retweet"></i></a>
@@ -67,7 +64,6 @@
             <div class="featured__item__text">
               <h6><a href="{% url 'home:home_book_details' programming_books.id %}">{{ programming_books.title }}</a></h6>
               <h5>&#2547; {{ programming_books.physical_price }}</h5>
-              
             </div>
           </div>
         </div>
@@ -434,7 +430,7 @@
     </div>
   </section> {% endcomment %}
   <!-- Blog Section End -->
-   <input type="hidden" id="csrf-token" value="{{ csrf_token }}" />
+  <input type="hidden" id="csrf-token" value="{{ csrf_token }}" />
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       document.body.addEventListener('click', function (event) {
