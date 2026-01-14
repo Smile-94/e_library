@@ -222,10 +222,10 @@
             // Optional: show message or update UI
             alert(data.message)
     
-            if (data.status === 'success') {
+            {% comment %} if (data.status === 'success') {
               target.innerHTML = '<i class="fa fa-check"></i> Added'
               target.classList.add('disabled')
-            }
+            } {% endcomment %}
           })
           .catch(() => alert('Request failed'))
       })

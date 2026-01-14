@@ -431,6 +431,7 @@
   </section> {% endcomment %}
   <!-- Blog Section End -->
   <input type="hidden" id="csrf-token" value="{{ csrf_token }}" />
+  <!-- Add to My Books Script Start -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       document.body.addEventListener('click', function (event) {
@@ -461,13 +462,14 @@
             alert(data.message)
     
             // Optional: disable the button or change icon after adding
-            if (data.status === 'success') {
+            {% comment %} if (data.status === 'success') {
               target.innerHTML = '<i class="fa fa-check"></i>'
               target.classList.add('disabled') // Add some styling if you want
-            }
+            } {% endcomment %}
           })
           .catch(() => alert('Request failed'))
       })
     })
   </script>
+  <!-- Add to My Books Script End -->
 {% endblock %}

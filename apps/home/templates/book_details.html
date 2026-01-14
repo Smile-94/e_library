@@ -26,26 +26,26 @@
         <div class="col-lg-6 col-md-6">
           <div class="product__details__text">
             <h3>{{ book_obj.title }}</h3>
-            <div class="product__details__rating">
+            {% comment %} <div class="product__details__rating">
               <i class="fa fa-star"></i>
               <i class="fa fa-star"></i>
               <i class="fa fa-star"></i>
               <i class="fa fa-star"></i>
               <i class="fa fa-star-half-o"></i>
               <span>(18 reviews)</span>
-            </div>
+            </div> {% endcomment %}
             <div class="product__details__price">&#2547; {{ book_obj.physical_price }}</div>
             <p id="desc-short-{{ book_obj.id }}">{{ book_obj.description|truncatechars:300 }}</p>
             <div class="product__details__quantity">
               <div class="quantity">
                 <div class="pro-qty">
-                  <input type="text" value="1" />
+                  <input type="text" id="product-quantity" value="1" />
                 </div>
               </div>
             </div>
-            <a href="#" class="primary-btn">ADD TO CARD</a>
+            <a href="#" class="primary-btn" id="add-to-cart-btn" data-product-id="{{ book_obj.id }}">ADD TO CART</a>
             <button class="primary-btn" id="add-to-my-book" data-book-id="{{ book_obj.id }}">ADD TO MY BOOK</button>
-            <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
+            {% comment %} <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a> {% endcomment %}
             <ul>
               <li>
                 <b>Availability</b> <span>In Stock</span>
@@ -135,13 +135,13 @@
 
                 <ul class="product__item__pic__hover">
                   <li>
-                    <a href="#"><i class="fa fa-heart"></i></a>
+                    <a href="#" class="add-to-my-book" data-book-id="{{ book.id }}"><i class="fa fa-book"></i></a>
                   </li>
-                  <li>
+                  {% comment %} <li>
                     <a href="#"><i class="fa fa-retweet"></i></a>
-                  </li>
+                  </li> {% endcomment %}
                   <li>
-                    <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                    <a href="#" class="add-to-cart-btn" data-product-id="{{ book.id }}"><i class="fa fa-shopping-cart"></i></a>
                   </li>
                 </ul>
               </div>
@@ -168,7 +168,48 @@
     <input type="hidden" id="csrf-token" value="{{ csrf_token }}" />
   </section>
   <!-- Related Product Section End -->
-  
+
+  <!-- Add to My Books Script Start -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.addEventListener('click', function (event) {
+        const target = event.target.closest('.add-to-my-book')
+        if (!target) return
+    
+        event.preventDefault() // Prevent default link behavior
+    
+        const bookId = target.dataset.bookId
+        const csrfToken = document.getElementById('csrf-token').value
+    
+        fetch("{% url 'home:add_book_to_subscription' %}", {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': csrfToken,
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: `book_id=${bookId}`
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === 'unauthenticated') {
+              window.location.href = data.redirect_url
+              return
+            }
+    
+            // Success or error message
+            alert(data.message)
+    
+            // Optional: disable the button or change icon after adding
+            if (data.status === 'success') {
+              target.innerHTML = '<i class="fa fa-check"></i>'
+              target.classList.add('disabled') // Add some styling if you want
+            }
+          })
+          .catch(() => alert('Request failed'))
+      })
+    })
+  </script>
+  <!-- Add to My Books Script End -->
 
   <script>
     document.getElementById('add-to-my-book').addEventListener('click', function () {
@@ -189,6 +230,93 @@
           alert(data.message)
         })
         .catch(() => alert('Request failed'))
+    })
+  </script>
+
+  <!-- Add to Cart Script Start -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.addEventListener('click', function (event) {
+        const target = event.target.closest('.add-to-cart-btn')
+        if (!target) return
+    
+        event.preventDefault()
+        const productId = target.dataset.productId
+        const csrfToken = document.getElementById('csrf-token').value
+    
+        fetch("{% url 'order:add_to_cart' %}", {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': csrfToken,
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: `product_id=${productId}&quantity=1`
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === 'unauthenticated') {
+              window.location.href = data.redirect_url
+              return
+            }
+    
+            // Optional: show message or update UI
+            alert(data.message)
+    
+            {% comment %} if (data.status === 'success') {
+              target.innerHTML = '<i class="fa fa-check"></i> Added'
+              target.classList.add('disabled')
+            } {% endcomment %}
+          })
+          .catch(() => alert('Request failed'))
+      })
+    })
+  </script>
+  <!-- Add to Cart Script End -->
+
+  <!-- Add to Cart from Book Details ADD TO CART Button Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const addToCartBtn = document.getElementById('add-to-cart-btn')
+    
+      if (!addToCartBtn) return
+    
+      addToCartBtn.addEventListener('click', function (event) {
+        event.preventDefault()
+    
+        const productId = this.dataset.productId
+        const csrfToken = document.getElementById('csrf-token').value
+    
+        const quantityInput = document.getElementById('product-quantity')
+        let quantity = parseInt(quantityInput.value, 10) || 1
+        if (quantity < 1) quantity = 1
+    
+        fetch("{% url 'order:add_to_cart' %}", {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': csrfToken,
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: `product_id=${encodeURIComponent(productId)}&quantity=${encodeURIComponent(quantity)}`
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === 'unauthenticated') {
+              window.location.href = data.redirect_url
+              return
+            }
+    
+            alert(data.message)
+    
+            {% comment %} if (data.status === 'success') {
+              addToCartBtn.innerHTML = '<i class="fa fa-check"></i> Added'
+              addToCartBtn.classList.add('disabled')
+            } {% endcomment %}
+          })
+          .catch((error) => {
+            console.error(error)
+            alert('Request failed')
+          })
+      })
     })
   </script>
 {% endblock %}

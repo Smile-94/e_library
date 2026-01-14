@@ -412,10 +412,10 @@
             alert(data.message)
     
             // Optional: disable the button or change icon after adding
-            if (data.status === 'success') {
+            {% comment %} if (data.status === 'success') {
               target.innerHTML = '<i class="fa fa-check"></i>'
               target.classList.add('disabled') // Add some styling if you want
-            }
+            } {% endcomment %}
           })
           .catch(() => alert('Request failed'))
       })
