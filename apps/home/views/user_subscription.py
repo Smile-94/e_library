@@ -109,7 +109,7 @@ class MySubscriptionBookListView(LoginRequiredMixin, View):
 
     def get(self, request):
         try:
-            user_subscription = self.model_class.objects.filter(user=request.user).first()
+            user_subscription = self.model_class.objects.filter(user=request.user).order_by("-id").first()
 
             if not user_subscription:
                 messages.error(request, "You don't have any subscriptions!")

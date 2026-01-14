@@ -307,8 +307,14 @@
                     {% endif %}
 
                     <ul class="product__item__pic__hover">
+                      {% comment %} <li>
+                        {% comment %} <a href="javascript:void(0);" class="add-to-subscription" data-book-id="{{ book.id }}"><i class="fa fa-book"></i></a> {% endcomment %}
+
+                        {% comment %} <button class="add-to-subscription" id="add-to-my-book" data-book-id="{{ book.id }}"><i class="fa fa-book"></i></button> {% endcomment %}
+                        {% comment %} <a href="#"><i class="fa fa-book"></i></a>
+                      </li> {% endcomment %}
                       <li>
-                        <a href="#"><i class="fa fa-heart"></i></a>
+                        <a href="#" class="add-to-my-book" data-book-id="{{ book.id }}"><i class="fa fa-book"></i></a>
                       </li>
                       <li>
                         <a href="#"><i class="fa fa-retweet"></i></a>
@@ -374,4 +380,44 @@
     </div>
   </section>
   <!-- Product Section End -->
+  <input type="hidden" id="csrf-token" value="{{ csrf_token }}" />
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.addEventListener('click', function (event) {
+        const target = event.target.closest('.add-to-my-book')
+        if (!target) return
+    
+        event.preventDefault() // Prevent default link behavior
+    
+        const bookId = target.dataset.bookId
+        const csrfToken = document.getElementById('csrf-token').value
+    
+        fetch("{% url 'home:add_book_to_subscription' %}", {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': csrfToken,
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: `book_id=${bookId}`
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === 'unauthenticated') {
+              window.location.href = data.redirect_url
+              return
+            }
+    
+            // Success or error message
+            alert(data.message)
+    
+            // Optional: disable the button or change icon after adding
+            if (data.status === 'success') {
+              target.innerHTML = '<i class="fa fa-check"></i>'
+              target.classList.add('disabled') // Add some styling if you want
+            }
+          })
+          .catch(() => alert('Request failed'))
+      })
+    })
+  </script>
 {% endblock %}
