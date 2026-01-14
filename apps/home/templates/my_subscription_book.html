@@ -153,7 +153,7 @@
                           <a href="#"><i class="fa fa-retweet"></i></a>
                         </li>
                         <li>
-                          <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                          <a href="#" class="add-to-cart-btn" data-product-id="{{ book.book.id }}"><i class="fa fa-shopping-cart"></i></a>
                         </li>
                       </ul>
                     </div>
@@ -190,6 +190,46 @@
         </div>
       </div>
     </div>
+     <input type="hidden" id="csrf-token" value="{{ csrf_token }}" />
   </section>
   <!-- Product Section End -->
+  <!-- Add to Cart Script Start -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.addEventListener('click', function (event) {
+        const target = event.target.closest('.add-to-cart-btn')
+        if (!target) return
+    
+        event.preventDefault()
+        const productId = target.dataset.productId
+        const csrfToken = document.getElementById('csrf-token').value
+    
+        fetch("{% url 'order:add_to_cart' %}", {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': csrfToken,
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: `product_id=${productId}&quantity=1`
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === 'unauthenticated') {
+              window.location.href = data.redirect_url
+              return
+            }
+    
+            // Optional: show message or update UI
+            alert(data.message)
+    
+            if (data.status === 'success') {
+              target.innerHTML = '<i class="fa fa-check"></i> Added'
+              target.classList.add('disabled')
+            }
+          })
+          .catch(() => alert('Request failed'))
+      })
+    })
+  </script>
+  <!-- Add to Cart Script End -->
 {% endblock %}
