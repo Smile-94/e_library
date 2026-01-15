@@ -141,10 +141,10 @@
           </div>
           <div class="row">
             {% if books %}
-            {% for book in books %}
+            {% for my_book in books %}
               <div class="col-lg-4 col-md-6 col-sm-6">
                 <div class="product__item">
-                  <div class="product__item__pic set-bg" data-setbg="{{ book.book_image.url }}">
+                  <div class="product__item__pic set-bg" data-setbg="{{ my_book.book.book_image.url }}">
                     <ul class="product__item__pic__hover">
                       <li>
                         <a href="#"><i class="fa fa-heart"></i></a>
@@ -158,8 +158,8 @@
                     </ul>
                   </div>
                   <div class="product__item__text">
-                    <h6><a href="{% url 'home:home_book_details' book.id %}">{{ book.title }}</a></h6>
-                    <h5>&#2547; {{ book.physical_price }}</h5>
+                    <h6><a href="{% url 'home:home_book_details' my_book.book.id %}">{{ my_book.book.title }}</a></h6>
+                    <h5>&#2547; {{ my_book.book.physical_price }}</h5>
                   </div>
                 </div>
               </div>
