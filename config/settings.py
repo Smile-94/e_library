@@ -32,6 +32,7 @@ CUSTOM_APPS = [
     "apps.home.apps.HomeConfig",
     "apps.book.apps.BookConfig",
     "apps.subscription.apps.SubscriptionConfig",
+    "apps.order.apps.OrderConfig",
 ]
 
 INSTALLED_APPS = [
@@ -69,6 +70,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "apps.order.context_processors.cart_summary",
             ],
         },
     },

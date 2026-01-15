@@ -1,6 +1,6 @@
 import logging
 from datetime import timedelta
-
+from django.db import transaction
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -11,7 +11,7 @@ from django.utils.decorators import method_decorator
 from django.utils.timezone import now
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-
+from django.utils.timezone import now
 from pysslcmz.payment import SSLCSession
 
 from apps.common.models import ActiveStatusChoices
@@ -49,9 +49,16 @@ class BuySubscriptionView(LoginRequiredMixin, View):
             #         return redirect("home:home_subscription")
 
             # Optional: prevent multiple active subscriptions
-            if UserSubscription.objects.filter(
-                user=request.user, active_status=ActiveStatusChoices.ACTIVE.value, subscription__subscription_price__gt=0
-            ).exists():
+            # Check for existing active subscriptions
+            current_time = now()
+            active_subscription_exists = UserSubscription.objects.filter(
+                user=request.user,
+                active_status=ActiveStatusChoices.ACTIVE.value,
+                subscription__subscription_price__gt=0,
+                start_at__lte=current_time,
+                end_at__gte=current_time,  # Only count subscriptions that haven't expired
+            ).exists()
+            if active_subscription_exists:
                 messages.warning(request, "You already have an active subscription.")
                 return redirect("home:home_subscription")
 
@@ -147,11 +154,19 @@ class PaymentSuccessView(View):
 
         duration = user_subscription.subscription.subscription_duration_days
 
-        user_subscription.payment_status = UserSubscriptionPaymentStatus.PAID.value
-        user_subscription.active_status = ActiveStatusChoices.ACTIVE.value
-        user_subscription.start_at = now()
-        user_subscription.end_at = now() + timedelta(days=duration)
-        user_subscription.save()
+        with transaction.atomic():
+            # Inactivate all other subscriptions of the user
+            UserSubscription.objects.filter(user=user_subscription.user, active_status=ActiveStatusChoices.ACTIVE.value).exclude(
+                id=user_subscription.id
+            ).update(active_status=ActiveStatusChoices.INACTIVE.value, end_at=now())
+
+            #  Activate current subscription
+            user_subscription.payment_status = UserSubscriptionPaymentStatus.PAID.value
+            user_subscription.payment_status = UserSubscriptionPaymentStatus.PAID.value
+            user_subscription.active_status = ActiveStatusChoices.ACTIVE.value
+            user_subscription.start_at = now()
+            user_subscription.end_at = now() + timedelta(days=duration)
+            user_subscription.save()
 
         messages.success(request, "Subscription Started successfully!")
         return redirect("home:home")

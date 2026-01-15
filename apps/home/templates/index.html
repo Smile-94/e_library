@@ -6,8 +6,6 @@
 {% endblock %}
 
 {% block body %}
-  
-
   <!-- Categories Section Begin -->
   <section class="categories">
     <div class="container">
@@ -53,7 +51,7 @@
             <div class="featured__item__pic set-bg" data-setbg="{{ programming_books.book_image.url }}">
               <ul class="featured__item__pic__hover">
                 <li>
-                  <a href="#"><i class="fa fa-heart"></i></a>
+                  <a href="#" class="add-to-my-book" data-book-id="{{ programming_books.id }}"><i class="fa fa-book"></i></a>
                 </li>
                 <li>
                   <a href="#"><i class="fa fa-retweet"></i></a>
@@ -74,7 +72,7 @@
             <div class="featured__item__pic set-bg" data-setbg="{{ history.book_image.url }}">
               <ul class="featured__item__pic__hover">
                 <li>
-                  <a href="#"><i class="fa fa-heart"></i></a>
+                  <a href="#" class="add-to-my-book" data-book-id="{{ history.id }}"><i class="fa fa-book"></i></a>
                 </li>
                 <li>
                   <a href="#"><i class="fa fa-retweet"></i></a>
@@ -95,7 +93,7 @@
             <div class="featured__item__pic set-bg" data-setbg="{{ fiction_books.book_image.url }}">
               <ul class="featured__item__pic__hover">
                 <li>
-                  <a href="#"><i class="fa fa-heart"></i></a>
+                  <a href="#" class="add-to-my-book" data-book-id="{{ fiction_books.id }}"><i class="fa fa-book"></i></a>
                 </li>
                 <li>
                   <a href="#"><i class="fa fa-retweet"></i></a>
@@ -116,7 +114,7 @@
             <div class="featured__item__pic set-bg" data-setbg="{{ politics_books.book_image.url }}">
               <ul class="featured__item__pic__hover">
                 <li>
-                  <a href="#"><i class="fa fa-heart"></i></a>
+                  <a href="#" class="add-to-my-book" data-book-id="{{ politics_books.id }}"><i class="fa fa-book"></i></a>
                 </li>
                 <li>
                   <a href="#"><i class="fa fa-retweet"></i></a>
@@ -137,7 +135,7 @@
             <div class="featured__item__pic set-bg" data-setbg="{{ rabindranath_tagore_books.book_image.url }}">
               <ul class="featured__item__pic__hover">
                 <li>
-                  <a href="#"><i class="fa fa-heart"></i></a>
+                  <a href="#" class="add-to-my-book" data-book-id="{{ rabindranath_tagore_books.id }}"><i class="fa fa-book"></i></a>
                 </li>
                 <li>
                   <a href="#"><i class="fa fa-retweet"></i></a>
@@ -158,7 +156,7 @@
             <div class="featured__item__pic set-bg" data-setbg="{{ history_2.book_image.url }}">
               <ul class="featured__item__pic__hover">
                 <li>
-                  <a href="#"><i class="fa fa-heart"></i></a>
+                  <a href="#" class="add-to-my-book" data-book-id="{{ history_2.id }}"><i class="fa fa-book"></i></a>
                 </li>
                 <li>
                   <a href="#"><i class="fa fa-retweet"></i></a>
@@ -179,7 +177,7 @@
             <div class="featured__item__pic set-bg" data-setbg="{{ history_3.book_image.url }}">
               <ul class="featured__item__pic__hover">
                 <li>
-                  <a href="#"><i class="fa fa-heart"></i></a>
+                  <a href="#" class="add-to-my-book" data-book-id="{{ history_3.id }}"><i class="fa fa-book"></i></a>
                 </li>
                 <li>
                   <a href="#"><i class="fa fa-retweet"></i></a>
@@ -200,7 +198,7 @@
             <div class="featured__item__pic set-bg" data-setbg="{{ programming_books_2.book_image.url }}">
               <ul class="featured__item__pic__hover">
                 <li>
-                  <a href="#"><i class="fa fa-heart"></i></a>
+                  <a href="#" class="add-to-my-book" data-book-id="{{ programming_books_2.id }}"><i class="fa fa-book"></i></a>
                 </li>
                 <li>
                   <a href="#"><i class="fa fa-retweet"></i></a>
@@ -432,4 +430,46 @@
     </div>
   </section> {% endcomment %}
   <!-- Blog Section End -->
+  <input type="hidden" id="csrf-token" value="{{ csrf_token }}" />
+  <!-- Add to My Books Script Start -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.addEventListener('click', function (event) {
+        const target = event.target.closest('.add-to-my-book')
+        if (!target) return
+    
+        event.preventDefault() // Prevent default link behavior
+    
+        const bookId = target.dataset.bookId
+        const csrfToken = document.getElementById('csrf-token').value
+    
+        fetch("{% url 'home:add_book_to_subscription' %}", {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': csrfToken,
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: `book_id=${bookId}`
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === 'unauthenticated') {
+              window.location.href = data.redirect_url
+              return
+            }
+    
+            // Success or error message
+            alert(data.message)
+    
+            // Optional: disable the button or change icon after adding
+            {% comment %} if (data.status === 'success') {
+              target.innerHTML = '<i class="fa fa-check"></i>'
+              target.classList.add('disabled') // Add some styling if you want
+            } {% endcomment %}
+          })
+          .catch(() => alert('Request failed'))
+      })
+    })
+  </script>
+  <!-- Add to My Books Script End -->
 {% endblock %}

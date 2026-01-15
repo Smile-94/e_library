@@ -256,15 +256,15 @@
           <div class="col-lg-3">
             <div class="header__cart">
               <ul>
-                <li>
+                {% comment %} <li>
                   <a href="#"><i class="fa fa-heart"></i> <span>1</span></a>
-                </li>
+                </li> {% endcomment %}
                 <li>
-                  <a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a>
+                  <a href="#"><i class="fa fa-shopping-bag"></i> <span>{{ cart_count }}</span></a>
                 </li>
               </ul>
               <div class="header__cart__price">
-                item: <span>$150.00</span>
+                item: <span>&#2547; {{ cart_total }}</span>
               </div>
             </div>
           </div>

@@ -9,6 +9,7 @@ from apps.account import urls as account_urls
 from apps.authority import urls as authority_urls
 from apps.home import urls as home_urls
 from apps.subscription import urls as subscription_urls
+from apps.order import urls as order_urls
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -16,6 +17,7 @@ urlpatterns = [
     path("", include(authority_urls)),
     path("", include(home_urls)),
     path("", include(subscription_urls)),
+    path("", include(order_urls)),
 ]
 # for serve static files
 urlpatterns += staticfiles_urlpatterns()
