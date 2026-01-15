@@ -1,16 +1,19 @@
 from django.views import View
 from django.http import JsonResponse
 from django.urls import reverse
+from django.shortcuts import render, redirect
 from django.db import transaction
 from django.contrib.auth.mixins import LoginRequiredMixin
 from apps.order.models.cart_model import Cart, CartProduct
 from apps.book.models.book_model import Book
+from apps.book.models.category_model import Category
 import logging
 from apps.order.function.promotional_discount import get_product_promotional_discount, get_discounted_physical_price
 
 logger = logging.getLogger(__name__)
 
 
+# <<------------------------------------*** Add To Cart View ***------------------------------------>>
 class AddToCartView(LoginRequiredMixin, View):
     login_url = "account:login"  # your login URL
 
@@ -62,3 +65,33 @@ class AddToCartView(LoginRequiredMixin, View):
         except Exception as e:
             logger.exception(f"ERROR: AddToCartView: {e}")
             return JsonResponse({"status": "error", "message": "Something went wrong"}, status=500)
+
+
+# <<------------------------------------*** Cart Detail View ***------------------------------------>>
+class CartDetailView(View):
+    template_name = "order/cart_detail.html"
+    model_class = Cart
+
+    def get(self, request):
+        try:
+            if not request.user.is_authenticated:
+                return redirect("account:login")
+
+            cart = self.model_class.objects.filter(user=request.user, is_active=True).prefetch_related("cart_products").first()
+
+            context = {
+                "title": "My Cart",
+                "cart": cart,
+                "cart_items": cart.cart_items.all() if cart else [],
+                "all_categories": Category.objects.all(),
+                "show_hero_banner": False,
+                "hero_normal": "hero-normal",
+                "subscription": False,
+            }
+
+            return render(request, self.template_name, context)
+
+        except Exception as e:
+            logger.exception(f"ERROR:------>> Error occurred in Cart Detail View: {e}")
+            messages.error(request, "Unable to load cart!")
+            return HttpResponse("Something went wrong!")
