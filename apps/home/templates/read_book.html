@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{ title }}</title>
+  {% load static %}
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: #111;
+    }
+
+    iframe {
+      width: 100vw;
+      height: 100vh;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+
+<iframe
+  src="{% static 'pdfjs/web/viewer.html' %}?file={{ book.digital_file.url|urlencode }}"
+  allowfullscreen>
+</iframe>
+
+</body>
+</html>
