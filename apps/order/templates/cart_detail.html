@@ -69,7 +69,7 @@
             <strong>৳ <span id="cart-net-amount">{{ cart.net_amount }}</span></strong>
           </div>
 
-          <a href="#" class="btn btn-success w-100">Proceed to Checkout</a>
+          <a href="{% url 'order:checkout' %}" class="btn btn-success w-100">Proceed to Checkout</a>
         </div>
       {% else %}
         <p>Your cart is empty.</p>

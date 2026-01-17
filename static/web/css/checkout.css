@@ -1,0 +1,105 @@
+/* <<------------------------------------*** Global Checkout Styles ***------------------------------------>> */
+
+.checkout-area input {
+  width: 100%;
+  height: 48px;
+  padding: 0 15px;
+  border: 1px solid #ebebeb;
+  margin-bottom: 15px;
+  font-size: 14px;
+  box-sizing: border-box; /* Ensures padding doesn't affect width */
+}
+
+.checkout-box {
+  background: #ffffff;
+  border: 1px solid #ebebeb;
+  padding: 25px; /* Improved padding for cleaner look */
+  margin-bottom: 20px;
+}
+
+.checkout-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #1c1c1c;
+}
+
+/* <<------------------------------------*** Payment Method Fixes ***------------------------------------>> */
+
+/* Target labels to act as flex containers for vertical centering */
+.payment-option {
+  display: flex;            /* Use flexbox for alignment */
+  align-items: center;      /* Vertically center the radio button and text */
+  margin-bottom: 12px;
+  font-size: 15px;
+  cursor: pointer;
+  color: #6f6f6f;
+  transition: all 0.3s;
+}
+
+/* Override global input styles specifically for the radio buttons */
+.checkout-area .payment-option input[type="radio"] {
+  width: 20px !important;   /* Force smaller size */
+  height: 20px !important;  /* Force smaller size */
+  margin-right: 12px;       /* Spacing between radio and text */
+  margin-bottom: 0;         /* Remove the global 15px bottom margin */
+  cursor: pointer;
+  flex-shrink: 0;           /* Prevents the circle from shrinking */
+}
+
+.payment-option:hover {
+  color: #7fad39;           /* Hover effect using primary theme color */
+}
+
+/* <<------------------------------------*** Order Summary & Buttons ***------------------------------------>> */
+
+.order-summary .order-items {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 15px;
+}
+
+.order-summary .order-items li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 15px;
+}
+
+.summary-row.discount {
+  color: #28a745;
+}
+
+.summary-row.total {
+  border-top: 1px solid #ebebeb;
+  padding-top: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1c1c1c;
+}
+
+.primary-btn {
+  width: 100%;
+  background: #7fad39;
+  color: #fff;
+  border: none;
+  height: 48px;
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.primary-btn:hover {
+  background: #6e9a30;
+}
+
+/* <<------------------------------------*** Checkout Area End ***------------------------------------>> */

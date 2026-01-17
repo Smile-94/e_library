@@ -1,6 +1,11 @@
 from django.contrib import admin
 
-from apps.order.models.order_model import Order, OrderProduct, ShippingAddress
+from apps.order.models.order_model import (
+    Order,
+    OrderPayment,
+    OrderProduct,
+    ShippingAddress,
+)
 
 
 # <<------------------------------------*** Order Admin ***------------------------------------>>
@@ -25,6 +30,16 @@ class OrderProductAdmin(admin.ModelAdmin):
 @admin.register(ShippingAddress)
 class ShippingAddressAdmin(admin.ModelAdmin):
     list_display = ("order", "first_name", "last_name", "address", "city", "country", "zip_code", "phone")
+    list_filter = ("order__status", "order__payment")
+    search_fields = ("order__user__username", "order__user__email")
+    ordering = ("-id",)
+    list_per_page = 20
+
+
+# <<------------------------------------*** Order Payment Admin ***------------------------------------>>
+@admin.register(OrderPayment)
+class OrderPaymentAdmin(admin.ModelAdmin):
+    list_display = ("id", "order", "amount", "status", "payment_method")
     list_filter = ("order__status", "order__payment")
     search_fields = ("order__user__username", "order__user__email")
     ordering = ("-id",)

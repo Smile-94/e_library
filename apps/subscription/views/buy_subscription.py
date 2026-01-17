@@ -1,17 +1,18 @@
 import logging
 from datetime import timedelta
-from django.db import transaction
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import transaction
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.utils.timezone import now
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from django.utils.timezone import now
+
 from pysslcmz.payment import SSLCSession
 
 from apps.common.models import ActiveStatusChoices
@@ -190,4 +191,5 @@ class PaymentFailView(View):
 
         messages.error(request, "Payment failed or was cancelled. Please try again.")
 
+        return redirect("home:home_subscription")
         return redirect("home:home_subscription")

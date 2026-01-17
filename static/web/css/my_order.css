@@ -1,0 +1,64 @@
+/* Badges for order status */
+.badge-pending {
+    background-color: #ffc107;
+    color: #212529;
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.3rem;
+}
+.badge-confirmed {
+    background-color: #17a2b8;
+    color: white;
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.3rem;
+}
+.badge-shipped {
+    background-color: #007bff;
+    color: white;
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.3rem;
+}
+.badge-delivered {
+    background-color: #28a745;
+    color: white;
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.3rem;
+}
+.badge-cancelled {
+    background-color: #dc3545;
+    color: white;
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.3rem;
+}
+
+/* Order summary card */
+.order-summary-card {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #dee2e6;
+}
+.summary-row:last-child {
+    border-bottom: none;
+}
+
+/* Responsive table */
+.table-responsive {
+    overflow-x: auto;
+}
+
+/* Buttons */
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+.checkout-title {
+    font-weight: 600;
+    margin-bottom: 1rem;
+}

@@ -1,0 +1,109 @@
+{% extends 'home_base.html' %}
+{% load static %}
+
+{% block body %}
+<section class="checkout-area section-padding">
+  <div class="container">
+    <h3 class="mb-4">Checkout</h3>
+
+    <div class="row">
+      <!-- LEFT -->
+      <div class="col-lg-7">
+        <form method="post" action="{% url 'order:place_order' %}" class="checkout-form">
+          {% csrf_token %}
+
+          <div class="checkout-box">
+            <h5 class="checkout-title">Shipping Address</h5>
+
+            <div class="row">
+              <div class="col-md-6">
+                {{ shipping_form.first_name }}
+              </div>
+              <div class="col-md-6">
+                {{ shipping_form.last_name }}
+              </div>
+              <div class="col-12">
+                {{ shipping_form.address }}
+              </div>
+              <div class="col-md-4">
+                {{ shipping_form.city }}
+              </div>
+              <div class="col-md-4">
+                {{ shipping_form.state }}
+              </div>
+              <div class="col-md-4">
+                {{ shipping_form.zip_code }}
+              </div>
+              <div class="col-md-6">
+                {{ shipping_form.country }}
+              </div>
+              <div class="col-md-6">
+                {{ shipping_form.phone }}
+              </div>
+            </div>
+          </div>
+
+          {% comment %} <div class="checkout-box">
+            <h5 class="checkout-title">Payment Method</h5>
+
+            {% for value, label in payment_methods %}
+              <label class="payment-option">
+                <input type="radio" name="payment_method" value="{{ value }}"
+                       {% if forloop.first %}checked{% endif %}>
+                {{ label }}
+              </label>
+            {% endfor %}
+          </div> {% endcomment %}
+          <div class="checkout-box">
+              <h5 class="checkout-title">Payment Method</h5>
+              {% for value, label in payment_methods %}
+              <label class="payment-option">
+                  <input type="radio" name="payment_method" value="{{ value }}" 
+                        {% if forloop.first %}checked{% endif %}>
+                  <span>{{ label }}</span> </label>
+              {% endfor %}
+          </div>
+
+          <button type="submit" class="primary-btn w-100 mt-3">
+            Place Order
+          </button>
+        </form>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="col-lg-5">
+        <div class="checkout-box order-summary">
+          <h5 class="checkout-title">Your Order</h5>
+
+          <ul class="order-items">
+            {% for item in cart_items %}
+              <li>
+                <span>{{ item.product.title }} × {{ item.quantity }}</span>
+                <strong>৳ {{ item.get_subtotal }}</strong>
+              </li>
+            {% endfor %}
+          </ul>
+
+          <div class="summary-row">
+            <span>Total Price</span>
+            <strong>৳ {{ cart.total_price }}</strong>
+          </div>
+          <div class="summary-row discount">
+            <span>Discount</span>
+            <strong>- ৳ {{ cart.total_discount }}</strong>
+          </div>
+          <div class="summary-row">
+            <span>Shipping</span>
+            <strong>৳ {{ shipping_charge }}</strong>
+          </div>
+
+          <div class="summary-row total">
+            <span>Payable</span>
+            <strong>৳ {{ grand_total }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

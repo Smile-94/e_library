@@ -52,7 +52,7 @@ class HomeView(View):
 
         except Exception as e:
             logger.exception(f"ERROR:------>> Error occurred in Admin Dashboard View: {e}")
-            messages.error(request, "Unable to load dashboard!")
+            messages.error(request, "Unable to load Home Page!")
             return HttpResponse("Something went wrong!")
 
 
@@ -81,7 +81,7 @@ class BookDetailsView(View):
 
         except Exception as e:
             logger.exception(f"ERROR:------>> Error occurred in Admin Dashboard View: {e}")
-            messages.error(request, "Unable to load dashboard!")
+            messages.error(request, "Unable to load book details!")
             return HttpResponse("Something went wrong!")
 
 
@@ -106,7 +106,7 @@ class ShopeView(View):
 
         except Exception as e:
             logger.exception(f"ERROR:------>> Error occurred in Admin Dashboard View: {e}")
-            messages.error(request, "Unable to load dashboard!")
+            messages.error(request, "Unable to load Shop Page!")
             return HttpResponse("Something went wrong!")
 
 
@@ -132,7 +132,7 @@ class CategoryProductView(View):
 
         except Exception as e:
             logger.exception(f"ERROR:------>> Error occurred in Admin Dashboard View: {e}")
-            messages.error(request, "Unable to load dashboard!")
+            messages.error(request, "Unable to load Subscription Page!")
             return HttpResponse("Something went wrong!")
 
 
@@ -156,5 +156,5 @@ class SubscriptionView(View):
 
         except Exception as e:
             logger.exception(f"ERROR:------>> Error occurred in Admin Dashboard View: {e}")
-            messages.error(request, "Unable to load dashboard!")
+            messages.error(request, "Unable to load Subscription Page!")
             return HttpResponse("Something went wrong!")

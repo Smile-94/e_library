@@ -1,0 +1,70 @@
+{% extends 'home_base.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+<section class="profile spad">
+  <div class="container">
+    <h3 class="mb-4">Order Details: {{ order.invoice_id }}</h3>
+
+    <!-- Order Summary -->
+    <div class="card mb-3 p-3 order-summary-card">
+      <h5 class="checkout-title">Order Summary</h5>
+      <div class="summary-row"><strong>Total Price:</strong> ৳ {{ order.total_price }}</div>
+      <div class="summary-row"><strong>Total Discount:</strong> ৳ {{ order.total_discount }}</div>
+      <div class="summary-row"><strong>Shipping Charge:</strong> ৳ {{ order.shipping_charge }}</div>
+      <div class="summary-row"><strong>Net Amount:</strong> ৳ {{ order.net_amount }}</div>
+      <div class="summary-row"><strong>Status:</strong> {{ order.status|title }}</div>
+      <div class="summary-row"><strong>Payment Method:</strong> {{ order.payment|upper }}</div>
+      <div class="summary-row"><strong>Payment Status:</strong> {{ order.payment_status|title }}</div>
+    </div>
+
+    <!-- Order Products -->
+    <div class="card p-3 mb-3">
+      <h5 class="checkout-title">Products</h5>
+      <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+          <thead>
+            <tr>
+              <th>Book</th>
+              <th>Price</th>
+              <th>Discount</th>
+              <th>Quantity</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in order_products %}
+            <tr>
+              <td>{{ item.product.title }}</td>
+              <td>৳ {{ item.price }}</td>
+              <td>৳ {{ item.discount }}</td>
+              <td>{{ item.quantity }}</td>
+              <td>৳ {{ item.get_subtotal }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Shipping Address -->
+    <div class="card p-3">
+      <h5 class="checkout-title">Shipping Address</h5>
+      {% if order.order_shipping_address %}
+        <p>
+          {{ order.order_shipping_address.first_name }} {{ order.order_shipping_address.last_name }}<br>
+          {{ order.order_shipping_address.address }}<br>
+          {{ order.order_shipping_address.city }}, {{ order.order_shipping_address.state }}<br>
+          {{ order.order_shipping_address.country }} - {{ order.order_shipping_address.zip_code }}<br>
+          Phone: {{ order.order_shipping_address.phone }}
+        </p>
+      {% else %}
+        <p>No shipping address provided.</p>
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+{% endblock %}

@@ -26,6 +26,8 @@
     <link rel="stylesheet" href="{% static 'web/css/slicknav.min.css' %}" type="text/css" />
     <link rel="stylesheet" href="{% static 'web/css/style.css' %}" type="text/css" />
     <link rel="stylesheet" href="{% static 'web/css/profile.css' %}" type="text/css" />
+    <link rel="stylesheet" href="{% static 'web/css/checkout.css' %}" type="text/css" />
+    <link rel="stylesheet" href="{% static 'web/css/my_order.css' %}" type="text/css" />
 
     {% if subscription %}
       <link rel="stylesheet" href="{% static 'web/css/subscription.css' %}" type="text/css" />
@@ -184,7 +186,7 @@
                           <a href="{% url 'home:my_profile' %}"><i class="fa fa-user"></i> Profile</a>
                         </li>
                         <li>
-                          <a href="#"><i class="fa fa-shopping-bag"></i> My Orders</a>
+                          <a href="{% url 'order:my_orders' %}"><i class="fa fa-shopping-bag"></i> My Orders</a>
                         </li>
                         <li>
                           <a href="{% url 'home:my_subscription_history' %}"><i class="fa fa-star"></i> Subscription</a>

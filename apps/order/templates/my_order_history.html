@@ -1,0 +1,53 @@
+{% extends 'home_base.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+<section class="profile spad">
+  <div class="container">
+    <h3 class="mb-4">{{ title }}</h3>
+
+    {% if orders %}
+      <div class="order-table table-responsive">
+        <table class="table table-bordered table-hover">
+          <thead class="thead-light">
+            <tr>
+              <th>Invoice ID</th>
+              <th>Total Price</th>
+              <th>Discount</th>
+              <th>Shipping</th>
+              <th>Net Amount</th>
+              <th>Status</th>
+              <th>Payment</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in orders %}
+            <tr>
+              <td>{{ order.invoice_id }}</td>
+              <td>৳ {{ order.total_price }}</td>
+              <td>৳ {{ order.total_discount }}</td>
+              <td>৳ {{ order.shipping_charge }}</td>
+              <td>৳ {{ order.net_amount }}</td>
+              <td>
+                <span class="badge badge-{{ order.status|lower }}">
+                  {{ order.status|title }}
+                </span>
+              </td>
+              <td>{{ order.payment|upper }}</td>
+              <td>
+                <a href="{% url 'order:my_order_detail' order.pk %}" class="btn btn-sm btn-primary">Details</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p>You have no orders yet.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
