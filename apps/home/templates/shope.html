@@ -381,49 +381,10 @@
   </section>
   <!-- Product Section End -->
   <input type="hidden" id="csrf-token" value="{{ csrf_token }}" />
+ 
   <!-- Add to My Books Script Start -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      document.body.addEventListener('click', function (event) {
-        const target = event.target.closest('.add-to-my-book')
-        if (!target) return
-    
-        event.preventDefault() // Prevent default link behavior
-    
-        const bookId = target.dataset.bookId
-        const csrfToken = document.getElementById('csrf-token').value
-    
-        fetch("{% url 'home:add_book_to_subscription' %}", {
-          method: 'POST',
-          headers: {
-            'X-CSRFToken': csrfToken,
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: `book_id=${bookId}`
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.status === 'unauthenticated') {
-              window.location.href = data.redirect_url
-              return
-            }
-    
-            // Success or error message
-            alert(data.message)
-    
-            // Optional: disable the button or change icon after adding
-            {% comment %} if (data.status === 'success') {
-              target.innerHTML = '<i class="fa fa-check"></i>'
-              target.classList.add('disabled') // Add some styling if you want
-            } {% endcomment %}
-          })
-          .catch(() => alert('Request failed'))
-      })
-    })
-  </script>
-  <!-- Add to My Books Script End -->
-
-  <!-- Add to Cart Script Start -->
+  
+ <!-- Add to Cart Script Start -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       document.body.addEventListener('click', function (event) {
@@ -452,14 +413,16 @@
             // Optional: show message or update UI
             alert(data.message)
     
-            if (data.status === 'success') {
+            {% comment %} if (data.status === 'success') {
               target.innerHTML = '<i class="fa fa-check"></i> Added'
               target.classList.add('disabled')
-            }
+            } {% endcomment %}
           })
           .catch(() => alert('Request failed'))
       })
     })
   </script>
   <!-- Add to Cart Script End -->
+
+ 
 {% endblock %}

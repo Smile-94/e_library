@@ -1,7 +1,8 @@
 from django.db import models
+
+from apps.account.models.user_model import User
 from apps.book.models.book_model import Book
 from apps.common.models import BaseModel
-from apps.account.models.user_model import User
 
 
 # <<------------------------------------*** Cart Model ***------------------------------------>>
@@ -9,6 +10,7 @@ class Cart(BaseModel):
     user = models.ForeignKey(User, related_name="cart_user", on_delete=models.CASCADE)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     total_discount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    net_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     is_active = models.BooleanField(default=True)  # only one active cart per user
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -27,7 +29,7 @@ class Cart(BaseModel):
 
 # <<-----------------------------*** Cart Product Model ***------------------------------>>
 class CartProduct(BaseModel):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="cart_products")
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="cart_products_cart")
     product = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="cart_products")
     quantity = models.PositiveIntegerField(default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -40,5 +42,11 @@ class CartProduct(BaseModel):
         verbose_name = "Cart Product"
         verbose_name_plural = "Cart Products"
 
+    def get_subtotal(self):
+        return self.final_price * self.quantity
+
     def __str__(self):
         return f"{self.product.title} x {self.quantity}"
+
+    def __repr__(self):
+        return f"<CartProduct: {self.product.title}, {self.pk}>"

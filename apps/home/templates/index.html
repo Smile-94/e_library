@@ -53,11 +53,12 @@
                 <li>
                   <a href="#" class="add-to-my-book" data-book-id="{{ programming_books.id }}"><i class="fa fa-book"></i></a>
                 </li>
-                <li>
+                {% comment %} <li>
                   <a href="#"><i class="fa fa-retweet"></i></a>
-                </li>
+                </li> {% endcomment %}
                 <li>
-                  <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                  
+                  <a href="#" class="add-to-cart-btn" data-product-id="{{ programming_books.id }}"><i class="fa fa-shopping-cart"></i></a>
                 </li>
               </ul>
             </div>
@@ -74,11 +75,11 @@
                 <li>
                   <a href="#" class="add-to-my-book" data-book-id="{{ history.id }}"><i class="fa fa-book"></i></a>
                 </li>
-                <li>
+                {% comment %} <li>
                   <a href="#"><i class="fa fa-retweet"></i></a>
-                </li>
+                </li> {% endcomment %}
                 <li>
-                  <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                  <a href="#" class="add-to-cart-btn" data-product-id="{{ history.id }}"><i class="fa fa-shopping-cart"></i></a>
                 </li>
               </ul>
             </div>
@@ -95,11 +96,11 @@
                 <li>
                   <a href="#" class="add-to-my-book" data-book-id="{{ fiction_books.id }}"><i class="fa fa-book"></i></a>
                 </li>
-                <li>
+                {% comment %} <li>
                   <a href="#"><i class="fa fa-retweet"></i></a>
-                </li>
+                </li> {% endcomment %}
                 <li>
-                  <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                  <a href="#" class="add-to-cart-btn" data-product-id="{{ fiction_books.id }}"><i class="fa fa-shopping-cart"></i></a>
                 </li>
               </ul>
             </div>
@@ -116,11 +117,11 @@
                 <li>
                   <a href="#" class="add-to-my-book" data-book-id="{{ politics_books.id }}"><i class="fa fa-book"></i></a>
                 </li>
-                <li>
+                {% comment %} <li>
                   <a href="#"><i class="fa fa-retweet"></i></a>
-                </li>
+                </li> {% endcomment %}
                 <li>
-                  <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                  <a href="#" class="add-to-cart-btn" data-product-id="{{ politics_books.id }}"><i class="fa fa-shopping-cart"></i></a>
                 </li>
               </ul>
             </div>
@@ -137,11 +138,11 @@
                 <li>
                   <a href="#" class="add-to-my-book" data-book-id="{{ rabindranath_tagore_books.id }}"><i class="fa fa-book"></i></a>
                 </li>
-                <li>
+                {% comment %} <li>
                   <a href="#"><i class="fa fa-retweet"></i></a>
-                </li>
+                </li> {% endcomment %}
                 <li>
-                  <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                  <a href="#" class="add-to-cart-btn" data-product-id="{{ rabindranath_tagore_books.id }}"><i class="fa fa-shopping-cart"></i></a>
                 </li>
               </ul>
             </div>
@@ -158,11 +159,11 @@
                 <li>
                   <a href="#" class="add-to-my-book" data-book-id="{{ history_2.id }}"><i class="fa fa-book"></i></a>
                 </li>
-                <li>
+                {% comment %} <li>
                   <a href="#"><i class="fa fa-retweet"></i></a>
-                </li>
+                </li> {% endcomment %}
                 <li>
-                  <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                  <a href="#" class="add-to-cart-btn" data-product-id="{{ history_2.id }}"><i class="fa fa-shopping-cart"></i></a>
                 </li>
               </ul>
             </div>
@@ -179,11 +180,11 @@
                 <li>
                   <a href="#" class="add-to-my-book" data-book-id="{{ history_3.id }}"><i class="fa fa-book"></i></a>
                 </li>
-                <li>
+                {% comment %} <li>
                   <a href="#"><i class="fa fa-retweet"></i></a>
-                </li>
+                </li> {% endcomment %}
                 <li>
-                  <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                  <a href="#" class="add-to-cart-btn" data-product-id="{{ history_3.id }}"><i class="fa fa-shopping-cart"></i></a>
                 </li>
               </ul>
             </div>
@@ -200,11 +201,11 @@
                 <li>
                   <a href="#" class="add-to-my-book" data-book-id="{{ programming_books_2.id }}"><i class="fa fa-book"></i></a>
                 </li>
-                <li>
+                {% comment %} <li>
                   <a href="#"><i class="fa fa-retweet"></i></a>
-                </li>
+                </li> {% endcomment %}
                 <li>
-                  <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                  <a href="#" class="add-to-cart-btn" data-product-id="{{ programming_books_2.id }}"><i class="fa fa-shopping-cart"></i></a>
                 </li>
               </ul>
             </div>
@@ -472,4 +473,43 @@
     })
   </script>
   <!-- Add to My Books Script End -->
+    <!-- Add to Cart Script Start -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.addEventListener('click', function (event) {
+        const target = event.target.closest('.add-to-cart-btn')
+        if (!target) return
+    
+        event.preventDefault()
+        const productId = target.dataset.productId
+        const csrfToken = document.getElementById('csrf-token').value
+    
+        fetch("{% url 'order:add_to_cart' %}", {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': csrfToken,
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: `product_id=${productId}&quantity=1`
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === 'unauthenticated') {
+              window.location.href = data.redirect_url
+              return
+            }
+    
+            // Optional: show message or update UI
+            alert(data.message)
+    
+            {% comment %} if (data.status === 'success') {
+              target.innerHTML = '<i class="fa fa-check"></i> Added'
+              target.classList.add('disabled')
+            } {% endcomment %}
+          })
+          .catch(() => alert('Request failed'))
+      })
+    })
+  </script>
+  <!-- Add to Cart Script End -->
 {% endblock %}

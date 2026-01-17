@@ -1,0 +1,82 @@
+{% extends 'home_base.html' %}
+{% load static %}
+
+{% block body %}
+  <section class="cart-area section-padding">
+    <div class="container">
+      <h3 class="mb-4">My Cart</h3>
+
+      {% if cart_items %}
+        <table class="table cart-table">
+          <thead>
+            <tr>
+              <th>Book</th>
+              <th>Price</th>
+              <th>Discount</th>
+              <th width="160">Quantity</th>
+              <th>Total</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for item in cart_items %}
+              <tr data-item-id="{{ item.id }}">
+                <!-- Book image + title -->
+                <td data-label="Book">
+                  <div class="d-flex align-items-center gap-2">
+                    <img src="{{ item.product.book_image.url }}" alt="{{ item.product.title }}" width="60" height="80" style="object-fit: cover; border-radius: 4px;" />
+                    <span>{{ item.product.title }}</span>
+                  </div>
+                </td>
+
+                <td data-label="Price">৳ {{ item.price }}</td>
+                <td data-label="Discount">৳ {{ item.discount }}</td>
+
+                <td data-label="Quantity">
+                  <div class="qty-box">
+                    <button class="qty-btn minus">−</button>
+                    <input type="number" class="qty-input" value="{{ item.quantity }}" min="1" />
+                    <button class="qty-btn plus">+</button>
+                  </div>
+                </td>
+
+                <td data-label="Total" class="item-total">৳ {{ item.final_price }}</td>
+
+                <td>
+                  <button class="btn btn-sm btn-danger remove-item">✕</button>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <!-- Cart Summary -->
+        <div class="p-3 border rounded bg-light cart-summary">
+          <h5>Cart Summary</h5>
+
+          <div class="summary-row">
+            <span>Total Price</span>
+            <strong>৳ <span id="cart-total">{{ cart.total_price }}</span></strong>
+          </div>
+
+          <div class="summary-row discount">
+            <span>Total Discount</span>
+            <strong>৳ <span id="cart-discount">{{ cart.total_discount }}</span></strong>
+          </div>
+          <div class="summary-row discount">
+            <span>Total Amount</span>
+            <strong>৳ <span id="cart-net-amount">{{ cart.net_amount }}</span></strong>
+          </div>
+
+          <a href="#" class="btn btn-success w-100">Proceed to Checkout</a>
+        </div>
+      {% else %}
+        <p>Your cart is empty.</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <input type="hidden" id="csrf_token" value="{{ csrf_token }}" />
+  <script src="{% static 'web/js/cart.js' %}"></script>
+{% endblock %}

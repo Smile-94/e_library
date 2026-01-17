@@ -14,7 +14,7 @@ def cart_summary(request):
             "cart_total": 0,
         }
 
-    cart = Cart.objects.filter(user=request.user, is_active=True).prefetch_related("cart_products").first()
+    cart = Cart.objects.filter(user=request.user, is_active=True).prefetch_related("cart_products_cart").first()
 
     if not cart:
         return {
@@ -23,6 +23,6 @@ def cart_summary(request):
         }
 
     return {
-        "cart_count": cart.cart_products.count(),
+        "cart_count": cart.cart_products_cart.count(),
         "cart_total": cart.total_price,
     }

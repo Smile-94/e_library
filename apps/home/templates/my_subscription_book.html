@@ -139,27 +139,6 @@
           </div>
           <div class="row">
             {% if books %}
-<<<<<<< HEAD
-            {% for my_book in books %}
-              <div class="col-lg-4 col-md-6 col-sm-6">
-                <div class="product__item">
-                  <div class="product__item__pic set-bg" data-setbg="{{ my_book.book.book_image.url }}">
-                    <ul class="product__item__pic__hover">
-                      <li>
-                        <a href="#"><i class="fa fa-heart"></i></a>
-                      </li>
-                      <li>
-                        <a href="#"><i class="fa fa-retweet"></i></a>
-                      </li>
-                      <li>
-                        <a href="#"><i class="fa fa-shopping-cart"></i></a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="product__item__text">
-                    <h6><a href="{% url 'home:home_book_details' my_book.book.id %}">{{ my_book.book.title }}</a></h6>
-                    <h5>&#2547; {{ my_book.book.physical_price }}</h5>
-=======
               {% for book in books %}
                 <div class="col-lg-4">
                   <div class="product__discount__item">
@@ -193,7 +172,6 @@
                         {% endif %}
                       </div>
                     </div>
->>>>>>> 6e236ef6c4b8a18ac170c260244a2a455ab075e2
                   </div>
                 </div>
               {% endfor %}
