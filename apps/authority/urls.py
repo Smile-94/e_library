@@ -41,6 +41,8 @@ from apps.authority.views.manage_subscription import (
 )
 from apps.authority.views.user_management import UserListView
 
+from apps.authority.views.discount_management import PromotionalDiscountListView
+
 app_name = "authority"
 
 # Dashboard Urls
@@ -99,4 +101,9 @@ urlpatterns += [
     path("subscription-detail/<int:pk>/", SubscriptionDetailView.as_view(), name="subscription_detail"),
     path("user-subscription-list/", UserSubscriptionListView.as_view(), name="user_subscription_list"),
     path("user-subscription-edit/<int:pk>/", UserSubscriptionEditView.as_view(), name="user_subscription_edit"),
+]
+
+# Discount Management Urls
+urlpatterns += [
+    path("discount-list/", PromotionalDiscountListView.as_view(), name="discount_list"),
 ]

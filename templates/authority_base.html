@@ -149,6 +149,26 @@
                             
                         </div>
                     </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa-solid fa-cart-arrow-down me-2"></i>Order</a>
+                        
+                        
+                        <div class="dropdown-menu bg-transparent border-0">
+
+                            {% if request.user|has_permission:"can_view_promotional_discount" %}
+                                <a href="{% url 'authority:discount_list' %}" class="dropdown-item"><i class="fa-solid fa-cart-plus me-2"></i>Promotional Discount</a>
+                                
+                            {% endif %}
+                            
+                            {% if request.user|has_permission:"can_view_subscription" %}
+                                <a href="{% url 'authority:subscription_list' %}" class="dropdown-item"><i class="fa-solid fa-list me-2"></i> Subscription List</a>
+                            {% endif %}
+                            {% if request.user|has_permission:"can_view_user_subscription" %}
+                                <a href="{% url 'authority:user_subscription_list' %}" class="dropdown-item"><i class="fa-solid fa-list me-2"></i> User Subscription List</a>
+                            {% endif %}
+                            
+                        </div>
+                    </div>
                     {% comment %} <a href="widget.html" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Widgets</a>
                     <a href="form.html" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Forms</a>
                     <a href="table.html" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Tables</a>
