@@ -1,29 +1,21 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>{{ title }}</title>
-  {% load static %}
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background: #111;
-    }
+{% extends 'home_base.html' %}
+{% load static %}
 
-    iframe {
-      width: 100vw;
-      height: 100vh;
-      border: none;
-    }
-  </style>
-</head>
-<body>
+{% block title %}
+  {{ book.title }} | Reader
+{% endblock %}
 
-<iframe
-  src="{% static 'pdfjs/web/viewer.html' %}?file={{ book.digital_file.url|urlencode }}"
-  allowfullscreen>
-</iframe>
+{% block body %}
+  <section class="container-fluid py-4">
+    <div class="row">
+      <div class="col-12 text-center mb-3">
+        <h4>{{ book.title }}</h4>
+        <p class="text-muted">{{ book.author }}</p>
+      </div>
 
-</body>
-</html>
+      <div class="col-12">
+        <iframe src="{% static 'pdfjs/web/viewer.html' %}?file={% url 'book:book_pdf_view' book.id %}" width="100%" height="700" style="border:none;"></iframe>
+      </div>
+    </div>
+  </section>
+{% endblock %}

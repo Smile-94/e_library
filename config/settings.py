@@ -187,3 +187,5 @@ LOGGING = {
         },
     },
 }
+
+X_FRAME_OPTIONS = "SAMEORIGIN"

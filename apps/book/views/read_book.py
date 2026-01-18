@@ -8,6 +8,10 @@ from django.views import View
 from apps.book.models import Book
 from apps.subscription.models import UserSubscriptionBooks
 from apps.subscription.utils import get_active_subscription
+from django.http import FileResponse
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+from apps.subscription.models.user_subscription_model import UserSubscriptionBooks
 
 logger = logging.getLogger(__name__)
 
@@ -61,3 +65,16 @@ class SubscriptionBookReadView(LoginRequiredMixin, View):
             logger.exception(f"ERROR:------>> Error occurred in SubscriptionBookReadView: {e}")
             messages.error(request, "Unable to load SubscriptionBookReadView!")
             return redirect("home:my_subscription_book_list")
+
+
+@login_required
+def book_pdf_view(request, book_id):
+    user_book = get_object_or_404(UserSubscriptionBooks, book=book_id)
+
+    response = FileResponse(user_book.book.digital_file.open(), content_type="application/pdf")
+
+    response["Content-Disposition"] = "inline"
+    response["X-Frame-Options"] = "SAMEORIGIN"
+    response["Cache-Control"] = "no-store"
+
+    return response
