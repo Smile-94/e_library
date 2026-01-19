@@ -18809,13 +18809,30 @@ export { PDFViewerApplication, AppConstants as PDFViewerApplicationConstants, Ap
 //   hide("download");
 //   hide("print");
 // });
+
 document.addEventListener("keydown", function (e) {
-  // Block Print (Ctrl/Cmd + P) and Save (Ctrl/Cmd + S)
+  const key = e.key.toLowerCase();
+
+  // Ctrl / Cmd + P / S
   if (
     (e.ctrlKey || e.metaKey) &&
-    ["p", "s"].includes(e.key.toLowerCase())
+    (key === "p" || key === "s")
   ) {
     e.preventDefault();
-    alert("Printing and saving are disabled for this document.");
+    e.stopImmediatePropagation();
+    return false;
   }
-});
+
+  // Ctrl + Shift + S
+  if (e.ctrlKey && e.shiftKey && key === "s") {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    return false;
+  }
+}, true);
+
+if (window.PDFViewerApplication) {
+  PDFViewerApplication.print = function () {
+    console.warn("PDF print blocked");
+  };
+}
