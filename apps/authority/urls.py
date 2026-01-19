@@ -49,6 +49,9 @@ from apps.authority.views.discount_management import (
     PromotionalDiscountDeleteView,
 )
 
+# Import Order View from authority/views/order_management.py
+from apps.authority.views.order_management import OrderListView, OrderDetailView
+
 app_name = "authority"
 
 # Dashboard Urls
@@ -115,4 +118,10 @@ urlpatterns += [
     path("discount-list/", PromotionalDiscountListView.as_view(), name="discount_list"),
     path("discount-edit/<int:pk>/", PromotionalDiscountEditView.as_view(), name="discount_edit"),
     path("discount-delete/<int:pk>/", PromotionalDiscountDeleteView.as_view(), name="discount_delete"),
+]
+
+# Order Management Urls
+urlpatterns += [
+    path("order-list/", OrderListView.as_view(), name="order_list"),
+    path("order-detail/<int:pk>/", OrderDetailView.as_view(), name="order_detail"),
 ]
