@@ -41,6 +41,17 @@ from apps.authority.views.manage_subscription import (
 )
 from apps.authority.views.user_management import UserListView
 
+# Import Promotional Discount View from authority/views/discount_management.py
+from apps.authority.views.discount_management import (
+    PromotionalDiscountListView,
+    PromotionalDiscountCreateView,
+    PromotionalDiscountEditView,
+    PromotionalDiscountDeleteView,
+)
+
+# Import Order View from authority/views/order_management.py
+from apps.authority.views.order_management import OrderListView, OrderDetailView
+
 app_name = "authority"
 
 # Dashboard Urls
@@ -99,4 +110,18 @@ urlpatterns += [
     path("subscription-detail/<int:pk>/", SubscriptionDetailView.as_view(), name="subscription_detail"),
     path("user-subscription-list/", UserSubscriptionListView.as_view(), name="user_subscription_list"),
     path("user-subscription-edit/<int:pk>/", UserSubscriptionEditView.as_view(), name="user_subscription_edit"),
+]
+
+# Discount Management Urls
+urlpatterns += [
+    path("discount-create/", PromotionalDiscountCreateView.as_view(), name="discount_create"),
+    path("discount-list/", PromotionalDiscountListView.as_view(), name="discount_list"),
+    path("discount-edit/<int:pk>/", PromotionalDiscountEditView.as_view(), name="discount_edit"),
+    path("discount-delete/<int:pk>/", PromotionalDiscountDeleteView.as_view(), name="discount_delete"),
+]
+
+# Order Management Urls
+urlpatterns += [
+    path("order-list/", OrderListView.as_view(), name="order_list"),
+    path("order-detail/<int:pk>/", OrderDetailView.as_view(), name="order_detail"),
 ]

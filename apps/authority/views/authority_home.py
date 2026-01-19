@@ -14,6 +14,9 @@ from django.views import View
 
 from apps.account.models.user_model import User
 
+from apps.book.models.book_model import Book
+from apps.order.models.order_model import Order, OrderStatusChoices
+
 # Custom Permission Class
 from apps.common.permissions import StaffPassesTestMixin
 
@@ -29,11 +32,15 @@ class AdminDashboardView(LoginRequiredMixin, StaffPassesTestMixin, View):
             total_customer = self.user_model.objects.filter(is_staff=False).count()
             total_staff = self.user_model.objects.filter(is_staff=True).count()
             total_author = self.user_model.objects.filter(is_author=True).count()
+            total_books = Book.objects.all().count()
+            recent_orders = Order.objects.filter(status=OrderStatusChoices.PENDING.value).order_by("-id")[:5]
             context = {
                 "title": "Dashboard",
                 "total_customer": total_customer,
                 "total_staff": total_staff,
                 "total_author": total_author,
+                "total_books": total_books,
+                "recent_orders": recent_orders,
             }
 
             return render(request, self.template_name, context)

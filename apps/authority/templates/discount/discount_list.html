@@ -1,0 +1,95 @@
+{% extends 'authority_base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load rbac_tags %}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block body %}
+  <div class="bg-light rounded h-100 p-4">
+    <h6 class="mb-4">{{ table_title }}</h6>
+
+    <div class="row mb-4 align-items-center">
+      <!-- Search -->
+      <div class="col-md-6">
+        {% if discounts %}
+          <form class="d-flex" method="get">
+            <div class="input-group">
+              {{ discounts.form.search|add_class:'form-control' }}
+              <button class="btn btn-outline-success" type="submit">Search</button>
+            </div>
+          </form>
+        {% endif %}
+      </div>
+
+      <!-- Add Promotion -->
+      <div class="col-md-6 text-end">
+        {% if request.user|has_permission:'can_add_promotional_discount' %}
+          <a href="{% url 'authority:discount_create' %}" class="btn btn-success"><i class="fa-solid fa-tags"></i> Add Promotion</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <table class="table table-striped table-bordered">
+      <thead class="bg-dark text-white">
+        <tr>
+          <th>Sl</th>
+          <th>Title</th>
+          <th>Discount Amount(%)</th>
+          <th>Priority</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% if discounts %}
+          {% for discount in discounts.qs %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ discount.promotion_title }}</td>
+              <td>{{ discount.discount_amount }}</td>
+              <td>{{ discount.priority }}</td>
+              <td>{{ discount.start_date|date:'Y-m-d' }}</td>
+              <td>
+                {% if discount.end_date %}
+                  {{ discount.end_date|date:'Y-m-d' }}
+                {% else %}
+                  <span class="badge bg-info">No Expiry</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if discount.active_status == 'active' %}
+                  <span class="badge bg-success">Active</span>
+                {% else %}
+                  <span class="badge bg-danger">Inactive</span>
+                {% endif %}
+              </td>
+              <td>
+                {% comment %} <a class="btn btn-success" href="{% url 'authority:promotion_detail' discount.id %}"><i class="fa-solid fa-eye"></i></a> {% endcomment %}
+                {% comment %} <a class="btn btn-success" href="#"><i class="fa-solid fa-eye"></i></a> {% endcomment %}
+
+                {% if request.user|has_permission:'can_edit_promotional_discount' %}
+                  <a class="btn btn-primary" href="{% url 'authority:discount_edit' discount.id %}"><i class="fa-regular fa-pen-to-square"></i></a>
+                {% endif %}
+
+                {% if request.user|has_permission:'can_delete_promotional_discount' %}
+                  
+                  <a class="btn btn-danger" href="{% url 'authority:discount_delete' discount.id %}"><i class="fa-solid fa-trash"></i></a>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="8" class="text-center">No promotional discount found!</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

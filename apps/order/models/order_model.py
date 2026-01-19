@@ -141,5 +141,5 @@ class OrderPayment(BaseModel):
     def __str__(self):
         return f"Payment #{self.pk} - {self.order.id}"
 
-    def __str__(self):
-        return f"Payment #{self.pk} - {self.order.id}"
+    def __repr__(self):
+        return f"<Payment: {self.order.id}, {self.pk}>"

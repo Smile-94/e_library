@@ -24,6 +24,7 @@ logger = logging.getLogger(__name__)
 User = get_user_model()
 
 
+# <<------------------------------------*** My Subscription History View ***------------------------------------>>
 class MySubscriptionHistoryView(LoginRequiredMixin, View):
     template_name = "home_user_subscription.html"
     model_class = UserSubscription
@@ -60,6 +61,7 @@ class AddBookToMySubscriptionView(LoginRequiredMixin, View):
     def post(self, request):
         try:
             book_id = request.POST.get("book_id")
+            book_instance = Book.objects.filter(id=book_id).first()
             current_time = now()
 
             user_subscription = (
@@ -82,6 +84,9 @@ class AddBookToMySubscriptionView(LoginRequiredMixin, View):
             if subscription.book_read_limit == SubscriptionReadLimitChoices.LIMITED:
                 if user_subscription.read_count >= subscription.max_book_read_limit:
                     return JsonResponse({"status": "error", "message": "Book read limit exceeded"}, status=400)
+
+            if book_instance and not book_instance.digital_file:
+                return JsonResponse({"status": "error", "message": "Book does not have digital file"}, status=400)
 
             if UserSubscriptionBooks.objects.filter(user_subscription=user_subscription, book_id=book_id).exists():
                 return JsonResponse({"status": "error", "message": "Book already added"}, status=400)

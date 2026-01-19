@@ -34,7 +34,7 @@ indent-style = "space"
 
 [tool.isort]
 profile = "black"
-line_length = 88
+line_length = 120
 combine_as_imports = true
 multi_line_output = 3
 include_trailing_comma = true
