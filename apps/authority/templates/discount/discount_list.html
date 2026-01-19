@@ -27,8 +27,7 @@
       <!-- Add Promotion -->
       <div class="col-md-6 text-end">
         {% if request.user|has_permission:'can_add_promotional_discount' %}
-          <a href="#" class="btn btn-success"><i class="fa-solid fa-tags"></i> Add Promotion</a>
-          {% comment %} <a href="{% url 'authority:promotion_create' %}" class="btn btn-success"><i class="fa-solid fa-tags"></i> Add Promotion</a> {% endcomment %}
+          <a href="{% url 'authority:discount_create' %}" class="btn btn-success"><i class="fa-solid fa-tags"></i> Add Promotion</a>
         {% endif %}
       </div>
     </div>
@@ -64,7 +63,7 @@
                 {% endif %}
               </td>
               <td>
-                {% if discount.active_status == 'ACTIVE' %}
+                {% if discount.active_status == 'active' %}
                   <span class="badge bg-success">Active</span>
                 {% else %}
                   <span class="badge bg-danger">Inactive</span>
@@ -72,16 +71,15 @@
               </td>
               <td>
                 {% comment %} <a class="btn btn-success" href="{% url 'authority:promotion_detail' discount.id %}"><i class="fa-solid fa-eye"></i></a> {% endcomment %}
-                <a class="btn btn-success" href="#"><i class="fa-solid fa-eye"></i></a>
+                {% comment %} <a class="btn btn-success" href="#"><i class="fa-solid fa-eye"></i></a> {% endcomment %}
 
                 {% if request.user|has_permission:'can_edit_promotional_discount' %}
-                  <a class="btn btn-primary" href="#"><i class="fa-regular fa-pen-to-square"></i></a>
-                  {% comment %} <a class="btn btn-primary" href="{% url 'authority:promotion_edit' discount.id %}"><i class="fa-regular fa-pen-to-square"></i></a> {% endcomment %}
+                  <a class="btn btn-primary" href="{% url 'authority:discount_edit' discount.id %}"><i class="fa-regular fa-pen-to-square"></i></a>
                 {% endif %}
 
                 {% if request.user|has_permission:'can_delete_promotional_discount' %}
-                  <a class="btn btn-danger" href="#"><i class="fa-solid fa-trash"></i></a> 
-                  {% comment %} <a class="btn btn-danger" href="{% url 'authority:promotion_delete' discount.id %}"><i class="fa-solid fa-trash"></i></a> {% endcomment %}
+                  
+                  <a class="btn btn-danger" href="{% url 'authority:discount_delete' discount.id %}"><i class="fa-solid fa-trash"></i></a>
                 {% endif %}
               </td>
             </tr>

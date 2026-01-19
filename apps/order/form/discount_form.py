@@ -4,6 +4,7 @@ from django.utils import timezone
 from apps.order.models.discount_model import PromotionalDiscount
 
 
+# <<------------------------------------*** Promotional Discount Form ***------------------------------------>>
 class PromotionalDiscountForm(forms.ModelForm):
     class Meta:
         model = PromotionalDiscount
@@ -18,16 +19,29 @@ class PromotionalDiscountForm(forms.ModelForm):
             "end_date",
         )
         widgets = {
-            "start_date": forms.DateTimeInput(attrs={"type": "datetime-local"}),
-            "end_date": forms.DateTimeInput(attrs={"type": "datetime-local"}),
+            "start_date": forms.DateTimeInput(
+                attrs={"type": "datetime-local"},
+                format="%Y-%m-%dT%H:%M",
+            ),
+            "end_date": forms.DateTimeInput(
+                attrs={"type": "datetime-local"},
+                format="%Y-%m-%dT%H:%M",
+            ),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # REQUIRED so Django accepts datetime-local format
+        self.fields["start_date"].input_formats = ("%Y-%m-%dT%H:%M",)
+        self.fields["end_date"].input_formats = ("%Y-%m-%dT%H:%M",)
 
     def clean(self):
         cleaned_data = super().clean()
         start_date = cleaned_data.get("start_date")
         end_date = cleaned_data.get("end_date")
 
-        if end_date and start_date and end_date < start_date:
+        if start_date and end_date and end_date < start_date:
             raise forms.ValidationError("End date must be greater than start date.")
 
         return cleaned_data
