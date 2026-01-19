@@ -1,17 +1,16 @@
 import logging
 
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import FileResponse
 from django.shortcuts import redirect, render
 from django.views import View
 
 from apps.book.models import Book
 from apps.subscription.models import UserSubscriptionBooks
-from apps.subscription.utils import get_active_subscription
-from django.http import FileResponse
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404
 from apps.subscription.models.user_subscription_model import UserSubscriptionBooks
+from apps.subscription.utils import get_active_subscription
 
 logger = logging.getLogger(__name__)
 
@@ -69,7 +68,10 @@ class SubscriptionBookReadView(LoginRequiredMixin, View):
 
 @login_required
 def book_pdf_view(request, book_id):
-    user_book = get_object_or_404(UserSubscriptionBooks, book=book_id)
+    user_book = UserSubscriptionBooks.objects.filter(
+        book__id=book_id, user_subscription__user=request.user, user_subscription__active_status="active"
+    ).first()
+    # get_object_or_404(UserSubscriptionBooks, book=book_id, subscription__user=request.user)
 
     response = FileResponse(user_book.book.digital_file.open(), content_type="application/pdf")
 

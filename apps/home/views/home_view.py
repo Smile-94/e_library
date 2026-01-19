@@ -1,6 +1,7 @@
 import logging
 
 from django.contrib import messages
+from django.db.models import Count
 from django.db.models.functions import Random
 
 # Permission and Authentication
@@ -96,7 +97,7 @@ class ShopeView(View):
             context = {
                 "title": "Shope",
                 "books": books,
-                "all_categories": Category.objects.all(),
+                "all_categories": Category.objects.all().annotate(count_book=Count("books_category")).order_by("-count_book"),
                 "show_hero_banner": False,
                 "hero_normal": "hero-normal",
                 "sale_off": books.filter(active_status="active").order_by("id")[:6],
@@ -122,7 +123,7 @@ class CategoryProductView(View):
                 "title": "Shope",
                 "books": books,
                 "category": category,
-                "all_categories": Category.objects.all(),
+                "all_categories": Category.objects.annotate(book_count=Count("books_category")).order_by("-book_count"),
                 "show_hero_banner": False,
                 "hero_normal": "hero-normal",
                 "sale_off": books.filter(active_status="active").order_by("id")[:6],

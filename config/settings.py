@@ -1,3 +1,4 @@
+import mimetypes
 from pathlib import Path
 
 from django.contrib.messages import constants as messages
@@ -117,6 +118,9 @@ TIME_ZONE = "Asia/Dhaka"
 USE_I18N = True
 
 USE_TZ = True
+
+mimetypes.add_type("application/javascript", ".mjs")
+mimetypes.add_type("application/wasm", ".wasm")
 
 # <<------------------------------------*** Static Files Settings ***------------------------------------>>
 STATIC_URL = "static/"

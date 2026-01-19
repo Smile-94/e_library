@@ -80,7 +80,7 @@
       <div class="d-flex align-items-center justify-content-between mb-4">
         <h6 class="mb-0">Recent Sales</h6>
         {% comment %} <a href="{% url 'order:order_list' %}">Show All</a> {% endcomment %}
-        <a href="#">Show All</a>
+        <a href="{% url 'authority:order_list' %}">Show All</a>
       </div>
 
       <div class="table-responsive">
@@ -130,8 +130,8 @@
                 </td>
 
                 <td>
-                  {% comment %} <a class="btn btn-sm btn-primary" href="{% url 'order:order_detail' order.id %}">Detail</a> {% endcomment %}
-                  <a class="btn btn-sm btn-primary" href="#">Detail</a>
+                  <a class="btn btn-sm btn-primary" href="{% url 'authority:order_detail' order.id %}">Detail</a>
+                  
                 </td>
               </tr>
             {% empty %}

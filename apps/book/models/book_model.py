@@ -15,7 +15,7 @@ class BookStatus(models.TextChoices):
 class Book(BaseModel):
     title = models.CharField(max_length=255)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="books_author")
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name="books_category")
     book_image = models.ImageField(upload_to="books/cover/", blank=True, null=True)
     isbn = models.CharField(max_length=20, blank=True, null=True, unique=True)
     language = models.CharField(max_length=50)
@@ -40,12 +40,16 @@ class Book(BaseModel):
         app_label = "book"
 
     def get_book_discount(self):
-        from apps.order.function.promotional_discount import get_product_promotional_discount
+        from apps.order.function.promotional_discount import (
+            get_product_promotional_discount,
+        )
 
         return get_product_promotional_discount(self.id)
 
     def get_discounted_price(self):
-        from apps.order.function.promotional_discount import get_discounted_physical_price
+        from apps.order.function.promotional_discount import (
+            get_discounted_physical_price,
+        )
 
         return get_discounted_physical_price(self.id)
 
