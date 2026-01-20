@@ -84,14 +84,14 @@
                 </a>
               {% endif %}
 
-              {% if request.user|has_permission:'can_delete_book' %}
+              {% comment %} {% if request.user|has_permission:'can_delete_book' %}
                 {% comment %} <a class="btn btn-danger btn-sm" href="{% url 'authority:book_delete' book.id %}">
                   <i class="fa-solid fa-trash"></i>
                 </a> {% endcomment %}
                 {% comment %} <a class="btn btn-danger btn-sm" href="#">
                   <i class="fa-solid fa-trash"></i>
-                </a> {% endcomment %}
-              {% endif %}
+                </a> 
+              {% endif %} {% endcomment %}
             </td>
           </tr>
           {% endfor %}
