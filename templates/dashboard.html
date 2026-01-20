@@ -49,28 +49,27 @@
   </div>
   <!-- Sale & Revenue End -->
 
-<!-- Sales Chart Start -->
-<div class="container-fluid pt-4 px-4">
-  <div class="row g-4 justify-content-center">
-    <!-- Weekly Orders Chart -->
-    <div class="col-sm-12 col-md-6 col-xl-6">
-      <div class="bg-light text-center rounded p-4 d-flex flex-column justify-content-center align-items-center" style="height: 320px;">
-        <h6 class="mb-3">Weekly Order Status (Last 7 Days)</h6>
-        <canvas id="worldwide-sales" style="max-width:100%; max-height:220px;"></canvas>
+  <!-- Sales Chart Start -->
+  <div class="container-fluid pt-4 px-4">
+    <div class="row g-4 justify-content-center">
+      <!-- Weekly Orders Chart -->
+      <div class="col-sm-12 col-md-6 col-xl-6">
+        <div class="bg-light text-center rounded p-4 d-flex flex-column justify-content-center align-items-center" style="height: 320px;">
+          <h6 class="mb-3">Weekly Order Status (Last 7 Days)</h6>
+          <canvas id="WeeklyOrdersChart" style="max-width:100%; max-height:220px;"></canvas>
+        </div>
       </div>
-    </div>
 
-    <!-- Category Books Pie Chart -->
-    <div class="col-sm-12 col-md-6 col-xl-6">
-      <div class="bg-light text-center rounded p-4 d-flex flex-column justify-content-center align-items-center" style="height: 320px;">
-        <h6 class="mb-3">Category Books</h6>
-        <canvas id="categoryPieChart" style="max-width:100%; max-height:220px;"></canvas>
+      <!-- Category Books Pie Chart -->
+      <div class="col-sm-12 col-md-6 col-xl-6">
+        <div class="bg-light text-center rounded p-4 d-flex flex-column justify-content-center align-items-center" style="height: 320px;">
+          <h6 class="mb-3">Category Books</h6>
+          <canvas id="categoryPieChart" style="max-width:100%; max-height:220px;"></canvas>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<!-- Sales Chart End -->
-
+  <!-- Sales Chart End -->
 
   <!-- Recent Sales Start -->
   <div class="container-fluid pt-4 px-4">
@@ -264,70 +263,68 @@
   </div> {% endcomment %}
   <!-- Widgets End -->
   {{ weekly_sales|json_script:'weekly-sales-data' }}
-  {{ category_pie_data|json_script:"category-pie-data" }}
+  {{ category_pie_data|json_script:'category-pie-data' }}
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const data = JSON.parse(
-        document.getElementById("weekly-sales-data").textContent
-    );
-
-    const ctx = document.getElementById("worldwide-sales").getContext("2d");
-
-    if (window.weeklyChart) {
-        window.weeklyChart.destroy();
-    }
-
-    window.weeklyChart = new Chart(ctx, {
-        type: "bar",
+    document.addEventListener('DOMContentLoaded', function () {
+      const data = JSON.parse(document.getElementById('weekly-sales-data').textContent)
+    
+      const ctx = document.getElementById('WeeklyOrdersChart').getContext('2d')
+    
+      if (window.weeklyChart) {
+        window.weeklyChart.destroy()
+      }
+    
+      window.weeklyChart = new Chart(ctx, {
+        type: 'bar',
         data: {
-            labels: data.labels,
-            datasets: [
-                {
-                    label: "Pending",
-                    data: data.pending,
-                    backgroundColor: "#ffc107",
-                },
-                {
-                    label: "Confirmed",
-                    data: data.confirmed,
-                    backgroundColor: "#0d6efd",
-                },
-                {
-                    label: "Delivered",
-                    data: data.delivered,
-                    backgroundColor: "#198754",
-                },
-            ],
+          labels: data.labels,
+          datasets: [
+            {
+              label: 'Pending',
+              data: data.pending,
+              backgroundColor: '#ffc107'
+            },
+            {
+              label: 'Confirmed',
+              data: data.confirmed,
+              backgroundColor: '#0d6efd'
+            },
+            {
+              label: 'Delivered',
+              data: data.delivered,
+              backgroundColor: '#198754'
+            }
+          ]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            scales: {
-                x: {
-                    stacked: false,   // 🔴 IMPORTANT
-                },
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        stepSize: 1,
-                    },
-                },
+          responsive: true,
+          maintainAspectRatio: true,
+          scales: {
+            x: {
+              stacked: false // 🔴 IMPORTANT
             },
-            plugins: {
-                legend: {
-                    position: "bottom",
-                },
-            },
-        },
-    });
-});
-</script>
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      })
+    })
+  </script>
 
-<!-- Category Books Chart Start -->
-<script>
+  <!-- Category Books Chart Start -->
+  <script>
 document.addEventListener("DOMContentLoaded", function () {
     const rawData = document.getElementById("category-pie-data");
     if (!rawData) return;
@@ -380,8 +377,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 <!-- Category Books Chart End -->
 </script>
-
-
 
   <!-- Weekly Sales Chart End -->
 {% endblock %}

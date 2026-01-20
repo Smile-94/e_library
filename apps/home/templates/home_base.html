@@ -48,7 +48,7 @@
     <div class="humberger__menu__overlay"></div>
     <div class="humberger__menu__wrapper">
       <div class="humberger__menu__logo">
-        <a href="#"><img src="{% static 'web/img/logo.jpg' %}" alt="" /></a>
+        <a href="home:home"><img src="{% static 'web/img/logo.jpg' %}" alt="" /></a>
       </div>
       <div class="humberger__menu__cart">
         <ul>
@@ -141,7 +141,7 @@
               <div class="header__top__left">
                 <ul>
                   <li>
-                    <i class="fa fa-envelope"></i> hello@colorlib.com
+                    <i class="fa fa-envelope"></i> sakar001chaity@gmail.com
                   </li>
                   {% comment %} <li>Free Shipping for all Order of $99</li> {% endcomment %}
                 </ul>
@@ -282,7 +282,8 @@
     </header>
     <!-- Header Section End -->
 
-    <!-- --- ----------Message Modal Start--------------->
+    <!-- --- -->
+    <!-- ----------Message Modal Start--------------->
     {% if messages %}
       <div id="messageModal" class="ogan-modal">
         <div class="ogan-modal-content">
@@ -320,9 +321,8 @@
       </script>
     {% endif %}
 
-    <!-- --- -->
-    <!---------Message Modal End--------------->
-
+    <!-- --- ----------Message Modal End--------------->
+     
 
     <!-- Hero Section Begin -->
     <section class="hero {{ hero_normal }}">
@@ -330,9 +330,9 @@
         <div class="row">
           <div class="col-lg-3">
             <div class="hero__categories">
-              <div class="hero__categories__all">
+              <div class="hero__categories__all" style="background: green;">
                 <i class="fa fa-bars"></i>
-                <span>All departments</span>
+                <span style="color: #fff">All departments</span>
               </div>
               <ul>
                 {% for category in all_categories %}
@@ -360,7 +360,7 @@
                   <i class="fa fa-phone"></i>
                 </div>
                 <div class="hero__search__phone__text">
-                  <h5>+8801981701000</h5>
+                  <h5 style="color: black;">+8801981701000</h5>
                   <span>support 24/7 time</span>
                 </div>
               </div>
@@ -371,7 +371,7 @@
                   <span>Read Anywhere</span>
                   <h2>Thousands of books</h2>
                   <p>Free Downloads Available</p>
-                  <a href="{% url 'home:home_shope' %}" class="primary-btn">GET STARTED</a>
+                  <a href="{% url 'home:home_shope' %}" class="primary-btn" style="background-color: green;">GET STARTED</a>
                 </div>
               </div>
             {% endif %}
@@ -395,9 +395,9 @@
                 <a href="{% url 'home:home' %}"><img src="{% static 'web/img/logo.jpg' %}" alt="" /></a>
               </div>
               <ul>
-                <li>Address: 60-49 Road 11378 New York</li>
-                <li>Phone: +65 11.188.888</li>
-                <li>Email: hello@colorlib.com</li>
+                <li>Address:  House 43,Road 11; uttara 10, Dkaka.</li>
+                <li>Phone: +8801748463415</li>
+                <li>Email: sarkaroo1chait@gmail.com</li>
               </ul>
             </div>
           </div>

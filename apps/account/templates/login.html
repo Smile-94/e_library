@@ -2,58 +2,59 @@
 {% load static %}
 {% load widget_tweaks %}
 
-{% block title %}{{ title }}{% endblock %}
+{% block title %}
+  {{ title }}
+{% endblock %}
 
 {% block body %}
-<!-- Sign In Start -->
-<div class="container-fluid">
+  <!-- Sign In Start -->
+  <div class="container-fluid">
     <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
-        <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
-            <div class="bg-light rounded p-4 p-sm-5 my-4 mx-3">
-                <div class="d-flex align-items-center justify-content-between mb-3">
-                    <h3>Login</h3>
-                </div>
-                <form action="" method="POST"> {% csrf_token %}
-                    <div class="form-floating mb-3">
-                        {{form.username | add_class:"form-control" | append_attr:"placeholder:jhon@example.com"}}
-                        <label for="id_username">Username</label>
-                    </div>
-                    <div class="form-floating mb-4">
-                        {{form.password | add_class:"form-control" | append_attr:"placeholder:name@example.com"}}
-                        <label for="id_password">Password</label>
-                        <span class="toggle-password" data-target="id_password" style="cursor:pointer; position:absolute; right:15px; top:50%; transform:translateY(-50%);">
-                            <i class="fa fa-eye"></i>
-                        </span>
-                    </div>
-                    <button type="submit" class="btn btn-primary py-3 w-100 mb-4">Login</button>
-                </form>
-                {% comment %} <div class="d-flex align-items-center justify-content-between mb-4">
-                    <a href="">Forgot Password</a>
-                </div> {% endcomment %}
-                
-                <p class="text-center mb-0">Don't have an Account? <a href="{% url 'account:signup' %}">Sign Up</a></p>
+      <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+        <div class="bg-light rounded p-4 p-sm-5 my-4 mx-3">
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <h3>Login</h3>
+          </div>
+          <form action="" method="POST">
+            {% csrf_token %}
+            <div class="form-floating mb-3">
+              {{ form.username|add_class:'form-control'|append_attr:'placeholder:jhon@example.com' }}
+              <label for="id_username">Username</label>
             </div>
+            <div class="form-floating mb-4">
+              {{ form.password|add_class:'form-control'|append_attr:'placeholder:name@example.com' }}
+              <label for="id_password">Password</label>
+              <span class="toggle-password" data-target="id_password" style="cursor:pointer; position:absolute; right:15px; top:50%; transform:translateY(-50%);"><i class="fa fa-eye"></i></span>
+            </div>
+            <button type="submit" class="btn btn-primary py-3 w-100 mb-4">Login</button>
+          </form>
+          {% comment %} <div class="d-flex align-items-center justify-content-between mb-4">
+            <a href="">Forgot Password</a>
+          </div> {% endcomment %}
+
+          <p class="text-center mb-0">
+            Don't have an Account? <a href="{% url 'account:signup' %}">Sign Up</a>
+          </p>
         </div>
+      </div>
     </div>
-</div>
-<!-- Sign In End -->
-<script>
-
-
-// Show/hide password
-document.querySelectorAll(".toggle-password").forEach(function (toggle) {
-        toggle.addEventListener("click", function () {
-            const targetId = toggle.getAttribute("data-target");
-            const input = document.getElementById(targetId);
-
-            if (input.type === "password") {
-                input.type = "text";
-                toggle.innerHTML = '<i class="fa fa-eye-slash"></i>';
-            } else {
-                input.type = "password";
-                toggle.innerHTML = '<i class="fa fa-eye"></i>';
-            }
-        });
-});
-</script>
-{% endblock body%}
+  </div>
+  <!-- Sign In End -->
+  <script>
+    // Show/hide password
+    document.querySelectorAll('.toggle-password').forEach(function (toggle) {
+      toggle.addEventListener('click', function () {
+        const targetId = toggle.getAttribute('data-target')
+        const input = document.getElementById(targetId)
+    
+        if (input.type === 'password') {
+          input.type = 'text'
+          toggle.innerHTML = '<i class="fa fa-eye-slash"></i>'
+        } else {
+          input.type = 'password'
+          toggle.innerHTML = '<i class="fa fa-eye"></i>'
+        }
+      })
+    })
+  </script>
+{% endblock %}

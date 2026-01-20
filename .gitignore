@@ -12,7 +12,7 @@ venv.bak/
 __pycache__/
 
 # Database files
-db.sqlite3
+# db.sqlite3
 
 
 # Media and Static files
@@ -87,5 +87,5 @@ MANIFEST
 # pyenv
 .python-version
 
-pyproject.toml
-poetry.lock
+# pyproject.toml
+# poetry.lock
