@@ -18,6 +18,8 @@ from apps.authority.views.book_management import (
     BookCreateView,
     BookEditView,
     BookListView,
+    BookDetailView,
+    BookDeleteView,
 )
 from apps.authority.views.category_management import (
     CategoryCreateView,
@@ -103,6 +105,8 @@ urlpatterns += [
     path("book-create/", BookCreateView.as_view(), name="book_create"),
     path("book-list/", BookListView.as_view(), name="book_list"),
     path("book-edit/<int:pk>/", BookEditView.as_view(), name="book_edit"),
+    path("book-detail/<int:pk>/", BookDetailView.as_view(), name="book_detail"),
+    path("book-delete/<int:pk>/", BookDeleteView.as_view(), name="book_delete"),
 ]
 
 # Subscription Management Urls

@@ -6,6 +6,7 @@ from django.utils.crypto import get_random_string
 from apps.account.models.user_model import User
 from apps.book.models.book_model import Book
 from apps.common.models import BaseModel
+from apps.order.function.promotional_discount import get_discounted_physical_price
 
 
 class OrderStatusChoices(models.TextChoices):
@@ -82,7 +83,9 @@ class OrderProduct(BaseModel):
     quantity = models.PositiveIntegerField(default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     discount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    purchase_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     final_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # price - discount
+    profit_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # purchase_price - final_price
 
     class Meta:
         db_table = "order_product"
@@ -91,6 +94,14 @@ class OrderProduct(BaseModel):
 
     def get_subtotal(self):
         return self.final_price * self.quantity
+
+    def save(self, *args, **kwargs):
+        if not self.purchase_price:
+            self.purchase_price = self.product.purchase_price
+
+        if not self.profit_amount:
+            self.profit_amount = self.final_price - self.purchase_price
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.product.title} x {self.quantity}"

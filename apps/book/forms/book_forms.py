@@ -24,6 +24,7 @@ class BookForm(forms.ModelForm):
             "preview_file",
             "digital_price",
             "physical_price",
+            "purchase_price",
             "has_physical_copy",
             "status",
             "is_read_only",

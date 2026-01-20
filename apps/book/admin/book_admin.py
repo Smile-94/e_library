@@ -7,6 +7,7 @@ from apps.book.models.book_model import Book
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
     list_display = (
+        "id",
         "title",
         "author",
         "category",

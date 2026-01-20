@@ -137,4 +137,81 @@ class BookListView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesT
             return HttpResponse(f"{e}")
 
 
-# <<
+# <<------------------------------------*** Book Detail View ***------------------------------------>>
+class BookDetailView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesTestMixin, View):
+    required_permission = "can_view_book"
+    template_name = "book_detail.html"
+    model_class = Book
+
+    def get(self, request, pk):
+        try:
+            book = self.model_class.objects.filter(pk=pk).first()
+
+            if not book:
+                messages.error(request, "Book not found!")
+                return redirect("authority:book_list")
+
+            context = {
+                "title": "Book Details",
+                "book": book,
+            }
+            return render(request, self.template_name, context)
+
+        except Exception as e:
+            logger.exception(f"ERROR:------>> Error occurred in Book Detail View: {e}")
+            messages.error(request, "Unable to load book details!")
+            return redirect("authority:book_list")
+
+
+# <<------------------------------------*** Book Delete View ***------------------------------------>>
+class BookDeleteView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesTestMixin, View):
+    required_permission = "can_delete_book"
+    template_name = "book_delete.html"
+    model_class = Book
+    form_class = BookForm
+    success_url = reverse_lazy("authority:book_list")
+
+    def get(self, request, pk, *args, **kwargs):
+        try:
+            book = self.model_class.objects.filter(pk=pk).first()
+            if not book:
+                messages.error(request, "Book not found!")
+                return redirect("authority:book_list")
+
+            context = {
+                "title": "Delete Book",
+                "form_title": "Delete Book",
+                "form": self.form_class(instance=book),
+                "book": book,
+            }
+            return render(request, self.template_name, context)
+        except Exception as e:
+            logger.exception(f"ERROR:------>> Error occurred in Book Delete GET View: {e}")
+            messages.error(request, "Unable to load Book details!")
+            return HttpResponse(f"{e}")
+
+    def post(self, request, pk):
+        try:
+            book = self.model_class.objects.filter(pk=pk).first()
+            if not book:
+                messages.error(request, "Book not found!")
+                return redirect("authority:book_list")
+
+            form = self.form_class(request.POST, request.FILES, instance=book)
+            if not form.is_valid():
+                context = {
+                    "title": "Delete Book",
+                    "form_title": "Delete Book",
+                    "form": form,
+                    "book": book,
+                }
+                messages.error(request, "Unable to delete Book!")
+                return render(request, self.template_name, context)
+
+            form.save()
+            messages.success(request, "Book deleted successfully!")
+            return redirect("authority:book_list")
+        except Exception as e:
+            logger.exception(f"ERROR:------>> Error occurred in Book Delete POST View: {e}")
+            messages.error(request, "Unable to delete Book!")
+            return HttpResponse(f"{e}")

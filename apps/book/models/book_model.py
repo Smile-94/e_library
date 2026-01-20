@@ -25,6 +25,7 @@ class Book(BaseModel):
     preview_file = models.FileField(upload_to="books/preview/", blank=True, null=True)
     digital_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     physical_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    purchase_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     has_physical_copy = models.BooleanField(default=False)
     status = models.CharField(max_length=20, choices=BookStatus.choices, default=BookStatus.DRAFT)
     is_read_only = models.BooleanField(default=True)
