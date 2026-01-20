@@ -52,6 +52,9 @@ from apps.authority.views.discount_management import (
 # Import Order View from authority/views/order_management.py
 from apps.authority.views.order_management import OrderListView, OrderDetailView
 
+# Import Report View from authority/views/report_management.py
+from apps.authority.views.report_management import DailySalesReportView, InvoiceSalesReportView, DailySubscriptionReportView
+
 app_name = "authority"
 
 # Dashboard Urls
@@ -124,4 +127,11 @@ urlpatterns += [
 urlpatterns += [
     path("order-list/", OrderListView.as_view(), name="order_list"),
     path("order-detail/<int:pk>/", OrderDetailView.as_view(), name="order_detail"),
+]
+
+# Report Management Urls
+urlpatterns += [
+    path("report-daily-sales/", DailySalesReportView.as_view(), name="daily_sales_report"),
+    path("report-invoice-sales/", InvoiceSalesReportView.as_view(), name="invoice_sales_report"),
+    path("report-daily-subscription/", DailySubscriptionReportView.as_view(), name="daily_subscription_report"),
 ]

@@ -1,0 +1,101 @@
+{% extends 'authority_base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block body %}
+<div class="bg-light rounded h-100 p-3">
+    <h6 class="mb-3">{{ table_title }}</h6>
+
+    <!-- Date + Time Filter -->
+    <form method="get" class="row g-2 mb-3">
+        <div class="col-md-3">
+            <label for="date">Date</label>
+            <input type="date" id="date" name="date" class="form-control form-control-sm" value="{{ date }}">
+        </div>
+        <div class="col-md-2">
+            <label for="time_from">From Time</label>
+            <input type="time" id="time_from" name="time_from" class="form-control form-control-sm" value="{{ time_from }}">
+        </div>
+        <div class="col-md-2">
+            <label for="time_to">To Time</label>
+            <input type="time" id="time_to" name="time_to" class="form-control form-control-sm" value="{{ time_to }}">
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary btn-sm w-100">Filter</button>
+        </div>
+    </form>
+
+    <!-- Invoice-wise Sales Table -->
+    <div class="table-responsive" style="overflow-x:auto;">
+        <table class="table table-striped table-hover align-middle table-sm" style="font-size: 0.85rem;">
+            <thead class="bg-dark text-white">
+                <tr>
+                    <th>Sl</th>
+                    <th>Invoice</th>
+                    <th>Customer</th>
+                    <th>Status</th>
+                    <th>Payment</th>
+                    <th>Payment Status</th>
+                    <th>Total Price</th>
+                    <th>Discount</th>
+                    <th>Shipping</th>
+                    <th>Net Amount</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ order.invoice_id|default:"—" }}</td>
+                    <td>
+                        {% if order.user %}
+                            {{ order.user.get_full_name|default:order.user.username }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="badge 
+                            {% if order.status == 'pending' %} bg-warning
+                            {% elif order.status == 'confirmed' %} bg-primary
+                            {% elif order.status == 'shipped' %} bg-info
+                            {% elif order.status == 'delivered' %} bg-success
+                            {% elif order.status == 'cancelled' %} bg-danger
+                            {% else %} bg-secondary
+                            {% endif %}">
+                            {{ order.get_status_display }}
+                        </span>
+                    </td>
+                    <td>{{ order.get_payment_display|default:"—" }}</td>
+                    <td>{{ order.get_payment_status_display|default:"—" }}</td>
+                    <td>{{ order.total_price|floatformat:2 }}</td>
+                    <td>{{ order.total_discount|floatformat:2 }}</td>
+                    <td>{{ order.shipping_charge|floatformat:2 }}</td>
+                    <td>{{ order.net_amount|floatformat:2 }}</td>
+                    <td>{{ order.created_at|date:"d M Y H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="11" class="text-center text-muted">No orders found.</td>
+                </tr>
+                {% endfor %}
+
+                <!-- Grand Total Row -->
+                <tr class="table-success fw-bold">
+                    <td colspan="6" class="text-end">Grand Total</td>
+                    <td>{{ grand_total.total_price|floatformat:2 }}</td>
+                    <td>{{ grand_total.total_discount|floatformat:2 }}</td>
+                    <td>{{ grand_total.shipping_charge|floatformat:2 }}</td>
+                    <td>{{ grand_total.net_amount|floatformat:2 }}</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

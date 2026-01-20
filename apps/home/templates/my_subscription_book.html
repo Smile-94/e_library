@@ -138,17 +138,25 @@
               return
             }
     
-            // Optional: show message or update UI
-            alert(data.message)
+            // Show message only once
+            if (data.status === 'success') {
+              // Update cart count
+              const cartCountEl = document.getElementById('header-cart-count')
+              if (cartCountEl) cartCountEl.textContent = data.cart_count
     
-            {% comment %} if (data.status === 'success') {
-              target.innerHTML = '<i class="fa fa-check"></i> Added'
-              target.classList.add('disabled')
-            } {% endcomment %}
+              // Update cart total
+              const cartTotalEl = document.getElementById('header-cart-total')
+              if (cartTotalEl) cartTotalEl.textContent = `৳ ${data.cart_total}`
+    
+              alert(data.message)
+            } else {
+              alert(data.message)
+            }
           })
           .catch(() => alert('Request failed'))
       })
     })
   </script>
+
   <!-- Add to Cart Script End -->
 {% endblock %}

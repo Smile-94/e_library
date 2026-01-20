@@ -473,43 +473,57 @@
     })
   </script>
   <!-- Add to My Books Script End -->
-    <!-- Add to Cart Script Start -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      document.body.addEventListener('click', function (event) {
-        const target = event.target.closest('.add-to-cart-btn')
-        if (!target) return
-    
-        event.preventDefault()
-        const productId = target.dataset.productId
-        const csrfToken = document.getElementById('csrf-token').value
-    
-        fetch("{% url 'order:add_to_cart' %}", {
-          method: 'POST',
-          headers: {
-            'X-CSRFToken': csrfToken,
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: `product_id=${productId}&quantity=1`
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.status === 'unauthenticated') {
-              window.location.href = data.redirect_url
-              return
-            }
-    
-            // Optional: show message or update UI
-            alert(data.message)
-    
-            {% comment %} if (data.status === 'success') {
-              target.innerHTML = '<i class="fa fa-check"></i> Added'
-              target.classList.add('disabled')
-            } {% endcomment %}
-          })
-          .catch(() => alert('Request failed'))
-      })
+   <!-- Add to Cart Script Start -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  document.body.addEventListener('click', function (event) {
+    const target = event.target.closest('.add-to-cart-btn');
+    if (!target) return;
+
+    event.preventDefault();
+    const productId = target.dataset.productId;
+    const csrfToken = document.getElementById('csrf-token').value;
+
+    fetch("{% url 'order:add_to_cart' %}", {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': csrfToken,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: `product_id=${productId}&quantity=1`
     })
-  </script>
-  <!-- Add to Cart Script End -->
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === 'unauthenticated') {
+        window.location.href = data.redirect_url;
+        return;
+      }
+
+      if (data.status === 'success') {
+        // Update cart count
+        const cartCountEl = document.getElementById('header-cart-count');
+        if (cartCountEl) cartCountEl.textContent = data.cart_count;
+
+        // Update cart total
+        const cartTotalEl = document.getElementById('header-cart-total');
+        if (cartTotalEl) cartTotalEl.textContent = `৳ ${data.cart_total}`;
+
+        alert(data.message)
+
+        // Optional: change button text to show added
+        //target.innerHTML = '<i class="fa fa-check"></i> Added';
+        //target.classList.add('disabled');
+
+        // Optional: show a success alert
+        // alert(data.message);
+      } else {
+        alert(data.message);
+      }
+    })
+    .catch(() => alert('Request failed'));
+  });
+});
+</script>
+<!-- Add to Cart Script End -->
+
 {% endblock %}
