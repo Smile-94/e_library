@@ -49,34 +49,34 @@
   </div>
   <!-- Sale & Revenue End -->
 
-  <!-- Sales Chart Start -->
-  <div class="container-fluid pt-4 px-4">
-    <div class="row g-4">
-      <div class="col-sm-12 col-xl-6">
-        <div class="bg-light text-center rounded p-4" style="height: 255px;">
-          <h6 class="mb-3">Weekly Order Status (Last 7 Days)</h6>
-          <canvas id="worldwide-sales"></canvas>
-        </div>
+<!-- Sales Chart Start -->
+<div class="container-fluid pt-4 px-4">
+  <div class="row g-4 justify-content-center">
+    <!-- Weekly Orders Chart -->
+    <div class="col-sm-12 col-md-6 col-xl-6">
+      <div class="bg-light text-center rounded p-4 d-flex flex-column justify-content-center align-items-center" style="height: 320px;">
+        <h6 class="mb-3">Weekly Order Status (Last 7 Days)</h6>
+        <canvas id="worldwide-sales" style="max-width:100%; max-height:220px;"></canvas>
       </div>
+    </div>
 
-      <div class="col-sm-12 col-xl-6">
-        <div class="bg-light text-center rounded p-4">
-          <div class="d-flex align-items-center justify-content-between mb-4">
-            <h6 class="mb-0">Salse & Revenue</h6>
-            <a href="">Show All</a>
-          </div>
-          <canvas id="salse-revenue"></canvas>
-        </div>
+    <!-- Category Books Pie Chart -->
+    <div class="col-sm-12 col-md-6 col-xl-6">
+      <div class="bg-light text-center rounded p-4 d-flex flex-column justify-content-center align-items-center" style="height: 320px;">
+        <h6 class="mb-3">Category Books</h6>
+        <canvas id="categoryPieChart" style="max-width:100%; max-height:220px;"></canvas>
       </div>
     </div>
   </div>
-  <!-- Sales Chart End -->
+</div>
+<!-- Sales Chart End -->
+
 
   <!-- Recent Sales Start -->
   <div class="container-fluid pt-4 px-4">
     <div class="bg-light text-center rounded p-4">
       <div class="d-flex align-items-center justify-content-between mb-4">
-        <h6 class="mb-0">Recent Sales</h6>
+        <h6 class="mb-0">Recent Pending Orders</h6>
         {% comment %} <a href="{% url 'order:order_list' %}">Show All</a> {% endcomment %}
         <a href="{% url 'authority:order_list' %}">Show All</a>
       </div>
@@ -264,6 +264,7 @@
   </div> {% endcomment %}
   <!-- Widgets End -->
   {{ weekly_sales|json_script:'weekly-sales-data' }}
+  {{ category_pie_data|json_script:"category-pie-data" }}
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -324,6 +325,62 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 </script>
+
+<!-- Category Books Chart Start -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const rawData = document.getElementById("category-pie-data");
+    if (!rawData) return;
+
+    const pieData = JSON.parse(rawData.textContent);
+
+    const ctx = document
+        .getElementById("categoryPieChart")
+        .getContext("2d");
+
+    if (window.categoryPieChart instanceof Chart) {
+        window.categoryPieChart.destroy();
+    }
+
+    window.categoryPieChart = new Chart(ctx, {
+        type: "pie",
+        data: {
+            labels: pieData.labels,
+            datasets: [
+                {
+                    data: pieData.data,
+                    backgroundColor: [
+                        "#0d6efd",
+                        "#198754",
+                        "#ffc107",
+                        "#dc3545",
+                        "#0dcaf0",
+                        "#6f42c1",
+                        "#fd7e14",
+                    ],
+                },
+            ],
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: "bottom",
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function (ctx) {
+                            return `${ctx.label}: ${ctx.parsed}`;
+                        },
+                    },
+                },
+            },
+        },
+    });
+});
+<!-- Category Books Chart End -->
+</script>
+
 
 
   <!-- Weekly Sales Chart End -->

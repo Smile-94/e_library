@@ -10,10 +10,11 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from datetime import timedelta
 from django.utils import timezone
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.utils.timezone import now
 from django.db.models.functions import TruncDate
 from datetime import timedelta
+from apps.book.models.category_model import Category
 
 # Django View Classes
 from django.views import View
@@ -77,6 +78,19 @@ class AdminDashboardView(LoginRequiredMixin, StaffPassesTestMixin, View):
                 elif item["status"] == OrderStatusChoices.DELIVERED:
                     weekly_data["delivered"][idx] = item["count"]
 
+            # Get categories with at least 1 book
+            category_data = (
+                Category.objects.filter(active_status="active")
+                .annotate(total_books=Count("books_category", filter=Q(books_category__isnull=False)))
+                .filter(total_books__gt=0)  # Keep only categories with at least 1 book
+                .values("category_name", "total_books")
+            )
+
+            pie_data = {
+                "labels": [c["category_name"] for c in category_data],
+                "data": [c["total_books"] for c in category_data],
+            }
+
             context = {
                 "title": "Dashboard",
                 "total_customer": total_customer,
@@ -85,6 +99,7 @@ class AdminDashboardView(LoginRequiredMixin, StaffPassesTestMixin, View):
                 "total_books": total_books,
                 "recent_orders": recent_orders,
                 "weekly_sales": weekly_data,
+                "category_pie_data": pie_data,
             }
 
             return render(request, self.template_name, context)
