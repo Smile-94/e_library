@@ -85,7 +85,11 @@ class OrderProduct(BaseModel):
     discount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     purchase_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     final_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # price - discount
-    profit_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # purchase_price - final_price
+    profit_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0,
+    )  # purchase_price - final_price
 
     class Meta:
         db_table = "order_product"

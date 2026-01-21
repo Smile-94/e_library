@@ -94,7 +94,7 @@ class UserLoginView(LoginView):
 
     def form_invalid(self, form):
         logger.error(f"WARNING:--------------------> {form.errors}")
-        messages.error(self.request, "Invalid User email password")
+        messages.error(self.request, "User Name Password Incorrect!")
         return super().form_invalid(form)
 
 

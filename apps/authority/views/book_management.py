@@ -20,7 +20,7 @@ User = get_user_model()
 # <<------------------------------------*** Book Create View ***------------------------------------>>
 class BookCreateView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesTestMixin, View):
     required_permission = "can_add_book"
-    template_name = "book_create.html"
+    template_name = "book/book_create.html"
     model_class = Book
     form_class = BookForm
     success_url = reverse_lazy("authority:book_list")
@@ -64,7 +64,7 @@ class BookCreateView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPasse
 # <<------------------------------------*** Book Edit View ***------------------------------------>>
 class BookEditView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesTestMixin, View):
     required_permission = "can_edit_book"
-    template_name = "edit_book.html"
+    template_name = "book/edit_book.html"
     model_class = Book
     form_class = BookForm
 
@@ -116,7 +116,7 @@ class BookEditView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesT
 # <<------------------------------------*** Book List View ***------------------------------------>>
 class BookListView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesTestMixin, View):
     required_permission = "can_view_book"
-    template_name = "book_list.html"
+    template_name = "book/book_list.html"
     model_class = Book
     filter_class = BookSearchFilter
 
@@ -140,7 +140,7 @@ class BookListView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesT
 # <<------------------------------------*** Book Detail View ***------------------------------------>>
 class BookDetailView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesTestMixin, View):
     required_permission = "can_view_book"
-    template_name = "book_detail.html"
+    template_name = "book/book_detail.html"
     model_class = Book
 
     def get(self, request, pk):

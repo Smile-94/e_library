@@ -26,7 +26,7 @@ User = get_user_model()
 # * <<------------------------------------*** Author Create User View ***------------------------------------>>
 class AuthorCreateView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesTestMixin, View):
     required_permission = "can_add_author"
-    template_name = "author_create.html"
+    template_name = "author/author_create.html"
     model_class = User
     form_class = UserForm
     success_url = reverse_lazy("authority:author_list")
@@ -74,7 +74,7 @@ class AuthorCreateView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPas
 # * <<------------------------------------*** Author User Edit View ***------------------------------------>>
 class AuthorEditView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesTestMixin, View):
     required_permission = "can_edit_author"
-    template_name = "author_edit.html"
+    template_name = "author/author_edit.html"
     model_class = User
     form_class = UserForm
 
@@ -127,7 +127,7 @@ class AuthorEditView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPasse
 # * <<------------------------------------*** Author List User View ***------------------------------------>>
 class AuthorListView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesTestMixin, View):
     required_permission = "can_view_author"
-    template_name = "author_list.html"
+    template_name = "author/author_list.html"
     model_class = User
     filter_class = UserSearchFilter
 
@@ -152,7 +152,7 @@ class AuthorListView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPasse
 class AuthorDetailView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesTestMixin, View):
     required_permission = "can_view_author"
     model_class = User
-    template_name = "author_detail.html"
+    template_name = "author/author_detail.html"
 
     def get(self, request, pk):
         try:
@@ -193,7 +193,7 @@ class AuthorDetailView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPas
 class AuthorSoftDeleteView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesTestMixin, View):
     required_permission = "can_delete_author"
     model_class = User
-    template_name = "author_delete.html"
+    template_name = "author/author_delete.html"
 
     def get(self, request, pk, *args, **kwargs):
         try:
@@ -236,7 +236,7 @@ class AuthorSoftDeleteView(LoginRequiredMixin, RBACPermissionRequiredMixin, Staf
 # <<------------------------------------*** Author Work Experience Create View ***------------------------------------>>
 class AuthorWorkExperienceCreateView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesTestMixin, View):
     required_permission = "can_add_author_experience"
-    template_name = "author_experience_create.html"
+    template_name = "author/author_experience_create.html"
     model_class = User
     form_class = AuthorWorkExperienceForm
 
@@ -294,7 +294,7 @@ class AuthorWorkExperienceCreateView(LoginRequiredMixin, RBACPermissionRequiredM
 # <<------------------------------------*** Author Work Experience Edit View ***------------------------------------>>
 class AuthorWorkExperienceEditView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesTestMixin, View):
     required_permission = "can_edit_author_experience"
-    template_name = "edit_author_experience.html"
+    template_name = "author/edit_author_experience.html"
     model_class = AuthorWorkExperience
     form_class = AuthorWorkExperienceForm
 
@@ -350,7 +350,7 @@ class AuthorWorkExperienceEditView(LoginRequiredMixin, RBACPermissionRequiredMix
 # <<------------------------------------*** Author Education Create View ***------------------------------------>>
 class AuthorEducationCreateView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesTestMixin, View):
     required_permission = "can_add_author_education"
-    template_name = "author_education_create.html"
+    template_name = "author/author_education_create.html"
     model_class = User
     form_class = AuthorEducationForm
 
@@ -412,7 +412,7 @@ class AuthorEducationCreateView(LoginRequiredMixin, RBACPermissionRequiredMixin,
 # <<------------------------------------*** Author Education Edit View ***------------------------------------>>
 class AuthorEducationEditView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesTestMixin, View):
     required_permission = "can_edit_author_education"
-    template_name = "edit_author_education.html"
+    template_name = "author/edit_author_education.html"
     model_class = AuthorEducation
     form_class = AuthorEducationForm
 
