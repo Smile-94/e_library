@@ -2,7 +2,7 @@ from django.views import View
 from django.shortcuts import render
 from django.contrib import messages
 from django.http import HttpResponse
-from django.db.models import Sum, Count, Q, F
+from django.db.models import Sum, Count, Q, F, ExpressionWrapper, DecimalField
 from django.db.models.functions import TruncDate
 from django.utils.dateparse import parse_date
 from apps.order.models.order_model import Order
@@ -12,6 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.dateparse import parse_date, parse_time
 from django.utils.timezone import make_aware, datetime as dt
 from apps.subscription.models.user_subscription_model import UserSubscription
+from apps.order.models.order_model import OrderProduct
 
 logger = logging.getLogger(__name__)
 
@@ -86,6 +87,100 @@ class DailySalesReportView(LoginRequiredMixin, RBACPermissionRequiredMixin, Staf
         except Exception as e:
             logger.exception(f"ERROR: Error in Daily Sales Report View: {e}")
             messages.error(request, "Unable to load Daily Sales Report!")
+            return HttpResponse(f"{e}")
+
+
+# <<----------------------------------
+class DailyProductSalesReportView(LoginRequiredMixin, View):
+    template_name = "report/daily_product_sales_report.html"
+    required_permission = "can_view_product_sales_report"
+
+    def get(self, request):
+        try:
+            date_str = request.GET.get("date")  # Specific date
+            time_from_str = request.GET.get("time_from")  # Start time
+            time_to_str = request.GET.get("time_to")  # End time
+
+            qs = OrderProduct.objects.select_related("product", "order")
+
+            if date_str:
+                date_obj = parse_date(date_str)
+
+                # Set start and end time
+                time_from_obj = parse_time(time_from_str) if time_from_str else dt.min.time()
+                time_to_obj = parse_time(time_to_str) if time_to_str else dt.max.time()
+
+                start_datetime = make_aware(dt.combine(date_obj, time_from_obj))
+                end_datetime = make_aware(dt.combine(date_obj, time_to_obj))
+
+                qs = qs.filter(order__created_at__gte=start_datetime, order__created_at__lte=end_datetime)
+
+            # Annotate subtotal and profit
+            qs = qs.annotate(
+                subtotal=ExpressionWrapper(
+                    F("final_price") * F("quantity"), output_field=DecimalField(max_digits=19, decimal_places=2)
+                ),
+                total_profit=ExpressionWrapper(
+                    (F("final_price") - F("purchase_price")) * F("quantity"),
+                    output_field=DecimalField(max_digits=19, decimal_places=2),
+                ),
+            )
+
+            # Aggregate per product
+            report = (
+                qs.annotate(sale_date=TruncDate("order__created_at"))  # extract the date
+                .values("sale_date", "product__title")  # group by date and product
+                .annotate(
+                    total_quantity=Sum("quantity"),
+                    total_price=Sum(
+                        F("final_price") * F("quantity"),
+                        output_field=DecimalField(max_digits=19, decimal_places=2),
+                    ),
+                    total_discount=Sum(
+                        F("discount") * F("quantity"),
+                        output_field=DecimalField(max_digits=19, decimal_places=2),
+                    ),
+                    total_purchase_price=Sum(
+                        F("purchase_price") * F("quantity"),
+                        output_field=DecimalField(max_digits=19, decimal_places=2),
+                    ),
+                    total_profit_amount=Sum(
+                        (F("final_price") - F("purchase_price")) * F("quantity"),
+                        output_field=DecimalField(max_digits=19, decimal_places=2),
+                    ),
+                )
+                .order_by("sale_date", "product__title")
+            )
+
+            # Grand totals
+            grand_total = qs.aggregate(
+                total_quantity=Sum("quantity"),
+                total_price=Sum(F("final_price") * F("quantity"), output_field=DecimalField(max_digits=19, decimal_places=2)),
+                total_discount=Sum(F("discount") * F("quantity"), output_field=DecimalField(max_digits=19, decimal_places=2)),
+                total_purchase_price=Sum(
+                    F("purchase_price") * F("quantity"), output_field=DecimalField(max_digits=19, decimal_places=2)
+                ),
+                total_profit_amount=Sum(
+                    (F("final_price") - F("purchase_price")) * F("quantity"),
+                    output_field=DecimalField(max_digits=19, decimal_places=2),
+                ),
+            )
+
+            context = {
+                "title": "Daily Product-wise Sales Report",
+                "table_title": "Daily Product Sales",
+                "report": report,
+                "grand_total": grand_total,
+                "date": date_str,
+                "time_from": time_from_str,
+                "time_to": time_to_str,
+            }
+
+            return render(request, self.template_name, context)
+
+        except Exception as e:
+            logger.exception(f"ERROR: Error in Daily Product Sales Report View: {e}")
+            messages.error(request, "Unable to load Product-wise Sales Report!")
             return HttpResponse(f"{e}")
 
 

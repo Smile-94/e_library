@@ -1,0 +1,180 @@
+{% extends 'authority_base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block body %}
+  <div class="bg-light rounded h-100 p-4">
+    <h6 class="mb-4">{{ form_title }}</h6>
+
+    <div class="text-end mb-3">
+      <a href="{% url 'authority:staff_list' %}" class="btn btn-primary"><i class="fa-solid fa-arrow-left me-2"></i> Back</a>
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <!-- Name -->
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-floating mb-3">
+            {{ user_form.first_name|add_class:'form-control' }}
+            <label>First Name</label>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-floating mb-3">
+            {{ user_form.last_name|add_class:'form-control' }}
+            <label>Last Name</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="form-floating mb-3">
+        {{ user_form.email|add_class:'form-control' }}
+        <label>Email Address</label>
+      </div>
+
+      <!-- Username & Contact -->
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-floating mb-3">
+            {{ user_form.username|add_class:'form-control' }}
+            <label>Username</label>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-floating mb-3">
+            {{ user_form.contact_no|add_class:'form-control' }}
+            <label>Contact No</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gender & Role -->
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-floating mb-3">
+            {{ user_form.gender|add_class:'form-select' }}
+            <label>Gender</label>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-floating mb-3">
+            {{ user_form.role|add_class:'form-select' }}
+            <label>Role</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Password -->
+        <div class="col-md-6">
+          <div class="form-floating mb-3">
+            {{ user_form.password|add_class:'form-control' }}
+            <label for="id_password">Password</label>
+            {% for error in user_form.password.errors %}
+              <small class="text-danger">{{ error }}</small>
+            {% endfor %}
+          </div>
+
+          <!-- Password Strength -->
+          <div class="progress mb-2" style="height: 6px;">
+            <div id="password-strength-fill" class="progress-bar" role="progressbar" style="width: 0%;"></div>
+          </div>
+          <small id="password-strength-text"></small>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="col-md-6">
+          <div class="form-floating mb-3">
+            {{ user_form.confirm_password|add_class:'form-control' }}
+            <label for="id_confirm_password">Confirm Password</label>
+            {% for error in user_form.confirm_password.errors %}
+              <small class="text-danger">{{ error }}</small>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Photo Preview -->
+      <div class="mb-3">
+        <label class="form-label">Profile Photo</label><br />
+
+        <img id="profile-preview" src="{% static 'img/default-avatar.png' %}" class="img-thumbnail mb-2" style="width:120px;height:120px;object-fit:cover;" />
+
+        {{ user_form.profile_photo|add_class:'form-control' }}
+      </div>
+
+      <!-- Status -->
+      <div class="form-check mb-4">
+        {{ user_form.is_active|add_class:'form-check-input' }}
+        <label class="form-check-label">Is Active</label>
+      </div>
+
+      <button type="submit" class="btn btn-success w-100">Create Staff</button>
+    </form>
+  </div>
+
+  <!-- ================= JS ================= -->
+  <script>
+    /* Email Validation */
+    document.addEventListener('DOMContentLoaded', function () {
+      const emailField = document.getElementById('id_email')
+      const emailError = document.createElement('small')
+      emailError.classList.add('text-danger')
+      emailField.parentNode.appendChild(emailError)
+    
+      emailField.addEventListener('input', function () {
+        const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        emailError.textContent = pattern.test(this.value) ? '' : 'Invalid email format'
+      })
+    })
+    
+    /* Password Strength */
+    const passwordInput = document.getElementById('id_password')
+    const strengthFill = document.getElementById('password-strength-fill')
+    const strengthText = document.getElementById('password-strength-text')
+    
+    passwordInput.addEventListener('input', function () {
+      let strength = 0
+      const val = this.value
+    
+      if (val.length >= 6) strength++
+      if (/[A-Z]/.test(val)) strength++
+      if (/[0-9]/.test(val)) strength++
+      if (/[\W]/.test(val)) strength++
+    
+      const width = (strength / 4) * 100
+      strengthFill.style.width = width + '%'
+    
+      if (strength <= 1) {
+        strengthFill.className = 'progress-bar bg-danger'
+        strengthText.textContent = 'Weak'
+      } else if (strength === 2) {
+        strengthFill.className = 'progress-bar bg-warning'
+        strengthText.textContent = 'Medium'
+      } else {
+        strengthFill.className = 'progress-bar bg-success'
+        strengthText.textContent = 'Strong'
+      }
+    })
+    
+    /* Profile Photo Preview */
+    const photoInput = document.getElementById('id_profile_photo')
+    const previewImage = document.getElementById('profile-preview')
+    
+    photoInput.addEventListener('change', function () {
+      const file = this.files[0]
+      if (file) {
+        const reader = new FileReader()
+        reader.onload = (e) => (previewImage.src = e.target.result)
+        reader.readAsDataURL(file)
+      }
+    })
+  </script>
+{% endblock %}

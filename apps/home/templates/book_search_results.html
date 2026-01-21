@@ -1,0 +1,209 @@
+{% extends 'home_base.html' %}
+{% load static %}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block body %}
+  <!-- Product Section Begin -->
+  <section class="product spad">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-3 col-md-5">
+          <div class="sidebar">
+            <div class="sidebar__item">
+              <h4>Department</h4>
+              <ul>
+                {% for category in all_categories %}
+                  <li>
+                    <a href="{% url 'home:home_shope_category' category.id %}">{{ category.category_name }}</a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+
+            <div class="sidebar__item">
+              <div class="latest-product__text">
+                <h4>Latest Products</h4>
+                <div class="latest-product__slider owl-carousel">
+                  <div class="latest-prdouct__slider__item">
+                    {% for book in books|slice:':3' %}
+                      <a href="{% url 'home:home_book_details' book.id %}" class="latest-product__item">
+                        <div class="latest-product__item__pic">
+                          <img src="{{ book.book_image.url }}" alt="" />
+                        </div>
+                        <div class="latest-product__item__text">
+                          <h6>{{ book.title }}</h6>
+                          <span>&#2547; {{ book.physical_price }}</span>
+                        </div>
+                      </a>
+                    {% endfor %}
+                  </div>
+                  <div class="latest-prdouct__slider__item">
+                    {% for book in books|slice:'3:6' %}
+                      <a href="{% url 'home:home_book_details' book.id %}" class="latest-product__item">
+                        <div class="latest-product__item__pic">
+                          <img src="{{ book.book_image.url }}" alt="" />
+                        </div>
+                        <div class="latest-product__item__text">
+                          <h6>{{ book.title }}</h6>
+                          <span>&#2547; {{ book.physical_price }}</span>
+                        </div>
+                      </a>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-9 col-md-7">
+          <div class="section-title product__discount__title">
+            <h2> Books</h2>
+          </div>
+          <div class="row">
+            {% for book in books %}
+              <div class="col-lg-4">
+                <div class="product__discount__item">
+                  <!-- Image -->
+                  <div class="product__discount__item__pic set-bg" data-setbg="{{ book.book_image.url }}">
+                    {% if book.get_book_discount %}
+                      <div class="product__discount__percent">-{{ book.get_book_discount }}%</div>
+                    {% endif %}
+
+                    <ul class="product__item__pic__hover">
+                      {% comment %} <li>
+                        {% comment %} <a href="javascript:void(0);" class="add-to-subscription" data-book-id="{{ book.id }}"><i class="fa fa-book"></i></a> {% endcomment %}
+
+                        {% comment %} <button class="add-to-subscription" id="add-to-my-book" data-book-id="{{ book.id }}"><i class="fa fa-book"></i></button> {% endcomment %}
+                        {% comment %} <a href="#"><i class="fa fa-book"></i></a>
+                      </li> {% endcomment %}
+                      <li>
+                        <a href="#" class="add-to-my-book" data-book-id="{{ book.id }}"><i class="fa fa-book"></i></a>
+                      </li>
+                      {% comment %} <li>
+                        <a href="#"><i class="fa fa-retweet"></i></a>
+                      </li> {% endcomment %}
+                      <li>
+                        <a href="#" class="add-to-cart-btn" data-product-id="{{ book.id }}"><i class="fa fa-shopping-cart"></i></a>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <!-- Text -->
+                  <div class="product__discount__item__text">
+                    <span>{{ book.category.category_name }}</span>
+                    <h5><a href="{% url 'home:home_book_details' book.id %}">{{ book.title }}</a></h5>
+
+                    <div class="product__item__price">
+                      {% if book.get_book_discount %}
+                        &#2547; {{ book.get_discounted_price }}
+                        <span>&#2547; {{ book.physical_price }}</span>
+                      {% else %}
+                        &#2547; {{ book.physical_price }}
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Product Section End -->
+  <input type="hidden" id="csrf-token" value="{{ csrf_token }}" />
+
+  <!-- Add to My Books Script Start -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.addEventListener('click', function (event) {
+        const target = event.target.closest('.add-to-my-book')
+        if (!target) return
+    
+        event.preventDefault() // Prevent default link behavior
+    
+        const bookId = target.dataset.bookId
+        const csrfToken = document.getElementById('csrf-token').value
+    
+        fetch("{% url 'home:add_book_to_subscription' %}", {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': csrfToken,
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: `book_id=${bookId}`
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === 'unauthenticated') {
+              window.location.href = data.redirect_url
+              return
+            }
+    
+            // Success or error message
+            alert(data.message)
+    
+            // Optional: disable the button or change icon after adding
+            {% comment %} if (data.status === 'success') {
+              target.innerHTML = '<i class="fa fa-check"></i>'
+              target.classList.add('disabled') // Add some styling if you want
+            } {% endcomment %}
+          })
+          .catch(() => alert('Request failed'))
+      })
+    })
+  </script>
+  <!-- Add to My Books Script End -->
+
+  <!-- Add to Cart Script Start -->
+  <script>
+document.addEventListener('DOMContentLoaded', function () {
+  document.body.addEventListener('click', function (event) {
+    const target = event.target.closest('.add-to-cart-btn');
+    if (!target) return;
+
+    event.preventDefault();
+    const productId = target.dataset.productId;
+    const csrfToken = document.getElementById('csrf-token').value;
+
+    fetch("{% url 'order:add_to_cart' %}", {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': csrfToken,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: `product_id=${productId}&quantity=1`
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === 'unauthenticated') {
+        window.location.href = data.redirect_url;
+        return;
+      }
+
+      // Show message only once
+      if (data.status === 'success') {
+        // Update cart count
+        const cartCountEl = document.getElementById('header-cart-count');
+        if (cartCountEl) cartCountEl.textContent = data.cart_count;
+
+        // Update cart total
+        const cartTotalEl = document.getElementById('header-cart-total');
+        if (cartTotalEl) cartTotalEl.textContent = `৳ ${data.cart_total}`;
+
+        alert(data.message);
+
+      } else {
+        alert(data.message);
+      }
+    })
+    .catch(() => alert('Request failed'));
+  });
+});
+</script>
+
+  <!-- Add to Cart Script End -->
+{% endblock %}

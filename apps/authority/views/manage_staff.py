@@ -8,7 +8,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
 
-from apps.account.forms.user_forms import UserForm
+from apps.account.forms.user_forms import StaffForm, UserForm
 
 # Import Filters
 from apps.authority.filters.user_filter import UserSearchFilter
@@ -21,9 +21,9 @@ User = get_user_model()
 # * <<------------------------------------*** Staff Create User View ***------------------------------------>>
 class StaffUserCreateView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesTestMixin, View):
     required_permission = "can_add_staff"
-    template_name = "staff_create.html"
+    template_name = "staff/staff_create.html"
     model_class = User
-    form_class = UserForm
+    form_class = StaffForm
     success_url = reverse_lazy("authority:staff_list")
 
     def get(self, request):
@@ -67,7 +67,7 @@ class StaffUserCreateView(LoginRequiredMixin, RBACPermissionRequiredMixin, Staff
 # * <<------------------------------------*** Staff User Edit View ***------------------------------------>>
 class StaffUserEditView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesTestMixin, View):
     required_permission = "can_edit_staff"
-    template_name = "staff_edit.html"
+    template_name = "staff/staff_edit.html"
     model_class = User
     form_class = UserForm
 
@@ -119,10 +119,10 @@ class StaffUserEditView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPa
 
 # * << ------------------------------------*** Staff User List View ***------------------------------------ >>
 class StaffUserListView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesTestMixin, View):
-    template_name = "staff_list.html"
+    required_permission = "can_view_staff"
+    template_name = "staff/staff_list.html"
     model_class = User
     filter_class = UserSearchFilter
-    required_permission = "can_view_staff"
 
     def get(self, request):
         try:
@@ -145,7 +145,7 @@ class StaffUserListView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPa
 class StaffUserDetailView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesTestMixin, View):
     required_permission = "can_view_staff"
     model_class = User
-    template_name = "staff_detail.html"
+    template_name = "staff/staff_detail.html"
 
     def get(self, request, pk):
         try:
@@ -171,7 +171,7 @@ class StaffUserDetailView(LoginRequiredMixin, RBACPermissionRequiredMixin, Staff
 class StaffUserSoftDeleteView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesTestMixin, View):
     required_permission = "can_delete_staff"
     model_class = User
-    template_name = "staff_delete.html"
+    template_name = "staff/staff_delete.html"
 
     def get(self, request, pk):
         try:
