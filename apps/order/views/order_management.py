@@ -122,7 +122,7 @@ class PlaceOrderView(LoginRequiredMixin, View):
             # COD → done
             if payment_method == OrderPaymentMethodChoices.COD:
                 order.payment_status = OrderPaymentStatusChoices.CONFIRMED
-                order.status = OrderStatusChoices.CONFIRMED
+                order.status = OrderStatusChoices.PENDING
                 order.save(update_fields=["payment_status", "status"])
 
                 messages.success(request, "Order placed successfully!")

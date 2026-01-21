@@ -13,7 +13,7 @@ from apps.order.models.order_model import (
 class OrderAdmin(admin.ModelAdmin):
     list_display = ("id", "invoice_id", "user", "total_price", "total_discount", "net_amount", "status", "payment")
     list_filter = ("status", "payment")
-    search_fields = ("user__username", "user__email")
+    search_fields = ("user__username", "user__email", "invoice_id")
     ordering = ("-id",)
     list_per_page = 20
 
