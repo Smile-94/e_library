@@ -6,6 +6,7 @@ from apps.home.views.home_view import (
     HomeView,
     ShopeView,
     SubscriptionView,
+    BookSearchView,
 )
 from apps.home.views.user_profile import EditMyProfileView, MyProfileView
 from apps.home.views.user_subscription import (
@@ -21,6 +22,7 @@ urlpatterns = [
     path("book-details/<int:pk>/", BookDetailsView.as_view(), name="home_book_details"),
     path("shope/", ShopeView.as_view(), name="home_shope"),
     path("shope/<int:pk>/", CategoryProductView.as_view(), name="home_shope_category"),
+    path("search/", BookSearchView.as_view(), name="home_search"),
     path("subscription/", SubscriptionView.as_view(), name="home_subscription"),
     path("my-subscription-history/", MySubscriptionHistoryView.as_view(), name="my_subscription_history"),
     path("my-profile/", MyProfileView.as_view(), name="my_profile"),

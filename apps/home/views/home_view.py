@@ -3,6 +3,7 @@ import logging
 from django.contrib import messages
 from django.db.models import Count
 from django.db.models.functions import Random
+from django.db.models import Q
 
 # Permission and Authentication
 # Django Response Class
@@ -135,6 +136,45 @@ class CategoryProductView(View):
             logger.exception(f"ERROR:------>> Error occurred in Admin Dashboard View: {e}")
             messages.error(request, "Unable to load Subscription Page!")
             return HttpResponse("Something went wrong!")
+
+
+# <<------------------------------------*** Book Search View  ***------------------------------------>>
+class BookSearchView(View):
+    template_name = "book_search_results.html"  # your template path
+    model_class = Book
+
+    def get(self, request):
+        try:
+            query = request.GET.get("q", "")  # Get search query
+            books = self.model_class.objects.none()  # default empty queryset
+
+            if query:
+                books = (
+                    self.model_class.objects.filter(
+                        Q(title__icontains=query)
+                        | Q(author__first_name__icontains=query)
+                        | Q(author__last_name__icontains=query)
+                        | Q(category__category_name__icontains=query)
+                    )
+                    .distinct()
+                    .order_by("id")
+                )
+
+            context = {
+                "title": "Search Results",
+                "books": books,
+                "query": query,
+                "all_categories": Category.objects.annotate(book_count=Count("books_category")).order_by("-book_count"),
+                "show_hero_banner": False,
+                "hero_normal": "hero-normal",
+                "subscription": False,
+            }
+            return render(request, self.template_name, context)
+
+        except Exception as e:
+            logger.exception(f"ERROR:------>> Error occurred in Book Search View: {e}")
+            messages.error(request, "Unable to load search results!")
+            return HttpResponse(f"{e}")
 
 
 # <<------------------------------------*** Subscription View ***------------------------------------>>
