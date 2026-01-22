@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import FileResponse
 from django.shortcuts import redirect, render
 from django.views import View
-from apps.book.models import Book
+from apps.book.models.book_model import Book, DownloadTypeChoices
 from apps.subscription.models.user_subscription_model import UserSubscriptionBooks
 from apps.subscription.utils import get_active_subscription
 from django.http import JsonResponse, FileResponse
@@ -100,7 +100,7 @@ class SubscriptionBookDownloadView(LoginRequiredMixin, View):
                 return JsonResponse({"message": "Book not added to subscription"}, status=403)
 
             # ----------------- Paid book check -----------------
-            if book.download_type != "Free" and not sub_book.is_paid:
+            if book.download_type != DownloadTypeChoices.FREE.value and not sub_book.is_paid:
                 # Trigger payment flow for paid book
                 return JsonResponse({"message": "Payment required for this book", "sub_book_id": sub_book.id}, status=402)
 
