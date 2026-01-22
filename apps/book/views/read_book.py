@@ -99,6 +99,12 @@ class SubscriptionBookDownloadView(LoginRequiredMixin, View):
             if not sub_book:
                 return JsonResponse({"message": "Book not added to subscription"}, status=403)
 
+            if (
+                subscription.subscription.book_download_limit == SubscriptionDownloadChoices.LIMITED
+                and subscription.subscription.max_book_download_limit == 0
+            ):
+                return JsonResponse({"message": "Your subscription does not allow downloading books"}, status=403)
+
             if sub_book.download_count == 0:
                 if subscription.subscription.book_download_limit == SubscriptionDownloadChoices.LIMITED:
                     MAX_DOWNLOAD = subscription.subscription.max_book_download_limit
