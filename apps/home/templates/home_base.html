@@ -282,9 +282,7 @@
     </header>
     <!-- Header Section End -->
 
-   
-
-    <!-- --------Message Modal Start--------------->
+    <!----Message Modal Start--------------->
     {% if messages %}
       <div id="messageModal" class="ogan-modal">
         <div class="ogan-modal-content">
@@ -322,7 +320,7 @@
       </script>
     {% endif %}
 
-    <!-- -----------Message Modal End--------------->
+    <!--------Message Modal End--------------->
 
 
     <!-- Hero Section Begin -->
@@ -347,13 +345,15 @@
           <div class="col-lg-9">
             <div class="hero__search">
               <div class="hero__search__form">
-                <form action="{% url 'home:home_search' %}" method="get" class="d-flex"> {% csrf_token %}
+                <form action="{% url 'home:home_search' %}" method="get" class="d-flex">
+                  {% csrf_token %}
                   {% comment %}Optional: you can include categories dropdown if needed<div class="hero__search__categories">
                     All Categories
                     <span class="arrow_carrot-down"></span>
                   </div>
                   {% endcomment %}
-                  <input type="text" name="q" placeholder="What do you need?" class="form-control me-2" value="{{ request.GET.q|default:'' }}" required />
+                  <input type="text" name="q" value="{{ request.GET.q|default:'' }}" />
+
                   <button type="submit" class="btn btn-success">SEARCH</button>
                 </form>
               </div>
