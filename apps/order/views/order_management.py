@@ -121,8 +121,8 @@ class PlaceOrderView(LoginRequiredMixin, View):
 
             # COD → done
             if payment_method == OrderPaymentMethodChoices.COD:
-                order.payment_status = OrderPaymentStatusChoices.CONFIRMED
-                order.status = OrderStatusChoices.CONFIRMED
+                order.payment_status = OrderPaymentStatusChoices.PENDING.value
+                order.status = OrderStatusChoices.PENDING.value
                 order.save(update_fields=["payment_status", "status"])
 
                 messages.success(request, "Order placed successfully!")
@@ -178,7 +178,7 @@ class OrderInitiatePaymentView(LoginRequiredMixin, View):
             phone=request.user.contact_no or "+8801000000000",
         )
 
-        # ✅ SHIPPING INFO (THIS WAS MISSING)
+        # SHIPPING INFO (THIS WAS MISSING)
         shipping = order.order_shipping_address
         sslc.set_shipping_info(
             shipping_to=request.user.get_full_name(),
