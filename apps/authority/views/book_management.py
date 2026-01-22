@@ -48,6 +48,8 @@ class BookCreateView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPasse
                 messages.success(request, "Book created successfully!")
                 return redirect(self.success_url)
 
+            logger.error(f"ERROR:------>> Error occurred in Book Create POST View: {form.errors}")
+
             context = {
                 "title": "Create Book",
                 "form_title": "Create Book",
@@ -102,6 +104,7 @@ class BookEditView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesT
                     "user_obj": book,
                 }
                 messages.error(request, "Unable to update Book!")
+                print(f"ERROR:------>> Error occurred in Book Edit POST View: {form.errors}")
                 return render(request, self.template_name, context)
 
             form.save()

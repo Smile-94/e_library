@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
-
+from django.template.loader import get_template
 from apps.common.permissions import RBACPermissionRequiredMixin, StaffPassesTestMixin
 from apps.subscription.filters.subscription_filter import (
     SubscriptionSearchFilter,

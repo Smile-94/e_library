@@ -18,6 +18,17 @@
     </div>
   </div>
 
+  <!-- Display non-field errors (e.g., clean() errors) -->
+  {% if form.non_field_errors %}
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        {% for error in form.non_field_errors %}
+          <li>{{ error }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
@@ -32,15 +43,28 @@
       </div>
     </div>
 
-    <!-- Author & Category -->
+    <!-- Author, Category & Download Type -->
     <div class="row mb-2">
-      <div class="col-md-6">
+      <div class="col-md-4">
         <label class="form-label">Author</label>
         {{ form.author|add_class:'form-select' }}
+        {% for error in form.author.errors %}
+          <small class="text-danger">{{ error }}</small>
+        {% endfor %}
       </div>
-      <div class="col-md-6">
+      <div class="col-md-4">
         <label class="form-label">Book Category</label>
         {{ form.category|add_class:'form-select' }}
+        {% for error in form.category.errors %}
+          <small class="text-danger">{{ error }}</small>
+        {% endfor %}
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Download Type</label>
+        {{ form.download_type|add_class:'form-select' }}
+        {% for error in form.download_type.errors %}
+          <small class="text-danger">{{ error }}</small>
+        {% endfor %}
       </div>
     </div>
 
@@ -49,42 +73,64 @@
       <div class="col-md-3">
         <label class="form-label">ISBN</label>
         {{ form.isbn|add_class:'form-control' }}
+        {% for error in form.isbn.errors %}
+          <small class="text-danger">{{ error }}</small>
+        {% endfor %}
       </div>
       <div class="col-md-3">
         <label class="form-label">Language</label>
         {{ form.language|add_class:'form-control' }}
+        {% for error in form.language.errors %}
+          <small class="text-danger">{{ error }}</small>
+        {% endfor %}
       </div>
       <div class="col-md-3">
         <label class="form-label">Publication Date</label>
         {{ form.publication_date|add_class:'form-control' }}
+        {% for error in form.publication_date.errors %}
+          <small class="text-danger">{{ error }}</small>
+        {% endfor %}
       </div>
       <div class="col-md-3">
         <label class="form-label">Book Edition</label>
         {{ form.edition|add_class:'form-control' }}
+        {% for error in form.edition.errors %}
+          <small class="text-danger">{{ error }}</small>
+        {% endfor %}
       </div>
     </div>
 
-    <!-- Files & Prices -->
+    <!-- Prices & Files -->
     <div class="row mb-2">
-      <div class="col-md-3">
-        <label class="form-label">Preview File</label>
-        {{ form.preview_file|add_class:'form-control' }}
-      </div>
-      <div class="col-md-3">
-        <label class="form-label">PDF File</label>
-        {{ form.digital_file|add_class:'form-control' }}
-      </div>
       <div class="col-md-3">
         <label class="form-label">Download Price</label>
         {{ form.digital_price|add_class:'form-control' }}
+        {% for error in form.digital_price.errors %}
+          <small class="text-danger">{{ error }}</small>
+        {% endfor %}
       </div>
       <div class="col-md-3">
         <label class="form-label">Physical Price</label>
         {{ form.physical_price|add_class:'form-control' }}
+        {% for error in form.physical_price.errors %}
+          <small class="text-danger">{{ error }}</small>
+        {% endfor %}
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Preview File</label>
+        {{ form.preview_file|add_class:'form-control' }}
+        {% for error in form.preview_file.errors %}
+          <small class="text-danger">{{ error }}</small>
+        {% endfor %}
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">PDF File</label>
+        {{ form.digital_file|add_class:'form-control' }}
+        {% for error in form.digital_file.errors %}
+          <small class="text-danger">{{ error }}</small>
+        {% endfor %}
       </div>
     </div>
-
-   
 
     <!-- Flags & Status -->
     <div class="row mb-2 align-items-center">
@@ -111,20 +157,27 @@
       <div class="col-md-4">
         <label class="form-label">Book Cover Image</label>
         {{ form.book_image|add_class:'form-control' }}
+        {% for error in form.book_image.errors %}
+          <small class="text-danger">{{ error }}</small>
+        {% endfor %}
 
         <div class="mt-2">
-          <img id="imagePreview"
-               style="width:300px;height:300px;border-radius:10px;object-fit:cover;display:none;" />
+          <img id="imagePreview" style="width:300px;height:300px;border-radius:10px;object-fit:cover;display:none;" />
         </div>
       </div>
-
       <div class="col-md-4">
         <label class="form-label">Active Status</label>
         {{ form.active_status|add_class:'form-select' }}
+        {% for error in form.active_status.errors %}
+          <small class="text-danger">{{ error }}</small>
+        {% endfor %}
       </div>
       <div class="col-md-4">
         <label class="form-label">Purchase Price</label>
         {{ form.purchase_price|add_class:'form-control' }}
+        {% for error in form.purchase_price.errors %}
+          <small class="text-danger">{{ error }}</small>
+        {% endfor %}
       </div>
     </div>
 
@@ -133,6 +186,9 @@
       <div class="col-md-12">
         <label class="form-label">Description</label>
         {{ form.description|add_class:'form-control' }}
+        {% for error in form.description.errors %}
+          <small class="text-danger">{{ error }}</small>
+        {% endfor %}
       </div>
     </div>
 
@@ -142,15 +198,22 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-  const input = document.querySelector('input[type="file"]');
-  const preview = document.getElementById('imagePreview');
+  // Target only the book cover image field
+  const imageInput = document.getElementById('id_book_image');
+  const imagePreview = document.getElementById('imagePreview');
 
-  if (input) {
-    input.addEventListener('change', function () {
+  if (imageInput) {
+    imageInput.addEventListener('change', function () {
       const file = this.files[0];
+
       if (file) {
-        preview.src = URL.createObjectURL(file);
-        preview.style.display = 'block';
+        // Create object URL for the new file
+        imagePreview.src = URL.createObjectURL(file);
+        imagePreview.style.display = 'block';
+      } else {
+        // Hide preview if no file selected
+        imagePreview.src = '';
+        imagePreview.style.display = 'none';
       }
     });
   }

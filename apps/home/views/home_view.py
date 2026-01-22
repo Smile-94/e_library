@@ -140,12 +140,16 @@ class CategoryProductView(View):
 
 # <<------------------------------------*** Book Search View  ***------------------------------------>>
 class BookSearchView(View):
-    template_name = "book_search_results.html"  # your template path
+    template_name = "book_search_results.html"
     model_class = Book
 
-    def get(self, request):
+    def post(self, request):
+        """
+        Search books based on form POST data.
+        Expects a form field named 'q' for the search query.
+        """
         try:
-            query = request.GET.get("q", "")  # Get search query
+            query = request.POST.get("q", "").strip()  # Get search query from POST
             books = self.model_class.objects.none()  # default empty queryset
 
             if query:
@@ -169,12 +173,13 @@ class BookSearchView(View):
                 "hero_normal": "hero-normal",
                 "subscription": False,
             }
+
             return render(request, self.template_name, context)
 
         except Exception as e:
-            logger.exception(f"ERROR:------>> Error occurred in Book Search View: {e}")
+            logger.exception(f"ERROR: BookSearchView POST: {e}")
             messages.error(request, "Unable to load search results!")
-            return HttpResponse(f"{e}")
+            return HttpResponse(f"Error: {e}")
 
 
 # <<------------------------------------*** Subscription View ***------------------------------------>>

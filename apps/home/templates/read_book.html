@@ -1,19 +1,114 @@
 {% extends 'home_base.html' %}
 {% load static %}
+
 {% block title %}
   {{ book.title }} | Reader
 {% endblock %}
+
 {% block body %}
   <section class="container-fluid py-4">
     <div class="row">
+      <!-- Title & Actions -->
       <div class="col-12 text-center mb-3">
         <h4>{{ book.title }}</h4>
         <p class="text-muted">{{ book.author }}</p>
+
+        <!-- Book Download Button -->
+
+        {% if book.is_downloadable %}
+          <button class="btn btn-primary download-book-btn" data-download-url="{% url 'book:book_download' book.id %}"><i class="bi bi-download"></i> Download</button>
+        {% endif %}
+
+        <!-- Message Area -->
+        <div id="download-msg" class="mt-3"></div>
       </div>
 
+      <!-- Read book PDF Viewer -->
       <div class="col-12">
-        <iframe src="{% static 'pdfjs/web/viewer.html' %}?file={% url 'book:book_pdf_view' book.id %}" width="100%" height="700" style="border: none"></iframe>
+        <iframe src="{% static 'pdfjs/web/viewer.html' %}?file={% url 'book:book_pdf_view' book.id %}" width="100%" height="700" style="border:none;"></iframe>
       </div>
     </div>
   </section>
+
+  <!-- AJAX Download Script -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    
+
+    document.body.addEventListener('click', async function (event) {
+      const target = event.target.closest('.download-book-btn');
+      if (!target) return;
+
+      event.preventDefault();
+
+      const downloadUrl = target.dataset.downloadUrl;
+      const msgBox = document.getElementById('download-msg');
+
+      target.disabled = true;
+      target.innerHTML = 'Processing...';
+
+      try {
+        const response = await fetch(downloadUrl, {
+          method: 'GET',
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        });
+
+        if (response.status === 402) {
+              const data = await response.json();
+              const subBookId = data.sub_book_id; // comes from Django
+              const payUrl = `/initiate-book-payment/${subBookId}/`; // MUST match Django URL path
+
+              msgBox.innerHTML = `
+                <div class="alert alert-warning fade show" id="download-alert">
+                  ${data.message}.
+                  <a href="${payUrl}" class="btn btn-sm btn-primary">Pay Now</a>
+                </div>
+              `;
+              return;
+          }
+
+
+        // Other errors
+        if (!response.ok) {
+          const data = await response.json();
+          throw data;
+        }
+
+        // Free book or already paid → download
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = '';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
+        // Success message
+        msgBox.innerHTML = `
+          <div class="alert alert-success fade show" id="download-alert">
+            Download started successfully
+          </div>
+        `;
+        setTimeout(() => { msgBox.innerHTML = ''; }, 3000);
+
+      } catch (err) {
+        msgBox.innerHTML = `
+          <div class="alert alert-danger fade show" id="download-alert">
+            ${err.message || 'Download failed or limit exceeded'}
+          </div>
+        `;
+        setTimeout(() => { msgBox.innerHTML = ''; }, 4000);
+      } finally {
+        target.disabled = false;
+        target.innerHTML = '<i class="bi bi-download"></i> Download';
+      }
+    });
+  });
+</script>
+
+
 {% endblock %}

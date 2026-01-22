@@ -12,6 +12,11 @@ class BookStatus(models.TextChoices):
     REJECTED = "rejected", "Rejected"
 
 
+class DownloadTypeChoices(models.TextChoices):
+    FREE = "free", "Free"
+    PAID = "paid", "Paid"
+
+
 class Book(BaseModel):
     title = models.CharField(max_length=255)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="books_author")
@@ -30,6 +35,8 @@ class Book(BaseModel):
     status = models.CharField(max_length=20, choices=BookStatus.choices, default=BookStatus.DRAFT)
     is_read_only = models.BooleanField(default=True)
     is_downloadable = models.BooleanField(default=False)
+    download_type = models.CharField(max_length=10, choices=DownloadTypeChoices.choices, default=DownloadTypeChoices.FREE.value)
+
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="books_created_by")
     active_status = models.CharField(max_length=10, choices=ActiveStatusChoices.choices, default=ActiveStatusChoices.ACTIVE)
     description = models.TextField(blank=True)

@@ -146,30 +146,37 @@ class InitiatePaymentView(LoginRequiredMixin, View):
 class PaymentSuccessView(View):
     def post(self, request):
         status = request.POST.get("status")
-
         if status != "VALID":
             return redirect("subscription:payment_fail")
 
         user_subscription_id = request.POST.get("value_a")
         user_subscription = UserSubscription.objects.filter(id=user_subscription_id).first()
 
-        duration = user_subscription.subscription.subscription_duration_days
+        if not user_subscription:
+            logger.warning(f"PaymentSuccessView: user_subscription not found, ID={user_subscription_id}")
+            return redirect("subscription:payment_fail")
+
+        subscription_obj = user_subscription.subscription
+        if not subscription_obj:
+            logger.warning(f"PaymentSuccessView: subscription not found for user_subscription ID={user_subscription_id}")
+            return redirect("subscription:payment_fail")
+
+        duration = subscription_obj.subscription_duration_days
 
         with transaction.atomic():
-            # Inactivate all other subscriptions of the user
+            # Inactivate other active subscriptions
             UserSubscription.objects.filter(user=user_subscription.user, active_status=ActiveStatusChoices.ACTIVE.value).exclude(
                 id=user_subscription.id
             ).update(active_status=ActiveStatusChoices.INACTIVE.value, end_at=now())
 
-            #  Activate current subscription
-            user_subscription.payment_status = UserSubscriptionPaymentStatus.PAID.value
+            # Activate current subscription
             user_subscription.payment_status = UserSubscriptionPaymentStatus.PAID.value
             user_subscription.active_status = ActiveStatusChoices.ACTIVE.value
             user_subscription.start_at = now()
             user_subscription.end_at = now() + timedelta(days=duration)
             user_subscription.save()
 
-        messages.success(request, "Subscription Started successfully!")
+        messages.success(request, "Subscription started successfully!")
         return redirect("home:home")
 
 
@@ -191,5 +198,4 @@ class PaymentFailView(View):
 
         messages.error(request, "Payment failed or was cancelled. Please try again.")
 
-        return redirect("home:home_subscription")
         return redirect("home:home_subscription")

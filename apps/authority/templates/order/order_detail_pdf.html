@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Order {{ order.invoice_id }}</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12px;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2, h3, h4 {
+            margin: 5px 0;
+        }
+
+        p {
+            margin: 2px 0;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .col {
+            flex: 1;
+            min-width: 200px;
+            margin-right: 20px;
+        }
+
+        .col:last-child {
+            margin-right: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #333;
+            padding: 6px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid #ccc;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <h2>Order Details - {{ order.invoice_id|default:"N/A" }}</h2>
+
+    <!-- Customer & Order Info -->
+    <div class="section row">
+        <div class="col">
+            <h3>Customer Info</h3>
+            <p><strong>Name:</strong> {{ order.user.get_full_name|default:order.user.username }}</p>
+            <p><strong>Email:</strong> {{ order.user.email }}</p>
+            <p><strong>Phone:</strong> {{ order.order_shipping_address.phone|default:"N/A" }}</p>
+        </div>
+        <div class="col">
+            <h3>Order Info</h3>
+            <p><strong>Status:</strong> {{ order.get_status_display }}</p>
+            <p><strong>Payment Method:</strong> {{ order.get_payment_display }}</p>
+            <p><strong>Payment Status:</strong> {{ order.get_payment_status_display }}</p>
+            <p><strong>Order Date:</strong> {{ order.created_at|date:"d M Y H:i" }}</p>
+        </div>
+        <div class="col">
+            <h3>Amounts</h3>
+            <p><strong>Total Price:</strong> ৳{{ order.total_price|floatformat:2 }}</p>
+            <p><strong>Total Discount:</strong> ৳{{ order.total_discount|floatformat:2 }}</p>
+            <p><strong>Shipping:</strong> ৳{{ order.shipping_charge|floatformat:2 }}</p>
+            <p><strong>Net Amount:</strong> ৳{{ order.net_amount|floatformat:2 }}</p>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Shipping Address -->
+    {% if order.order_shipping_address %}
+    <div class="section">
+        <h3>Shipping Address</h3>
+        <p><strong>Name:</strong> {{ order.order_shipping_address.first_name }} {{ order.order_shipping_address.last_name }}</p>
+        <p>{{ order.order_shipping_address.address }}</p>
+        <p>{{ order.order_shipping_address.city }}, {{ order.order_shipping_address.state }}</p>
+        <p>{{ order.order_shipping_address.country }} - {{ order.order_shipping_address.zip_code }}</p>
+        <p><strong>Phone:</strong> {{ order.order_shipping_address.phone }}</p>
+    </div>
+    <hr>
+    {% endif %}
+
+    <!-- Products Table -->
+    <div class="section">
+        <h3>Products</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Book</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Discount</th>
+                    <th>Final Price</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.order_placed_products.all %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.product.title }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>৳{{ item.price|floatformat:2 }}</td>
+                    <td>৳{{ item.discount|floatformat:2 }}</td>
+                    <td>৳{{ item.final_price|floatformat:2 }}</td>
+                    <td>৳{{ item.get_subtotal|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <hr>
+
+    <!-- Payment Info -->
+    {% if order.payment_info %}
+    <div class="section">
+        <h3>Payment Info</h3>
+        <p><strong>Transaction ID:</strong> {{ order.payment_info.transaction_id|default:"N/A" }}</p>
+        <p><strong>Amount:</strong> ৳{{ order.payment_info.amount|floatformat:2 }}</p>
+        <p><strong>Status:</strong> {{ order.payment_info.status|title }}</p>
+        <p><strong>Method:</strong> {{ order.payment_info.payment_method|title }}</p>
+        {% if order.payment_info.card_type %}
+        <p><strong>Card Type:</strong> {{ order.payment_info.card_type }}</p>
+        <p><strong>Card Brand:</strong> {{ order.payment_info.card_brand }}</p>
+        <p><strong>Card Issuer:</strong> {{ order.payment_info.card_issuer }} ({{ order.payment_info.card_issuer_country }})</p>
+        {% endif %}
+    </div>
+    <hr>
+    {% endif %}
+
+</body>
+</html>
