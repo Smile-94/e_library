@@ -37,6 +37,9 @@ class AddToCartView(LoginRequiredMixin, View):
             if not product:
                 return JsonResponse({"status": "error", "message": "Book not found"}, status=404)
 
+            if not product.has_physical_copy:
+                return JsonResponse({"status": "error", "message": "This book is only for read or download"}, status=404)
+
             # Get or create active cart for the user
             cart, created = Cart.objects.get_or_create(user=request.user, is_active=True)
 

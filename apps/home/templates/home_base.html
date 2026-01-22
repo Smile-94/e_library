@@ -353,7 +353,7 @@
                     <span class="arrow_carrot-down"></span>
                   </div>
                   {% endcomment %}
-                  <input type="text" name="q" placeholder="What do you need?" class="form-control me-2" value="{{ request.GET.q|default:'' }}" required />
+                  {% comment %} <input type="text" name="q" placeholder="What do you need?" class="form-control me-2" value="{{ request.GET.q|default:'' }}" required /> {% endcomment %}
                   <button type="submit" class="btn btn-success">SEARCH</button>
                 </form>
               </div>

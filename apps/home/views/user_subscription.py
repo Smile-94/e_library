@@ -85,6 +85,9 @@ class AddBookToMySubscriptionView(LoginRequiredMixin, View):
                 if user_subscription.read_count >= subscription.max_book_read_limit:
                     return JsonResponse({"status": "error", "message": "Book read limit exceeded"}, status=400)
 
+            if book_instance and not book_instance.is_read_only:
+                return JsonResponse({"status": "error", "message": "Book is only for physical purchase"}, status=400)
+
             if book_instance and not book_instance.digital_file:
                 return JsonResponse({"status": "error", "message": "Book does not have digital file"}, status=400)
 

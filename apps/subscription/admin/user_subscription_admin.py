@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from apps.subscription.models import UserSubscription, UserSubscriptionBooks
+from apps.subscription.models import UserSubscription, UserSubscriptionBooks, BookPayment
 
 
 # <<------------------------------------*** User Subscription Admin ***------------------------------------>>
@@ -19,5 +19,15 @@ class UserSubscriptionBooksAdmin(admin.ModelAdmin):
     list_display = ("id", "user_subscription", "book", "read_count", "download_count")
     list_filter = ("user_subscription__active_status",)
     search_fields = ("id", "user_subscription__user__username", "book__title")
+    ordering = ("-id",)
+    list_per_page = 50
+
+
+# <<------------------------------------*** Book Payment Admin ***------------------------------------>>
+@admin.register(BookPayment)
+class BookPaymentAdmin(admin.ModelAdmin):
+    list_display = ("id", "sub_book", "sub_book__user_subscription", "amount", "status", "created_at", "updated_at")
+    list_filter = ("sub_book__user_subscription__active_status",)
+    search_fields = ("id", "sub_book__user_subscription__user__username", "sub_book__book__title")
     ordering = ("-id",)
     list_per_page = 50

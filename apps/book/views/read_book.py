@@ -1,5 +1,5 @@
 import logging
-
+from django.db import transaction
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -11,6 +11,7 @@ from apps.subscription.models.user_subscription_model import UserSubscriptionBoo
 from apps.subscription.utils import get_active_subscription
 from django.http import JsonResponse, FileResponse
 from apps.subscription.models.subscription_model import SubscriptionDownloadChoices
+from django.urls import reverse
 
 logger = logging.getLogger(__name__)
 
@@ -76,7 +77,7 @@ def book_pdf_view(request, book_id):
     return response
 
 
-# <<------------------------------------*** Download Book View ***------------------------------------>>
+# <<------------------------------------*** Book Download View ***------------------------------------>>
 class SubscriptionBookDownloadView(LoginRequiredMixin, View):
     model_class = Book
     user_subscription_book = UserSubscriptionBooks
@@ -95,43 +96,30 @@ class SubscriptionBookDownloadView(LoginRequiredMixin, View):
                 return JsonResponse({"message": "No active subscription found"}, status=403)
 
             sub_book = self.user_subscription_book.objects.filter(user_subscription=subscription, book=book).first()
-
             if not sub_book:
                 return JsonResponse({"message": "Book not added to subscription"}, status=403)
 
-            if (
-                subscription.subscription.book_download_limit == SubscriptionDownloadChoices.LIMITED
-                and subscription.subscription.max_book_download_limit == 0
-            ):
-                return JsonResponse({"message": "Your subscription does not allow downloading books"}, status=403)
+            # ----------------- Paid book check -----------------
+            if book.download_type != "Free" and not sub_book.is_paid:
+                # Trigger payment flow for paid book
+                return JsonResponse({"message": "Payment required for this book", "sub_book_id": sub_book.id}, status=402)
 
+            # ----------------- Download limit for first-time download -----------------
             if sub_book.download_count == 0:
                 if subscription.subscription.book_download_limit == SubscriptionDownloadChoices.LIMITED:
                     MAX_DOWNLOAD = subscription.subscription.max_book_download_limit
-
                     if MAX_DOWNLOAD and subscription.download_count >= MAX_DOWNLOAD:
                         return JsonResponse({"message": "Download limit exceeded"}, status=403)
 
-                # First-time download → count it
-                subscription.download_count += 1
-                subscription.save(update_fields=["download_count"])
+                # Safe increment with transaction
+                with transaction.atomic():
+                    subscription.download_count += 1
+                    subscription.save(update_fields=["download_count"])
 
-                sub_book.download_count = 1
-                sub_book.save(update_fields=["download_count"])
+                    sub_book.download_count = 1
+                    sub_book.save(update_fields=["download_count"])
 
-            # if subscription.subscription.book_download_limit == SubscriptionDownloadChoices.LIMITED:
-            #     MAX_DOWNLOAD = subscription.subscription.max_book_download_limit
-            #     if MAX_DOWNLOAD and subscription.download_count >= MAX_DOWNLOAD:
-            #         return JsonResponse({"message": "Download limit exceeded"}, status=403)
-
-            # # Prevent Multiple Count for Same Book
-            # if sub_book.download_count == 0:
-            #     subscription.download_count += 1
-            #     subscription.save(update_fields=["download_count"])
-
-            #     sub_book.download_count = 1
-            #     sub_book.save(update_fields=["download_count"])
-
+            # ----------------- Serve file -----------------
             return FileResponse(
                 book.digital_file.open("rb"),
                 as_attachment=True,
@@ -139,5 +127,5 @@ class SubscriptionBookDownloadView(LoginRequiredMixin, View):
             )
 
         except Exception as e:
-            logger.exception(f"ERROR:------>> SubscriptionBookDownloadView: {e}")
+            logger.exception(f"ERROR: SubscriptionBookDownloadView: {e}")
             return JsonResponse({"message": "Unable to download book"}, status=500)
