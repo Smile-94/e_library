@@ -9,6 +9,9 @@ from apps.order.models.order_model import Order
 from django.db.models import Case, When, Value, IntegerField
 from apps.common.permissions import RBACPermissionRequiredMixin, StaffPassesTestMixin
 from django.shortcuts import redirect
+from django.template.loader import get_template
+from weasyprint import HTML
+from django.template.loader import render_to_string
 
 logger = logging.getLogger(__name__)
 
@@ -100,3 +103,60 @@ class OrderDetailView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPass
         order.save(update_fields=["status"])
         messages.success(request, f"Order status updated to {order.get_status_display()}.")
         return redirect("authority:order_list")  # Redirect to Order List after update
+
+
+# <<------------------------------------*** Order PDF View ***------------------------------------>>
+class OrderPDFView(View):
+    """
+    Generate PDF for a given Order using WeasyPrint.
+    """
+
+    template_name = "order/order_detail_pdf.html"
+    model_class = Order  # Model class to fetch the order from
+
+    def get(self, request, order_id, *args, **kwargs):
+        try:
+            # Fetch the order object
+            order = self.model_class.objects.filter(pk=order_id).prefetch_related("order_placed_products__product").first()
+
+            # Render template to HTML string
+            html_string = render_to_string(self.template_name, {"order": order}, request=request)
+
+            # Convert HTML to PDF
+            pdf_file = HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf()
+
+            # Return PDF in HTTP response
+            response = HttpResponse(pdf_file, content_type="application/pdf")
+            response["Content-Disposition"] = f'attachment; filename="order_{order.invoice_id}.pdf"'
+            return response
+
+        except Exception as e:
+            logger.exception(f"Failed to generate PDF for Order ID {order_id}: {e}")
+            return HttpResponse("An error occurred while generating PDF. Please try again later.")
+
+
+# <<------------------------------------*** Order Packing Slip View ***------------------------------------>>
+class OrderPackingSlipView(LoginRequiredMixin, RBACPermissionRequiredMixin, StaffPassesTestMixin, View):
+    required_permission = "can_view_order"
+    template_name = "order/order_packing_pdf.html"
+    model_class = Order
+
+    def get(self, request, order_id, *args, **kwargs):
+        try:
+            # Fetch the order object
+            order = self.model_class.objects.filter(pk=order_id).prefetch_related("order_placed_products__product").first()
+
+            # Render template to HTML string
+            html_string = render_to_string(self.template_name, {"order": order}, request=request)
+
+            # Convert HTML to PDF
+            pdf_file = HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf()
+
+            # Return PDF in HTTP response
+            response = HttpResponse(pdf_file, content_type="application/pdf")
+            response["Content-Disposition"] = f'attachment; filename="order_{order.invoice_id}.pdf"'
+            return response
+
+        except Exception as e:
+            logger.exception(f"Failed to generate PDF for Order ID {order_id}: {e}")
+            return HttpResponse("An error occurred while generating PDF. Please try again later.")

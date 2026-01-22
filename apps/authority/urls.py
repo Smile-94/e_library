@@ -52,7 +52,7 @@ from apps.authority.views.discount_management import (
 )
 
 # Import Order View from authority/views/order_management.py
-from apps.authority.views.order_management import OrderListView, OrderDetailView
+from apps.authority.views.order_management import OrderListView, OrderDetailView, OrderPDFView, OrderPackingSlipView
 
 # Import Report View from authority/views/report_management.py
 from apps.authority.views.report_management import (
@@ -136,6 +136,8 @@ urlpatterns += [
 urlpatterns += [
     path("order-list/", OrderListView.as_view(), name="order_list"),
     path("order-detail/<int:pk>/", OrderDetailView.as_view(), name="order_detail"),
+    path("order-pdf/<int:order_id>/", OrderPDFView.as_view(), name="order_pdf"),
+    path("order-packing-slip/<int:order_id>/", OrderPackingSlipView.as_view(), name="order_packing_slip"),
 ]
 
 # Report Management Urls

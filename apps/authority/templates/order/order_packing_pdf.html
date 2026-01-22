@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Packaging Slip - Order {{ order.invoice_id }}</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12px;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2, h3 {
+            margin: 5px 0;
+        }
+
+        p {
+            margin: 2px 0;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .col {
+            flex: 1;
+            min-width: 200px;
+            margin-right: 20px;
+        }
+
+        .col:last-child {
+            margin-right: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #333;
+            padding: 6px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid #ccc;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <h2>Packaging Slip</h2>
+    <p><strong>Order ID / Invoice:</strong> {{ order.invoice_id|default:"N/A" }}</p>
+
+    <!-- Shipping Address -->
+    {% if order.order_shipping_address %}
+    <div class="section">
+        <h3>Shipping Address</h3>
+        <p><strong>Name:</strong> {{ order.order_shipping_address.first_name }} {{ order.order_shipping_address.last_name }}</p>
+        <p>{{ order.order_shipping_address.address }}</p>
+        <p>{{ order.order_shipping_address.city }}, {{ order.order_shipping_address.state }}</p>
+        <p>{{ order.order_shipping_address.country }} - {{ order.order_shipping_address.zip_code }}</p>
+        <p><strong>Phone:</strong> {{ order.order_shipping_address.phone }}</p>
+    </div>
+    <hr>
+    {% endif %}
+
+    <!-- Products Table -->
+    <div class="section">
+        <h3>Products</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Book</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.order_placed_products.all %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.product.title }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>৳{{ item.get_subtotal|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Totals & Payment -->
+    <div class="section">
+        <h3>Totals & Payment</h3>
+        <p><strong>Total Items:</strong> {{ order.order_placed_products.all|length }}</p>
+        <p><strong>Total Amount:</strong> ৳{{ order.net_amount|floatformat:2 }}</p>
+        <p><strong>Payment Method:</strong> {{ order.get_payment_display }}</p>
+    </div>
+
+</body>
+</html>
