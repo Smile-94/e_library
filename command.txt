@@ -1,6 +1,12 @@
 # Run Command
 poetry run python manage.py runserver
 
+# Database Makemigrations
+poetry run python manage.py makemigrations
+
+# Database Migrate
+poetry run python manage.py migrate
+
 
 # Change Background
 style="background: red;"

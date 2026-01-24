@@ -19,6 +19,7 @@ from apps.subscription.models.user_subscription_model import (
     UserSubscriptionBooks,
     UserSubscriptionPaymentStatus,
 )
+from apps.subscription.utils import get_active_subscription
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
@@ -117,11 +118,11 @@ class MySubscriptionBookListView(LoginRequiredMixin, View):
 
     def get(self, request):
         try:
-            user_subscription = self.model_class.objects.filter(user=request.user).order_by("-id").first()
+            user_subscription = get_active_subscription(request.user)
 
             if not user_subscription:
                 messages.error(request, "You don't have any subscriptions!")
-                return redirect("home:index")
+                return redirect("home:home")
 
             my_books = UserSubscriptionBooks.objects.filter(user_subscription=user_subscription).order_by("-id")
 

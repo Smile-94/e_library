@@ -1,4 +1,5 @@
 import mimetypes
+import os
 from pathlib import Path
 
 from django.contrib.messages import constants as messages
@@ -193,3 +194,5 @@ LOGGING = {
 }
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
+os.environ["GIO_LOG_LEVEL"] = "critical"
+os.environ["G_MESSAGES_DEBUG"] = ""

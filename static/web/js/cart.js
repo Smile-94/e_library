@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const input = row.querySelector(".qty-input");
       let qty = parseInt(input.value);
 
-      if (btn.classList.contains("plus")) qty++;
+      if (btn.classList.contains("plus")) qty++; // qty = qty + 2
       if (btn.classList.contains("minus") && qty > 1) qty--;
 
       input.value = qty;

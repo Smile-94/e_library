@@ -9,7 +9,12 @@ class CategoryForm(forms.ModelForm):
 
     class Meta:
         model = Category
-        fields = ["category_name", "category_image", "active_status", "description"]
+        fields = [
+            "category_name",
+            "category_image",
+            "active_status",
+            "description",
+        ]
         widgets = {
             "category_name": forms.TextInput(attrs={"placeholder": "Category Name"}),
             "active_status": forms.Select(attrs={"placeholder": "Active Status"}),

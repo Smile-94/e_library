@@ -1,9 +1,8 @@
 from django.db import models
 from django.utils import timezone
 
-from apps.book.models.book_model import Category, Book
-
-from apps.common.models import BaseModel, ActiveStatusChoices
+from apps.book.models.book_model import Book, Category
+from apps.common.models import ActiveStatusChoices, BaseModel
 
 
 # <<------------------------------------*** Discount Model ***------------------------------------>>

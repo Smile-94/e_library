@@ -11,6 +11,7 @@ class BookAdmin(admin.ModelAdmin):
         "title",
         "author",
         "category",
+        "category__id",
         "isbn",
         "language",
         "publication_date",

@@ -24,3 +24,8 @@ urlpatterns = [
 # for serve static files
 urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# Set Admin Site Title
+admin.site.site_header = "E-Library"
+admin.site.site_title = "E-Library Admin"
+admin.site.index_title = "E-Library Administration"

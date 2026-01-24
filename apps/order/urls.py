@@ -37,5 +37,5 @@ urlpatterns += [
 # <<------------------------------------*** My Order Url ***------------------------------------>>
 urlpatterns += [
     path("my-orders/", MyOrdersView.as_view(), name="my_orders"),
-    path("order/<int:pk>/", OrderDetailView.as_view(), name="my_order_detail"),
+    path("my-order-details/<int:pk>/", OrderDetailView.as_view(), name="my_order_detail"),
 ]

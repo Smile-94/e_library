@@ -137,18 +137,30 @@
       <div class="col-md-3 mt-3">
         {{ form.has_physical_copy|add_class:'form-check-input' }}
         <label class="form-check-label ms-2">Has Physical Copy</label>
+        {% for error in form.has_physical_copy.errors %}
+          <small class="text-danger">{{ error }}</small>
+        {% endfor %}
       </div>
       <div class="col-md-3 mt-3">
         {{ form.is_read_only|add_class:'form-check-input' }}
         <label class="form-check-label ms-2">Is Read Only</label>
+        {% for error in form.is_read_only.errors %}
+          <small class="text-danger">{{ error }}</small>
+        {% endfor %}
       </div>
       <div class="col-md-3 mt-3">
         {{ form.is_downloadable|add_class:'form-check-input' }}
         <label class="form-check-label ms-2">Is Downloadable</label>
+        {% for error in form.is_downloadable.errors %}
+          <small class="text-danger">{{ error }}</small>
+        {% endfor %}
       </div>
       <div class="col-md-3">
         <label class="form-label">Publication Status</label>
         {{ form.status|add_class:'form-select' }}
+        {% for error in form.status.errors %}
+          <small class="text-danger">{{ error }}</small>
+        {% endfor %}
       </div>
     </div>
 

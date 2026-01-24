@@ -1,24 +1,28 @@
 import logging
-from django.contrib import messages
-from datetime import timedelta
+
 from django.conf import settings
-from django.shortcuts import redirect
-from django.urls import reverse
-from django.views import View
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
+from django.shortcuts import redirect
+from django.urls import reverse
+from django.utils.decorators import method_decorator
+from django.views import View
+from django.views.decorators.csrf import csrf_exempt
+
 from pysslcmz.payment import SSLCSession
-from apps.subscription.models.user_subscription_model import UserSubscriptionBooks, UserSubscriptionPaymentStatus
-from apps.common.models import ActiveStatusChoices
+
+from apps.subscription.models.user_subscription_model import (
+    BookPayment,
+    BookPaymentStatus,
+    UserSubscriptionBooks,
+)
 from apps.subscription.utils import get_active_subscription
-from apps.subscription.models.user_subscription_model import BookPayment, BookPaymentStatus
 
 logger = logging.getLogger(__name__)
 
 
-# <<------------------------------------*** Book Download Payment Initiate View ***------------------------------------>>
+# <<------------------------------------*** Book Download Payment Initiate [download]View ***------------------------------------>>
 class InitiateBookPaymentView(LoginRequiredMixin, View):
     """
     Initiates payment for a paid book.
@@ -110,6 +114,7 @@ class BookPaymentSuccessView(View):
             with transaction.atomic():
                 # Mark the paid book
                 sub_book.is_paid = True
+                sub_book.download_count += 1
                 sub_book.save(update_fields=["is_paid"])
 
                 # Create a BookPayment entry
@@ -207,4 +212,5 @@ class BookPaymentCancelView(View):
 
         except Exception as e:
             logger.exception(f"ERROR: BookPaymentCancelView: {e}")
+            return redirect("home:my_subscription_book_list")
             return redirect("home:my_subscription_book_list")

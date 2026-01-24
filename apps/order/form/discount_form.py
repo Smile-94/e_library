@@ -1,6 +1,6 @@
 from django import forms
-from django.utils import timezone
 from django.utils.timezone import now
+
 from apps.order.models.discount_model import PromotionalDiscount
 
 
@@ -43,7 +43,7 @@ class PromotionalDiscountForm(forms.ModelForm):
 
         # Only apply start_date check for creation (new object)
         if not self.instance.pk and start_date and start_date < now_time:
-            self.add_error("start_date", "Start date cannot be in the past.")
+            self.add_error("start_date", "Start date cannot be in the past.Give current date and time.")
 
         # End date must always be after start date
         if start_date and end_date and end_date < start_date:

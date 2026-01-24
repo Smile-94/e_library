@@ -21,8 +21,10 @@ from apps.subscription.models.user_subscription_model import (
     UserSubscription,
     UserSubscriptionPaymentStatus,
 )
+from apps.subscription.utils import get_active_subscription
 
 logger = logging.getLogger(__name__)
+
 User = get_user_model()
 
 
@@ -50,6 +52,7 @@ class BuySubscriptionView(LoginRequiredMixin, View):
             #         return redirect("home:home_subscription")
 
             # Optional: prevent multiple active subscriptions
+
             # Check for existing active subscriptions
             current_time = now()
             active_subscription_exists = UserSubscription.objects.filter(
@@ -72,14 +75,26 @@ class BuySubscriptionView(LoginRequiredMixin, View):
 
             # If free subscription, activate immediately
             if subscription.subscription_price == 0:
+                active_subscription = get_active_subscription(user=request.user)
+                if active_subscription and active_subscription.subscription.subscription_price == 0:
+                    messages.warning(request, "You have already used free subscription.")
+                    return redirect("home:home_subscription")
+
                 user_subscription.active_status = ActiveStatusChoices.ACTIVE.value
                 user_subscription.payment_status = UserSubscriptionPaymentStatus.PAID.value
                 user_subscription.start_at = now()
                 user_subscription.end_at = now() + timedelta(days=subscription.subscription_duration_days)
                 user_subscription.save()
+
+                # Inactivate other active subscriptions
+                UserSubscription.objects.filter(user=user_subscription.user, active_status=ActiveStatusChoices.ACTIVE.value).exclude(
+                    id=user_subscription.id
+                ).update(active_status=ActiveStatusChoices.INACTIVE.value, end_at=now())
+
                 messages.success(request, "Free subscription started successfully!")
                 return redirect("home:home_subscription")
 
+            # If not free subscription, redirect to initiate payment
             return redirect("subscription:initiate_payment", pk=user_subscription.id)
         except Exception as e:
             logger.exception(f"ERROR:------>> Error occurred in Buy Subscription View: {e}")
@@ -87,6 +102,7 @@ class BuySubscriptionView(LoginRequiredMixin, View):
             return redirect("home:home_subscription")
 
 
+# * <<------------------------------------*** Initiate Payment View [subscription:initiate_payment] ***------------------------------------>>
 class InitiatePaymentView(LoginRequiredMixin, View):
     model_class = UserSubscription
 

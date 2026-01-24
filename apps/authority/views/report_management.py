@@ -1,18 +1,18 @@
-from django.views import View
-from django.shortcuts import render
-from django.contrib import messages
-from django.http import HttpResponse
-from django.db.models import Sum, Count, Q, F, ExpressionWrapper, DecimalField
-from django.db.models.functions import TruncDate
-from django.utils.dateparse import parse_date
-from apps.order.models.order_model import Order
 import logging
-from apps.common.permissions import RBACPermissionRequiredMixin, StaffPassesTestMixin
+
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Count, DecimalField, ExpressionWrapper, F, Q, Sum
+from django.db.models.functions import TruncDate
+from django.http import HttpResponse
+from django.shortcuts import render
 from django.utils.dateparse import parse_date, parse_time
-from django.utils.timezone import make_aware, datetime as dt
+from django.utils.timezone import datetime as dt, make_aware
+from django.views import View
+
+from apps.common.permissions import RBACPermissionRequiredMixin, StaffPassesTestMixin
+from apps.order.models.order_model import Order, OrderProduct
 from apps.subscription.models.user_subscription_model import UserSubscription
-from apps.order.models.order_model import OrderProduct
 
 logger = logging.getLogger(__name__)
 
@@ -92,8 +92,8 @@ class DailySalesReportView(LoginRequiredMixin, RBACPermissionRequiredMixin, Staf
 
 # <<----------------------------------
 class DailyProductSalesReportView(LoginRequiredMixin, View):
-    template_name = "report/daily_product_sales_report.html"
     required_permission = "can_view_product_sales_report"
+    template_name = "report/daily_product_sales_report.html"
 
     def get(self, request):
         try:

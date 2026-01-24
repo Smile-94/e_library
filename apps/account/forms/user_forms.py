@@ -1,7 +1,7 @@
 from django import forms
+from django.core.exceptions import ValidationError
 
 from apps.account.models.user_model import User
-from django.core.exceptions import ValidationError
 
 # Custom widgets
 from apps.common.widgets import CustomPictureImageFieldWidget
@@ -54,8 +54,9 @@ class StaffForm(forms.ModelForm):
         return user
 
 
+# <<--------------------------------- Staff Update Form ------------------------------------>>
 class UserForm(forms.ModelForm):
-    profile_photo = forms.ImageField(widget=CustomPictureImageFieldWidget)
+    profile_photo = forms.ImageField(widget=CustomPictureImageFieldWidget, required=False)
 
     class Meta:
         model = User

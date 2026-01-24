@@ -1,17 +1,17 @@
 import logging
-from django.db import transaction
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import FileResponse
+from django.db import transaction
+from django.http import FileResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.views import View
+
 from apps.book.models.book_model import Book, DownloadTypeChoices
+from apps.subscription.models.subscription_model import SubscriptionDownloadChoices
 from apps.subscription.models.user_subscription_model import UserSubscriptionBooks
 from apps.subscription.utils import get_active_subscription
-from django.http import JsonResponse, FileResponse
-from apps.subscription.models.subscription_model import SubscriptionDownloadChoices
-from django.urls import reverse
 
 logger = logging.getLogger(__name__)
 
@@ -108,6 +108,9 @@ class SubscriptionBookDownloadView(LoginRequiredMixin, View):
             if sub_book.download_count == 0:
                 if subscription.subscription.book_download_limit == SubscriptionDownloadChoices.LIMITED:
                     MAX_DOWNLOAD = subscription.subscription.max_book_download_limit
+                    if MAX_DOWNLOAD == 0:
+                        return JsonResponse({"message": "Your subscription does not have download permission"}, status=403)
+
                     if MAX_DOWNLOAD and subscription.download_count >= MAX_DOWNLOAD:
                         return JsonResponse({"message": "Download limit exceeded"}, status=403)
 
@@ -128,4 +131,5 @@ class SubscriptionBookDownloadView(LoginRequiredMixin, View):
 
         except Exception as e:
             logger.exception(f"ERROR: SubscriptionBookDownloadView: {e}")
+            return JsonResponse({"message": "Unable to download book"}, status=500)
             return JsonResponse({"message": "Unable to download book"}, status=500)

@@ -1,9 +1,8 @@
 import logging
 
 from django.contrib import messages
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.db.models.functions import Random
-from django.db.models import Q
 
 # Permission and Authentication
 # Django Response Class
@@ -34,7 +33,7 @@ class HomeView(View):
             all_categories = Category.objects.all()
             context = {
                 "title": "Home",
-                "all_categories": all_categories[:8],
+                "all_categories": all_categories,
                 "history": Book.objects.filter(category__category_name="History").order_by("id").first(),
                 "fiction_books": Book.objects.filter(title__icontains="The English Patient").order_by("id").first(),
                 "programming_books": Book.objects.filter(category__category_name="Programming").order_by("id").first(),
@@ -88,7 +87,7 @@ class BookDetailsView(View):
 
 
 # <<------------------------------------*** Shope View ***------------------------------------>>
-class ShopeView(View):
+class ShopView(View):
     template_name = "shope.html"  # your template path
     model_class = Book
 
@@ -96,7 +95,7 @@ class ShopeView(View):
         try:
             books = self.model_class.objects.all().order_by("-id")
             context = {
-                "title": "Shope",
+                "title": "Shop",
                 "books": books,
                 "all_categories": Category.objects.all().annotate(count_book=Count("books_category")).order_by("-count_book"),
                 "show_hero_banner": False,

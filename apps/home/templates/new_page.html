@@ -1,0 +1,25 @@
+{% comment %} {% extends 'home_base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block body %}
+ <h1>Hello world</h1>
+{% endblock %} {% endcomment %}
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title }}</title>
+  </head>
+  <body>
+    <h1>{{ data }}</h1>
+  </body>
+</html>

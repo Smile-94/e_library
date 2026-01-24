@@ -65,6 +65,7 @@
             <div class="featured__item__text">
               <h6><a href="{% url 'home:home_book_details' programming_books.id %}">{{ programming_books.title }}</a></h6>
               <h5>&#2547; {{ programming_books.physical_price }}</h5>
+             
             </div>
           </div>
         </div>
@@ -85,7 +86,8 @@
             </div>
             <div class="featured__item__text">
               <h6><a href="{% url 'home:home_book_details' history.id %}">{{ history.title }}</a></h6>
-              <h5>&#2547; {{ history.physical_price }}</h5>
+              <h5>&#2547; {{ programming_books.physical_price }}</h5>
+              
             </div>
           </div>
         </div>
@@ -106,7 +108,8 @@
             </div>
             <div class="featured__item__text">
               <h6><a href="{% url 'home:home_book_details' fiction_books.id %}">{{ fiction_books.title }}</a></h6>
-              <h5>&#2547; {{ fiction_books.physical_price }}</h5>
+              <h5>&#2547;{{ programming_books.physical_price }}</h5>
+      
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
 from apps.book.admin.book_admin import BookAdmin
-from apps.book.admin.category_admin import CategoryAdmin, SubCategoryAdmin
+from apps.book.admin.category_admin import CategoryAdmin
 
-__all__ = ["CategoryAdmin", "SubCategoryAdmin", "BookAdmin"]
+__all__ = ["CategoryAdmin", "BookAdmin"]

@@ -22,6 +22,7 @@ from apps.order.models.order_model import (
     OrderPaymentStatusChoices,
     OrderProduct,
     OrderStatusChoices,
+    ShippingAddress,
 )
 
 logger = logging.getLogger(__name__)
@@ -37,6 +38,9 @@ class CheckoutView(LoginRequiredMixin, View):
         try:
             cart = Cart.objects.filter(user=request.user, is_active=True).prefetch_related("cart_products_cart__product").first()
 
+            # Previous Order if exist then shipping address
+            previous_address = ShippingAddress.objects.filter(order__user=request.user).order_by("-id").first()
+
             if not cart or cart.cart_products_cart.count() == 0:
                 messages.warning(request, "Your cart is empty.")
                 return redirect("order:cart_detail")
@@ -48,7 +52,7 @@ class CheckoutView(LoginRequiredMixin, View):
                 "shipping_charge": SHIPPING_CHARGE,
                 "grand_total": cart.net_amount + SHIPPING_CHARGE,
                 "payment_methods": OrderPaymentMethodChoices.choices,
-                "shipping_form": ShippingAddressForm(),
+                "shipping_form": ShippingAddressForm(instance=previous_address),
                 "show_hero_banner": False,
                 "hero_normal": "hero-normal",
                 "subscription": False,
@@ -121,13 +125,8 @@ class PlaceOrderView(LoginRequiredMixin, View):
 
             # COD → done
             if payment_method == OrderPaymentMethodChoices.COD:
-<<<<<<< HEAD
-                order.payment_status = OrderPaymentStatusChoices.CONFIRMED
-                order.status = OrderStatusChoices.PENDING
-=======
                 order.payment_status = OrderPaymentStatusChoices.PENDING.value
                 order.status = OrderStatusChoices.PENDING.value
->>>>>>> ddfcd96c7cb61100d27429574eea4f49f6c8abb8
                 order.save(update_fields=["payment_status", "status"])
 
                 messages.success(request, "Order placed successfully!")
@@ -141,7 +140,7 @@ class PlaceOrderView(LoginRequiredMixin, View):
             return redirect("home:home")
 
 
-# <<------------------------------------*** Order Initiate Payment View ***------------------------------------>>
+# <<------------------------------------*** Order Initiate Payment View payment api[order]***------------------------------------>>
 class OrderInitiatePaymentView(LoginRequiredMixin, View):
     def get(self, request, pk):
         order = Order.objects.filter(pk=pk, user=request.user).first()
